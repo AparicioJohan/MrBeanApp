@@ -1,0 +1,76 @@
+#' home_module1 UI Function
+#'
+#' @description A shiny Module.
+#'
+#' @param id,input,output,session Internal parameters for {shiny}.
+#'
+#' @noRd 
+#'
+#' @importFrom shiny NS tagList 
+mod_home_module1_ui <- function(id){
+  ns <- NS(id)
+  tagList(
+    fluidRow(
+      
+      column( 9 ,
+              bs4Card(
+                HTML(" <img src='www/beans3.png' width='52' vspace='10' hspace='10' height='48' align='left'> <font size='7'>Mr.Bean</font>
+                                                "),
+                br(),
+                
+                includeHTML(
+                  system.file("app/www/encabezado.html", package = "MrBean")
+                ),
+                
+                
+                # h3("Let's start"),
+                width = 12,status = "success",solidHeader = TRUE, title = tagList(shiny::icon("home"), "Home")
+              )
+      ),
+      column(3, 
+             bs4Dash::valueBox(value = "SpATS", subtitle =  "Spatial P-Splines",width = 12,status  = "success",elevation = 3,
+                               href = "https://cran.r-project.org/web/packages/SpATS/SpATS.pdf",icon = ("braille")),
+             bs4Dash::valueBox(value = "ASReml-R", subtitle =  "AR1xAR1 Correlation",width = 12,status  = "danger",elevation = 3,
+                               href = "https://asreml.kb.vsni.co.uk/wp-content/uploads/sites/3/2018/02/ASReml-R-Reference-Manual-4.pdf",icon = ("braille")),
+             bs4Dash::valueBox(value = "Lme4", subtitle =  "lmer",width = 12, icon = ("line-chart"),status  = "warning",elevation = 3,
+                               href = "https://cran.r-project.org/web/packages/lme4/lme4.pdf"),
+             bs4Dash::valueBox(value = "Predictions", subtitle = "BLUPs/BLUEs",width = 12 ,icon = ("sort-numeric-up"),status = "info",elevation = 3, 
+                               href = "https://www.frontiersin.org/articles/10.3389/fpls.2018.01511/full"),
+             # bs4Dash::valueBox(value = "Visualization", subtitle = "ggplot2/plotly",width = 12, icon = ("bar-chart"),status = "danger",elevation = 3,
+             #                   href = "https://cran.r-project.org/web/packages/ggplot2/ggplot2.pdf"),
+             bs4Card(title = "Jump",status = "danger",width = 12,solidHeader = TRUE,
+                     actionLink(inputId = ns("toAwesome1"), label = "Data", icon = icon("database"), style = "color: #d9534f"),br(),
+                     actionLink(inputId = ns("toAwesome2"), label = "Spatial", icon = icon("braille"), style = "color: #d9534f"),br(),
+                     actionLink(inputId = ns("toAwesome3"), label = "Lme4", icon = icon("bar-chart-o"), style = "color: #d9534f"),br()
+             )
+      )
+    )
+  )
+}
+    
+#' home_module1 Server Function
+#'
+#' @noRd 
+mod_home_module1_server <- function(input, output, session){
+  ns <- session$ns
+  
+  observeEvent(input$toAwesome1, {
+    updatebs4TabSetPanel(session = session, inputId = "tabs", selected = "Data")
+  })
+  
+  observeEvent(input$toAwesome2, {
+    updatebs4TabSetPanel(session = session, inputId = "tabs", selected = "modelo")
+  })
+  
+  
+  observeEvent(input$toAwesome3, {
+    updatebs4TabSetPanel(session = session, inputId = "tabs", selected = "mixed")
+  })
+}
+    
+## To be copied in the UI
+# mod_home_module1_ui("home_module1_ui_1")
+    
+## To be copied in the server
+# callModule(mod_home_module1_server, "home_module1_ui_1")
+ 

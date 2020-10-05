@@ -1,0 +1,220 @@
+#' info_spats UI Function
+#'
+#' @description A shiny Module.
+#'
+#' @param id,input,output,session Internal parameters for {shiny}.
+#'
+#' @noRd 
+#'
+#' @importFrom shiny NS tagList 
+mod_info_spats_ui <- function(id){
+  ns <- NS(id)
+  tagList(
+    fluidRow(
+      
+      valueBoxOutput(ns("heritability"),width = 3),
+      valueBoxOutput(ns("maxline"),width = 3),
+      valueBoxOutput(ns("minline"),width = 3), 
+      valueBoxOutput(ns("cv"),width = 3)
+      
+    ),
+    
+    fluidRow(
+      
+      bs4TabCard(width = 6,id = "tabcard",tabStatus = "light",maximizable = T,solidHeader = T,closable = F,
+                 status ="success", 
+                 bs4TabPanel(tabName = "Summary", 
+                             helpText("First upload your data and fill the required fields."),
+                             shinycssloaders::withSpinner(
+                               verbatimTextOutput(ns("summary2")),
+                               type = 5,color = "#28a745"),icon = icon("arrow-circle-right")
+                 ),
+                 bs4TabPanel(tabName = "Model Plot",
+                             dropdown(
+                               prettyRadioButtons(inputId = ns("typefile"),label = "Download Plot File Type", outline = TRUE,fill = FALSE,shape = "square",inline = TRUE,
+                                                  choices = list(PNG="png",PDF="pdf"),
+                                                  icon = icon("check"),animation = "tada" ),
+                               conditionalPanel(condition="input.typefile=='png'", ns = ns,
+                                                sliderInput(inputId=ns("png.wid"),min = 200,max = 2000,value = 900,label = "Width pixels") ,
+                                                sliderInput(inputId=ns("png.hei"),min = 200,max = 2000,value = 600,label = "Height pixels")
+                                                ),
+                               conditionalPanel(condition="input.typefile=='pdf'", ns = ns,
+                                                sliderInput(inputId=ns("pdf.wid"),min = 2,max = 20,value = 10,label = "Width") ,
+                                                sliderInput(inputId=ns("pdf.hei"),min = 2,max = 20,value = 8,label = "Height")
+                                                ),
+                               
+                               downloadButton(ns("descargar"), "Download Plot", class="btn-success",
+                                              style= " color: white ; background-color: #28a745"), br() ,
+                               animate = shinyWidgets::animateOptions(
+                                 enter = shinyWidgets::animations$fading_entrances$fadeInLeftBig,
+                                 exit  = shinyWidgets::animations$fading_exits$fadeOutLeftBig
+                               ),
+                               style = "unite", icon = icon("gear"),
+                               status = "warning", width = "300px"
+                             ),
+                             shinycssloaders::withSpinner(plotOutput(ns("plot_spats")),type = 5,color = "#28a745"),icon = icon("th")
+                 ),
+                 bs4TabPanel(tabName = "Var-Components",icon = icon("signal"),
+                             shinycssloaders::withSpinner(plotly::plotlyOutput(ns("varcomp"),height = "500px"),type = 5,color = "#28a745")
+                             )
+      ),
+      bs4Dash::box(status = "success",width = 6,collapsible = TRUE,collapsed = T,
+                   title =   tagList(icon=icon("cloud-sun-rain"), "Spatial Trend")  ,solidHeader = TRUE,maximizable = T,
+                   shinycssloaders::withSpinner(
+                     plotly::plotlyOutput(ns("trend")),type = 5,color = "#28a745")
+                   )
+    )
+  )
+}
+    
+#' info_spats Server Function
+#'
+#' @noRd 
+mod_info_spats_server <- function(input, output, session, Model){
+  ns <- session$ns
+ 
+  modelo <- reactive({
+    req(Model$Modelo())
+    Model$Modelo()
+    })
+  
+  output$plot_spats <- renderPlot({
+    Model$action()
+      plot(isolate(modelo()))
+  })
+
+  output$summary2 <- renderPrint({
+    Model$action()
+    req(modelo())
+    isolate(summary(modelo()))
+  })
+
+  output$varcomp <- plotly::renderPlotly({
+    Model$action()
+    
+    isolate({
+      VarE<- round(sqrt(modelo()$psi[1]),2)
+      va <-  round(sqrt(modelo()$var.comp),2)
+      Comp <- data.frame(Component=c(names(modelo()$var.comp),"Residual") ,  Standard_deviation=c(va,VarE)  )
+      v <- as.character(Comp[order(Comp$Standard_deviation,decreasing = FALSE),1])
+      g1 <-  ggplot(Comp,aes(x =Component,Standard_deviation))+
+        geom_bar(position="dodge", stat="identity")+xlab("")+
+        ggtitle("Components") +
+        theme_bw(base_size = 15) +
+        theme(axis.text.x = element_text(angle=90, hjust=1, vjust=0.5)) +
+        scale_x_discrete(limits=v)+ylab("Standard Deviation")
+      plotly::ggplotly(g1)
+    })
+
+  })
+
+  output$trend <- plotly::renderPlotly({
+    
+    Model$spatial()
+    
+    isolate({
+      COL     <- obtain.spatialtrend(modelo())[[1]]
+      ROW     <- obtain.spatialtrend(modelo())[[2]]
+      SPATIAL <- obtain.spatialtrend(modelo())$fit
+      p <- plotly::plot_ly(x=COL,y=ROW,  z =SPATIAL) %>% plotly::add_surface( ) %>%
+        plotly::layout(
+          title = "Spatial Trend",
+          scene = list(
+            xaxis = list(title = "Column"),
+            yaxis = list(title = "Row"),
+            zaxis = list(title = "Z"),
+            camera=list(
+              eye = list(x=-1.5, y=-1.5, z=1.2)
+            )
+          ))
+      p
+    })
+  })
+  
+  
+  # BOXES
+  
+  observeEvent(!Model$inf(), shinyjs::toggle("heritability",anim = TRUE,time = 1,animType = "fade"))
+  observeEvent(!Model$inf(), shinyjs::toggle("maxline",anim = TRUE,time = 1,animType = "fade"))
+  observeEvent(!Model$inf(), shinyjs::toggle("minline",anim = TRUE,time = 1,animType = "fade"))
+  observeEvent(!Model$inf(), shinyjs::toggle("cv",anim = TRUE,time = 1,animType = "fade"))
+  
+  output$heritability <- renderbs4ValueBox({
+    ran <- modelo()$model$geno$as.random
+    validate(need(ran, "Heritability can only be calculated when genotype is random"))
+    H <- getHeritability(modelo())
+    bs4ValueBox(value = H,subtitle = "Heritability", 
+                icon="pagelines",  
+                status = "info",elevation = 3,
+                footer = HTML("<center> 0 = Bad / 1 = Good <center> "))
+  })
+  
+  observeEvent(Model$res_ran(),{   # warning Message heritability
+    tryCatch(
+      { 
+        aleatorio <- Model$res_ran()
+        if(!isTRUE(aleatorio)) stop("Remember: Heritability can only be calculated when genotype is random")
+      },
+      error = function(e) {
+        shinytoastr::toastr_warning(title = "INFO:", conditionMessage(e),position =  "bottom-right")
+      }
+    )
+  })
+  
+  output$maxline <- renderbs4ValueBox({
+    a <- round(sqrt(modelo()$psi[1]),2)
+    bs4ValueBox(value = a,subtitle = "Residual SD", 
+                icon=("arrow-circle-down"),  
+                status = "success",elevation = 3,
+                footer = HTML("<center> Looking for low <center>"))
+  })
+  
+  output$minline <- renderbs4ValueBox({
+    a <- R.square(modelo())
+    bs4ValueBox(value = a,subtitle = "R-Square", 
+                icon=("arrow-circle-up"),  
+                status = "danger",elevation = 3,
+                footer = HTML("<center> 0 = Bad / 1 = Good  <center>"))
+  })
+  
+  output$cv <- renderbs4ValueBox({
+    Model$action()
+    isolate({
+      m0 <- modelo()
+      me <- mean(Model$Effects()[,2],na.rm = TRUE)
+      sd <- sqrt(m0$var.comp[m0$model$geno$genotype])
+      bs4ValueBox(value = round(sd/me,2),subtitle = "Coefficient of Variation", 
+                  icon= "arrow-circle-up",  
+                  status = "warning",elevation = 3,
+                  footer = HTML("<center> Looking for high <center>"))
+    })
+  })
+  
+  
+  # Download PLOT SPATIAL
+  output$descargar <- downloadHandler(
+    filename = function() {
+      paste("plotSpATS", input$typefile, sep = ".")
+    },
+    content = function(file){
+      if(input$typefile=="png") {
+        png(file,width = input$png.wid ,height = input$png.hei)
+        plot(modelo(),cex.lab = 1.5, cex.main = 2, cex.axis = 1.5, axis.args = list(cex.axis = 1.2))
+        dev.off()
+      } else { 
+        pdf(file,width = input$pdf.wid , height = input$pdf.hei )
+        plot(modelo(),cex.lab = 1.5, cex.main = 2, cex.axis = 1.5, axis.args = list(cex.axis = 1.2))
+        dev.off()
+      }
+    }
+  )
+
+  
+}
+    
+## To be copied in the UI
+# mod_info_spats_ui("info_spats_ui_1")
+    
+## To be copied in the server
+# callModule(mod_info_spats_server, "info_spats_ui_1")
+ 
