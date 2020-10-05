@@ -1,0 +1,26 @@
+.nav-pills .nav-link:not(.active):not(.dropdown-toggle):hover {
+    color: #212223;
+}
+
+.profile-user-img {
+  border: 3px solid #adb5bd;
+  margin: 0 auto;
+  padding: 3px;
+  width: 200px;
+}
+
+.bttn-jelly.bttn-success {
+    background: #28a745;
+    color: #fff;
+}
+
+.table-responsive {
+    display: inline-table;
+    width: 100%;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+}
+
+.bttn-minimal.bttn-success {
+    color: #28a745;
+}
