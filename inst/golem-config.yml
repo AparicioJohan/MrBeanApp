@@ -5,4 +5,4 @@ default:
 production:
   app_prod: yes
 dev:
-  golem_wd: !expr here::here()
+  golem_wd: D:/OneDrive - CGIAR/2020/GOLEM/MrBean.v.0.2

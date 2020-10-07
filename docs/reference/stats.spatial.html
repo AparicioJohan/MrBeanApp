@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Function reference • MrBean</title>
+<title>Routine to obtain several goodness-of-fit statistics for spatial and non-spatial models — stats.spatial • MrBean</title>
 
 <!-- favicons -->
 <link rel="icon" type="image/png" sizes="16x16" href="../favicon-16x16.png">
@@ -48,7 +48,11 @@
   <link href="../extra.css" rel="stylesheet">
   
 
-<meta property="og:title" content="Function reference" />
+<meta property="og:title" content="Routine to obtain several goodness-of-fit statistics for spatial and non-spatial models — stats.spatial" />
+<meta property="og:description" content="stats.spatial Internal routine that calculates goodness-of-fit statisitcs for a
+specific fitted model provided as input. Statistics obtained are log-likelihood, AIC, 
+BIC, heritability based on predictor error variance (heritPEV, only for genotypes 'random'),
+A-optimality value, and logarithm of D-optimality value," />
 <meta property="og:image" content="/logo.png" />
 
 
@@ -68,7 +72,7 @@
   </head>
 
   <body data-spy="scroll" data-target="#toc">
-    <div class="container template-reference-index">
+    <div class="container template-reference-topic">
       <header>
       <div class="navbar navbar-default navbar-fixed-top" role="navigation">
   <div class="container">
@@ -118,72 +122,74 @@
       </header>
 
 <div class="row">
-  <div class="contents col-md-9">
+  <div class="col-md-9 contents">
     <div class="page-header">
-      <h1>Reference</h1>
+    <h1>Routine to obtain several goodness-of-fit statistics for spatial and non-spatial models</h1>
+    <small class="dont-index">Source: <a href='https://github.com/AparicioJohan/MrBeanApp/blob/master/R/asreml_funct.R'><code>R/asreml_funct.R</code></a></small>
+    <div class="hidden name"><code>stats.spatial.Rd</code></div>
     </div>
 
-    <table class="ref-index">
+    <div class="ref-description">
+    <p><code>stats.spatial</code> Internal routine that calculates goodness-of-fit statisitcs for a
+specific fitted model provided as input. Statistics obtained are log-likelihood, AIC, 
+BIC, heritability based on predictor error variance (heritPEV, only for genotypes 'random'),
+A-optimality value, and logarithm of D-optimality value,</p>
+    </div>
 
-    <colgroup>
-      
-      <col class="alias" />
-      <col class="title" />
-    </colgroup>
+    <pre class="usage"><span class='fu'>stats.spatial</span><span class='op'>(</span>
+  object <span class='op'>=</span> <span class='cn'>NULL</span>,
+  checks <span class='op'>=</span> <span class='cn'>FALSE</span>,
+  solution <span class='op'>=</span> <span class='cn'>NULL</span>,
+  preds <span class='op'>=</span> <span class='cn'>NULL</span>,
+  k <span class='op'>=</span> <span class='fl'>1</span>,
+  ctable <span class='op'>=</span> <span class='cn'>NULL</span>
+<span class='op'>)</span></pre>
 
-    <tbody>
-      <tr>
-        <th colspan="2">
-          <h2 id="section-all-functions" class="hasAnchor"><a href="#section-all-functions" class="anchor"></a>All functions</h2>
-          <p class="section-desc"></p>
-        </th>
-      </tr>
-      
-      
-    </tbody><tbody>
-      
-      
-      <tr>
-        
-        <td>
-          <p><code><a href="run_app.html">run_app()</a></code> </p>
-        </td>
-        <td><p>Run the Shiny Application</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="spatial.aud.html">spatial.aud()</a></code> </p>
-        </td>
-        <td><p>Routine to fit several spatial models for Augmented, Unreplicated and P-Rep Designs</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="spatial.selector.html">spatial.selector()</a></code> </p>
-        </td>
-        <td><p>Routine to fit several spatial models and suggest the best model</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="spatial.single.html">spatial.single()</a></code> </p>
-        </td>
-        <td><p>Routine to fit a given spatial models for field trials</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="stageMET.html">stageMET()</a></code> </p>
-        </td>
-        <td><p>Routine to perform final step of a two-stage MET analyses</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="stats.spatial.html">stats.spatial()</a></code> </p>
-        </td>
-        <td><p>Routine to obtain several goodness-of-fit statistics for spatial and non-spatial models</p></td>
-      </tr>
-    </tbody>
+    <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
+    <table class="ref-arguments">
+    <colgroup><col class="name" /><col class="desc" /></colgroup>
+    <tr>
+      <th>object</th>
+      <td><p>model fit output for object class asreml. Genotype factor is called 'gen'</p></td>
+    </tr>
+    <tr>
+      <th>checks</th>
+      <td><p>logical to indicate if checks were included in the model (default = FALSE)</p></td>
+    </tr>
+    <tr>
+      <th>solution</th>
+      <td><p>data frame with the random solutions from asreml (BLUPs)</p></td>
+    </tr>
+    <tr>
+      <th>preds</th>
+      <td><p>data frame with the predictions for genotypes (required to calculate Aopt, Dopt)</p></td>
+    </tr>
+    <tr>
+      <th>k</th>
+      <td><p>value 1 or 2 to be used for the denominator of heritabilty calculation (herit.PEV) (default = 2)</p></td>
+    </tr>
+    <tr>
+      <th>ctable</th>
+      <td><p>table with genotypes and checks (optional)</p></td>
+    </tr>
     </table>
-  </div>
 
+    <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
+
+    <p>A table with goodness-of-fit statistics for models evaluated. This includes columns: 
+number of variance components in the model (n.VC), log-likelihood (logL), Akaike information 
+criteria (AIC), Bayesian information criteria (BIC), heritability based on variance components,
+heritability based on predictor error variance (heritPEV, only for genotypes 'random'), A-optimality value, and logarithm of 
+D-optimality value.</p>
+    <h2 class="hasAnchor" id="author"><a class="anchor" href="#author"></a>Author</h2>
+
+    <p>Salvador A. Gezan. VSN International</p>
+
+    <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
+    <pre class="examples"><div class='input'><span class='co'># Example: Pending</span>
+
+</div></pre>
+  </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">
       <h2 data-toc-skip>Contents</h2>

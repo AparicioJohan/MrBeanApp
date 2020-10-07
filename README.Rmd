@@ -13,7 +13,7 @@ knitr::opts_chunk$set(
 )
 ```
 
-# MrBean
+# MrBean <img src="man/figures/hex-MrBean.png" width="120px" align="right"/>
 
 <!-- badges: start -->
 [![Lifecycle: experimental](https://img.shields.io/badge/lifecycle-experimental-orange.svg)](https://www.tidyverse.org/lifecycle/#experimental)
@@ -26,7 +26,9 @@ The goal of MrBean is to analyze field experiments with a user interface.
 You can install the package:
 
 ``` r
-devtools::install_bitbucket("johanaparicio/mrbean", auth_user = "AparicioJohan", password = rstudioapi::askForPassword() )
+devtools::install_bitbucket("johanaparicio/mrbean", 
+                            auth_user = "AparicioJohan", 
+                            password = rstudioapi::askForPassword() )
 ```
 
 ## Example

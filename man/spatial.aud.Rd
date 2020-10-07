@@ -63,21 +63,21 @@ If an additional factor of checks is provided then these will be fitted as fixed
 }
 \examples{
 # Example 1: Analysis Unreplicated Trial 
-library(agridat)
-UR <- burgueno.unreplicated
-UR$col <- as.factor(UR$col)
-UR$row <- as.factor(UR$row)
-UR$gen <- as.factor(UR$gen)
-head(UR)
-output.UR <- spatial.aud(data=UR, gen='gen', row='row', col='col', resp='yield',
-                         type.gen='random')
-output.UR
-
-# Example 2: Fitting only Model 4: ar1(Row):ar1(Col)
-mod4.UR <- spatial.aud(data=UR, gen='gen', row='row', col='col', resp='yield',
-                       type.gen='random', model=4)
-summary(mod4.UR$mod)$varcomp  # Summary from ASReml-R
-head(mod4.UR$predictions)     # Predictions
+# library(agridat)
+# UR <- burgueno.unreplicated
+# UR$col <- as.factor(UR$col)
+# UR$row <- as.factor(UR$row)
+# UR$gen <- as.factor(UR$gen)
+# head(UR)
+# output.UR <- spatial.aud(data=UR, gen='gen', row='row', col='col', resp='yield',
+#                          type.gen='random')
+# output.UR
+# 
+# # Example 2: Fitting only Model 4: ar1(Row):ar1(Col)
+# mod4.UR <- spatial.aud(data=UR, gen='gen', row='row', col='col', resp='yield',
+#                        type.gen='random', model=4)
+# summary(mod4.UR$mod)$varcomp  # Summary from ASReml-R
+# head(mod4.UR$predictions)     # Predictions
 }
 \author{
 Salvador A. Gezan. VSN International

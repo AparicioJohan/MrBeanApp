@@ -1,5 +1,5 @@
 
-# MrBean
+# MrBean <img src="man/figures/hex-MrBean.png" width="120px" align="right"/>
 
 
 
@@ -39,17 +39,19 @@ library(MrBean)
 run_app()
 ```
 
+
 ## Demo
 
 A running demo is on [shinyapps.io](https://beanteam.shinyapps.io/MrBean_BETA/).
 
-
-<div class="row">
-<div class="card">
-<a href="#" target="_blank"><img src="man/figures/desktop_update.png"></a>
+<div class="marvel-device macbook">
+    <div class="top-bar" width=></div>
+    <div class="camera"></div>
+    <div class="screen">
+             <iframe width="100%" src="https://beanteam.shinyapps.io/MrBean_BETA/" allowfullscreen=""  scrolling="yes"  height="100%"></iframe>
+    </div>
+    <div class="bottom-bar"></div>
 </div>
-</div>
-
 
 <br>
 

@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Function reference • MrBean</title>
+<title>Routine to perform final step of a two-stage MET analyses — stageMET • MrBean</title>
 
 <!-- favicons -->
 <link rel="icon" type="image/png" sizes="16x16" href="../favicon-16x16.png">
@@ -48,7 +48,13 @@
   <link href="../extra.css" rel="stylesheet">
   
 
-<meta property="og:title" content="Function reference" />
+<meta property="og:title" content="Routine to perform final step of a two-stage MET analyses — stageMET" />
+<meta property="og:description" content="stageMET Performs the genetic analysis of an MET dataset corresponding
+to the final step of a two-stage analysis, where input corresponds to meand (or 
+adjusted values) of Evaluates and verifies the data originating from several trials with the 
+aim of determining levels of: connectivity, variability, etc., which are reported as 
+statistics. Only non-NA observations are considered in the reports. Note that trial is 
+always considered a fixed effect." />
 <meta property="og:image" content="/logo.png" />
 
 
@@ -68,7 +74,7 @@
   </head>
 
   <body data-spy="scroll" data-target="#toc">
-    <div class="container template-reference-index">
+    <div class="container template-reference-topic">
       <header>
       <div class="navbar navbar-default navbar-fixed-top" role="navigation">
   <div class="container">
@@ -118,72 +124,87 @@
       </header>
 
 <div class="row">
-  <div class="contents col-md-9">
+  <div class="col-md-9 contents">
     <div class="page-header">
-      <h1>Reference</h1>
+    <h1>Routine to perform final step of a two-stage MET analyses</h1>
+    <small class="dont-index">Source: <a href='https://github.com/AparicioJohan/MrBeanApp/blob/master/R/ASReml_MET.R'><code>R/ASReml_MET.R</code></a></small>
+    <div class="hidden name"><code>stageMET.Rd</code></div>
     </div>
 
-    <table class="ref-index">
+    <div class="ref-description">
+    <p><code>stageMET</code> Performs the genetic analysis of an MET dataset corresponding
+to the final step of a two-stage analysis, where input corresponds to meand (or 
+adjusted values) of Evaluates and verifies the data originating from several trials with the 
+aim of determining levels of: connectivity, variability, etc., which are reported as 
+statistics. Only non-NA observations are considered in the reports. Note that trial is 
+always considered a fixed effect.</p>
+    </div>
 
-    <colgroup>
-      
-      <col class="alias" />
-      <col class="title" />
-    </colgroup>
+    <pre class="usage"><span class='fu'>stageMET</span><span class='op'>(</span>
+  data <span class='op'>=</span> <span class='cn'>NULL</span>,
+  gen <span class='op'>=</span> <span class='cn'>NULL</span>,
+  trial <span class='op'>=</span> <span class='cn'>NULL</span>,
+  resp <span class='op'>=</span> <span class='cn'>NULL</span>,
+  weight <span class='op'>=</span> <span class='cn'>NULL</span>,
+  type.gen <span class='op'>=</span> <span class='st'>"random"</span>,
+  type.trial <span class='op'>=</span> <span class='st'>"fixed"</span>,
+  vc.model <span class='op'>=</span> <span class='st'>"corh"</span>
+<span class='op'>)</span></pre>
 
-    <tbody>
-      <tr>
-        <th colspan="2">
-          <h2 id="section-all-functions" class="hasAnchor"><a href="#section-all-functions" class="anchor"></a>All functions</h2>
-          <p class="section-desc"></p>
-        </th>
-      </tr>
-      
-      
-    </tbody><tbody>
-      
-      
-      <tr>
-        
-        <td>
-          <p><code><a href="run_app.html">run_app()</a></code> </p>
-        </td>
-        <td><p>Run the Shiny Application</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="spatial.aud.html">spatial.aud()</a></code> </p>
-        </td>
-        <td><p>Routine to fit several spatial models for Augmented, Unreplicated and P-Rep Designs</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="spatial.selector.html">spatial.selector()</a></code> </p>
-        </td>
-        <td><p>Routine to fit several spatial models and suggest the best model</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="spatial.single.html">spatial.single()</a></code> </p>
-        </td>
-        <td><p>Routine to fit a given spatial models for field trials</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="stageMET.html">stageMET()</a></code> </p>
-        </td>
-        <td><p>Routine to perform final step of a two-stage MET analyses</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="stats.spatial.html">stats.spatial()</a></code> </p>
-        </td>
-        <td><p>Routine to obtain several goodness-of-fit statistics for spatial and non-spatial models</p></td>
-      </tr>
-    </tbody>
+    <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
+    <table class="ref-arguments">
+    <colgroup><col class="name" /><col class="desc" /></colgroup>
+    <tr>
+      <th>data</th>
+      <td><p>dataframe with all relevant columns for MET analyses.</p></td>
+    </tr>
+    <tr>
+      <th>gen</th>
+      <td><p>factor name for genotypes (or treatments)</p></td>
+    </tr>
+    <tr>
+      <th>trial</th>
+      <td><p>factor name for trial (or environment)</p></td>
+    </tr>
+    <tr>
+      <th>resp</th>
+      <td><p>column name for the response variable to evaluate</p></td>
+    </tr>
+    <tr>
+      <th>weight</th>
+      <td><p>column name for the weight of response (default = 1)</p></td>
+    </tr>
+    <tr>
+      <th>type.gen</th>
+      <td><p>model assumption for genotype effects: 'random' or 'fixed' (default = 'random')</p></td>
+    </tr>
+    <tr>
+      <th>type.trial</th>
+      <td><p>model assumption for trial effects: 'random' or 'fixed' (default = 'fixed')</p></td>
+    </tr>
+    <tr>
+      <th>vc.model</th>
+      <td><p>variance-covariance model to fit: 'diag', 'corv', 'corh', 'fa1', 'fa2', 
+'fa3', 'fa4', 'corgh' (default = 'corh') (only for type.gen =' random')</p></td>
+    </tr>
     </table>
-  </div>
 
+    <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
+
+    <p>Several objects with reports of the MET analysis. 
+call:        String with the ASReml-R call used to fit the requested model
+mod:         ASReml-R object with all information from the fitted model
+predictions: Predictions for all genotypes across all sites, with thier standard
+              error and reliability.</p>
+    <h2 class="hasAnchor" id="author"><a class="anchor" href="#author"></a>Author</h2>
+
+    <p>Salvador A. Gezan. VSN International</p>
+
+    <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
+    <pre class="examples"><div class='input'><span class='co'># Example 1: </span>
+
+</div></pre>
+  </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">
       <h2 data-toc-skip>Contents</h2>
