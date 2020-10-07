@@ -1,7 +1,7 @@
 
 # MrBean <img src="man/figures/hex-MrBean.png" width="120px" align="right"/>
 
-
+[![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/AparicioJohan/MrBeanApp/main)
 
 [![Lifecycle:
 experimental](https://img.shields.io/badge/lifecycle-experimental-orange.svg)](https://www.tidyverse.org/lifecycle/#experimental)
