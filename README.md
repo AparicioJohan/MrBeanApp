@@ -1,5 +1,5 @@
 
-# MrBean
+# MrBean <img src="man/figures/hex-MrBean.png" width="120px" align="right"/>
 
 
 
