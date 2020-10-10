@@ -1,6 +1,6 @@
-conectBMS <- function( user="" , password= "" ){
-  bmscon <- try(brapi::ba_connect(brapiDb = NULL, secure = FALSE, protocol = "http://",
-                                  db = "bms.ciat.cgiar.org", port = 48080, apipath = "bmsapi", multicrop = FALSE,
+conectBMS <- function( user="" , password= "", protocol = "http://" , db = "bms.ciat.cgiar.org" ){
+  bmscon <- try(brapi::ba_connect(brapiDb = NULL, secure = FALSE, protocol = protocol,
+                                  db = db , port = 48080, apipath = "bmsapi", multicrop = FALSE,
                                   crop = "", user = user, password = password, token = "", clientid = "rbrapi", bms = TRUE), silent = T  )
   bmscon <- try(login_bms(con = bmscon), silent = T)
   if(length(bmscon)==1) return()

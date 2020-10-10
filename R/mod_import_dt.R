@@ -143,6 +143,15 @@ mod_import_dt_server <- function(input, output, session){
           column(width = 4,
                  fluidRow(
                  bs4Dash::box(title = tagList(shiny::icon("users"), "BMS"),solidHeader = TRUE,width = 12,status = "success",
+                              materialSwitch(ns("config"),label = "Configuration",status = "success", right = T, width = "100%"),
+                              div(id=ns("bms_config"),
+                                  fluidRow(
+                                    col_12(
+                                      textInput(inputId = ns("protocol"), label = "Protocol", value = "http://", width = "100%"),
+                                      textInput(inputId = ns("bdIP"), label = "BMS Server IP Address", value = "bms.ciat.cgiar.org", width = "100%"),
+                                    )
+                                  )
+                              ),
                               textInput(ns("user"),label = tagList(shiny::icon("user"), "User:"),placeholder = "username",width = "100%" ),
                               passwordInput(ns("password"), tagList(shiny::icon("key"), "Password:"),width = "100%",placeholder = "*****************"),
                               actionButton(ns("mysql"),label = "Conect",icon = icon("sync")),
@@ -170,12 +179,14 @@ mod_import_dt_server <- function(input, output, session){
     }
 
   })
+  
+  observeEvent(sum(input$config)==0, toggle("bms_config",anim = TRUE,time = 1,animType = "fade"))
 
 
   # BMS ---------------------------------------------------------------------
 
   bmscon <- reactive({
-    conectBMS(user = input$user, password = input$password)
+    conectBMS(user = input$user, password = input$password, protocol = input$protocol , db = input$bdIP)
   })
   
   crops <- reactive({
