@@ -10,6 +10,18 @@ R.square <- function(Model){
   return(round(R,3))
 }
 
+CV.spats <- function(Model){
+  response      <- Model$data[,Model$model$response]  
+  mean.response <- mean(response,na.rm = T)
+  fitted        <- Model$fitted
+  MSE           <- mean( (response-fitted)^2 , na.rm = T)
+  RMSE          <- sqrt(MSE)
+  NRMSE         <- RMSE/mean.response
+  cv_prcnt      <- NRMSE*100
+  names(cv_prcnt) <- "CV"
+  return(round(cv_prcnt,2))
+} 
+
 
 res_data <- function(Model){
   dt <- Model$data
@@ -292,9 +304,10 @@ VarG_msa <- function(model){
     names(vargen) <- "Var_Gen"
     return(vargen)
   } else{
-    pred <- predict(model,which = gen)[,"predicted.values"]
-    CV <- round(sd(pred)/mean(pred),3)
-    names(CV) <- "CV"
+    # pred <- predict(model,which = gen)[,"predicted.values"]
+    # CV <- round(sd(pred)/mean(pred),3)
+    # names(CV) <- "CV"
+    CV = NA
     return(CV)
   }
 }
@@ -327,8 +340,8 @@ msa_table <- function(models, gen_ran){
   he <- unlist(lapply(models, h_msa ))
   out <- unlist(lapply(models, msa_residuals ))
   r2 <- unlist(lapply(models, R.square ))
-  summ <- data.frame(Experiment=exp, varG = gv, varE = ev, h2 = he, outliers=out , r2=r2 ,  row.names = NULL)
-  if(!gen_ran) names(summ)[2] <- "CV"
+  cv <- unlist(lapply(models, CV.spats ))
+  summ <- data.frame(Experiment=exp, varG = gv, varE = ev, h2 = he, outliers=out , r2=r2 , cv = cv , row.names = NULL)
   return(summ)
 }
 

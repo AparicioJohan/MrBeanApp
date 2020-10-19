@@ -14,6 +14,7 @@
 run_app <- function(
   ...
 ) {
+  options(shiny.maxRequestSize=100*1024^2)
   with_golem_options(
     app = shinyApp(
       ui = app_ui, 

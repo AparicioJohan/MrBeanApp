@@ -25,7 +25,7 @@ programBMS <- function(conection, crop ){
   programs 
 }
 
-trialBMS <- function(conection, cropSele, programSele){
+trialBMS <- function(conection, cropSele, programSele, rclass = "data.frame" ){
   bmscon <- conection
   if(is.null(bmscon)) return()
   if(is.null(programSele)) return()
@@ -35,7 +35,7 @@ trialBMS <- function(conection, cropSele, programSele){
   bmscon$crop <-  as.character(cropSele)
   programs <- ba_programs_new(bmscon)
   pr.DbId <- as.character(programs[programs$name==programSele,1])
-  trials <- try(ba_trials_new(con = bmscon, programDbId = pr.DbId , rclass = "data.frame") ,silent = T)
+  trials <- try(ba_trials_new(con = bmscon, programDbId = pr.DbId , rclass = rclass) ,silent = T)
   if(length(trials)==1) return()
   trials <- trials$trialName 
   trials <- make.names( trials  , unique=TRUE)  
@@ -216,6 +216,10 @@ ba_trials_new <- function (con = NULL, programDbId = "", locationDbId = "", acti
     }
     if (rclass %in% c("data.frame", "tibble")) {
       out <- brapi:::trl2tbl2(res = cont, rclass = rclass)
+      # out <- try(brapi:::trl2tbl2(res = cont, rclass = rclass), silent = T)
+      # if(class(out)=="try-error"){
+      #   out <- brapi:::dat2tbl(res = cont, rclass = rclass)
+      # } 
     }
     class(out) <- c(class(out), "ba_trials")
     brapi:::show_metadata(resp)

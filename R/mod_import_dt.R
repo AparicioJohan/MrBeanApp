@@ -37,7 +37,7 @@ mod_import_dt_ui <- function(id){
                                                        '.csv',
                                                        '.tsv','xlsx'
                                                      )),
-                                           helpText("Default max. file size is 5MB"),
+                                           helpText("Default max. file size is 100MB"),
                                            prettyCheckbox(
                                              inputId = ns("header"), label = "Include Header?", icon = icon("check"),outline = TRUE,fill = FALSE,shape="square",
                                              animation = "tada", value=TRUE,status = "success"

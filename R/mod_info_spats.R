@@ -181,12 +181,11 @@ mod_info_spats_server <- function(input, output, session, Model){
     Model$action()
     isolate({
       m0 <- modelo()
-      me <- mean(Model$Effects()[,2],na.rm = TRUE)
-      sd <- sqrt(m0$var.comp[m0$model$geno$genotype])
-      bs4ValueBox(value = round(sd/me,2),subtitle = "Coefficient of Variation", 
+      cv <- CV.spats(m0)
+      bs4ValueBox(value = paste0(cv,"%"),subtitle = "Coefficient of Variation", 
                   icon= "arrow-circle-up",  
                   status = "warning",elevation = 3,
-                  footer = HTML("<center> Looking for high <center>"))
+                  footer = HTML("<center> Looking for low <center>"))
     })
   })
   

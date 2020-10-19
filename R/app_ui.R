@@ -14,6 +14,7 @@ app_ui <- function(request) {
       navbar = bs4DashNavbar(
         status = "white",
         fixed = F,
+        HTML("<script type='text/javascript' src='https://cdnjs.buymeacoffee.com/1.0.0/button.prod.min.js' data-name='bmc-button' data-slug='mrbean' data-color='#FFFFFF' data-emoji=''  data-font='Cookie' data-text='Buy MrBean a coffee' data-outline-color='#000' data-font-color='#000' data-coffee-color='#fd0' ></script>"),
         "Web Application for Spatial Analysis!",
         rightUi = bs4DropdownMenu(
           show = FALSE,
