@@ -308,8 +308,8 @@ mod_MSA_results_server <- function(input, output, session, msa){
     tryCatch(
       {
         var2 <- names(summary_msa())[2]
-        exp <- summary_msa() %>% dplyr::filter(!.data[[var2]]==0) %>% dplyr::pull(Experiment) %>% as.character()
-        bl <- blups() %>% dplyr::filter(Experiment %in% exp) %>% droplevels()
+        # exp <- summary_msa() %>% dplyr::filter(!.data[[var2]]==0) %>% dplyr::pull(Experiment) %>% as.character()  # check when genotype is fixed
+        bl <- blups() # %>% dplyr::filter(Experiment %in% exp) %>% droplevels()
         bl <- bl[,1:3] %>% tidyr::spread(., "Experiment", "predicted.values" )
         
         CC <- round(cor(bl[,-1], use = "pairwise.complete.obs"),3)
@@ -329,7 +329,7 @@ mod_MSA_results_server <- function(input, output, session, msa){
           e_grid(left = "20%",height = "60%")
       },
       error = function(e) {
-        shinytoastr::toastr_error(title = "Error:", message = "There is not enough information for the correlation plot.",position =  "bottom-full-width",
+        shinytoastr::toastr_error(title = "Error:", conditionMessage(e),position =  "bottom-full-width",
                                   showMethod ="slideDown", hideMethod="hide", hideEasing = "linear")
       }
     )
