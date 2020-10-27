@@ -10,7 +10,7 @@
 #' @rawNamespace import(shinyjs, except = c(alert, runExample))
 #' @rawNamespace import(lme4, except = show)
 #' @rawNamespace import(Matrix, except = show)
-#' @import shinyWidgets readxl ggplot2 summarytools SpATS waiter echarts4r data.table
+#' @import shinyWidgets readxl ggplot2 summarytools SpATS waiter echarts4r data.table ggrepel
 run_app <- function(
   ...
 ) {

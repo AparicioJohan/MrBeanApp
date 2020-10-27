@@ -735,7 +735,7 @@ corrChart <- function(model, height = "65%", left = "20%"){
 
 
 
-latent_regress <- function(model, genotype , scale = T, text_labs = T, alpha_p = 0.5, return_data = F){
+latent_regress <- function(model, genotype , scale = T, text_labs = T,  size_text = 1, alpha_text = 0.5 ,alpha_p = 0.5, return_data = F){
   
   ASM <- fa.asreml( model , trunc.char = NULL)
   
@@ -749,7 +749,6 @@ latent_regress <- function(model, genotype , scale = T, text_labs = T, alpha_p =
   
   names(UgOve)[2:3] <- c("site","gen")
   FAST <- merge(UgOve, L.star, by = "site") %>% 
-           # subset(gen%in%c(genotype)) %>% 
            tidyr::gather(., key = "loading", value = "value", -1,-2,-3,-4) 
   
   SCores <- ASM$blups[[1]]$scores
@@ -758,29 +757,26 @@ latent_regress <- function(model, genotype , scale = T, text_labs = T, alpha_p =
   SCores <- SCores %>% dplyr::select(-blup)
   
    FAST <- merge(FAST, SCores, by.y = c("Comp","gen"), by.x = c("loading","gen")  )
-   FAST$reg_blup <- FAST$blup
+   FAST$blup_wo_psi <- FAST$regblup # wo = without psi
   
   if(dimen == 2){
-    # FAST <- merge(FAST, SCores, by.y = c("Comp","gen"), by.x = c("loading","gen")  )
     
-    FAST[FAST$loading=="fac_2", "blup" ] <- FAST[FAST$loading=="fac_2",  "blup" ] - FAST[FAST$loading=="fac_1", "value" ]*FAST[FAST$loading=="fac_1", "blupr" ]
+    FAST[FAST$loading=="fac_2", "regblup" ] <- FAST[FAST$loading=="fac_2",  "regblup" ] - FAST[FAST$loading=="fac_1", "value" ]*FAST[FAST$loading=="fac_1", "blupr" ]
     
   } else if( dimen == 3 ) {
-    # FAST <- merge(FAST, SCores, by.y = c("Comp","gen"), by.x = c("loading","gen")  )
     
-    FAST[FAST$loading=="fac_2", "blup" ] <- FAST[FAST$loading=="fac_2",  "blup" ] - FAST[FAST$loading=="fac_1", "value" ]*FAST[FAST$loading=="fac_1", "blupr" ]
-    FAST[FAST$loading=="fac_3", "blup" ] <- FAST[FAST$loading=="fac_3",  "blup" ] - FAST[FAST$loading=="fac_2", "value" ]*FAST[FAST$loading=="fac_2", "blupr" ] - FAST[FAST$loading=="fac_1", "value" ]*FAST[FAST$loading=="fac_1", "blupr" ]
+    FAST[FAST$loading=="fac_2", "regblup" ] <- FAST[FAST$loading=="fac_2",  "regblup" ] - FAST[FAST$loading=="fac_1", "value" ]*FAST[FAST$loading=="fac_1", "blupr" ]
+    FAST[FAST$loading=="fac_3", "regblup" ] <- FAST[FAST$loading=="fac_3",  "regblup" ] - FAST[FAST$loading=="fac_2", "value" ]*FAST[FAST$loading=="fac_2", "blupr" ] - FAST[FAST$loading=="fac_1", "value" ]*FAST[FAST$loading=="fac_1", "blupr" ]
     
   } else if( dimen == 4){
-    # FAST <- merge(FAST, SCores, by.y = c("Comp","gen"), by.x = c("loading","gen")  )
     
-    FAST[FAST$loading=="fac_2", "blup" ] <- FAST[FAST$loading=="fac_2",  "blup" ] - FAST[FAST$loading=="fac_1", "value" ]*FAST[FAST$loading=="fac_1", "blupr" ]
-    FAST[FAST$loading=="fac_3", "blup" ] <- FAST[FAST$loading=="fac_3",  "blup" ] - FAST[FAST$loading=="fac_2", "value" ]*FAST[FAST$loading=="fac_2", "blupr" ] - FAST[FAST$loading=="fac_1", "value" ]*FAST[FAST$loading=="fac_1", "blupr" ]
-    FAST[FAST$loading=="fac_4", "blup" ] <- FAST[FAST$loading=="fac_4",  "blup" ] - FAST[FAST$loading=="fac_3", "value" ]*FAST[FAST$loading=="fac_3", "blupr" ] - FAST[FAST$loading=="fac_1", "value" ]*FAST[FAST$loading=="fac_1", "blupr" ] - FAST[FAST$loading=="fac_2", "value" ]*FAST[FAST$loading=="fac_2", "blupr" ]
+    FAST[FAST$loading=="fac_2", "regblup" ] <- FAST[FAST$loading=="fac_2",  "regblup" ] - FAST[FAST$loading=="fac_1", "value" ]*FAST[FAST$loading=="fac_1", "blupr" ]
+    FAST[FAST$loading=="fac_3", "regblup" ] <- FAST[FAST$loading=="fac_3",  "regblup" ] - FAST[FAST$loading=="fac_2", "value" ]*FAST[FAST$loading=="fac_2", "blupr" ] - FAST[FAST$loading=="fac_1", "value" ]*FAST[FAST$loading=="fac_1", "blupr" ]
+    FAST[FAST$loading=="fac_4", "regblup" ] <- FAST[FAST$loading=="fac_4",  "regblup" ] - FAST[FAST$loading=="fac_3", "value" ]*FAST[FAST$loading=="fac_3", "blupr" ] - FAST[FAST$loading=="fac_1", "value" ]*FAST[FAST$loading=="fac_1", "blupr" ] - FAST[FAST$loading=="fac_2", "value" ]*FAST[FAST$loading=="fac_2", "blupr" ]
   }
   
   if(return_data){
-    names(FAST) <- c("component", "genotype", "trial", "reg_blup", "blup_without_psi", "loading", "score", "blup_psi")
+    names(FAST) <- c("component", "genotype", "trial", "blup_psi", "reg_blup", "loading", "score", "blup_without_psi")
     FAST <- FAST[, c("component", "genotype", "trial", "blup_psi", "blup_without_psi", "reg_blup" , "loading", "score")]
     return(FAST)
   } 
@@ -788,17 +784,21 @@ latent_regress <- function(model, genotype , scale = T, text_labs = T, alpha_p =
   FAST <- FAST %>% subset(gen %in% c(genotype))   
   
   p <- FAST %>% 
-        ggplot2::ggplot(aes(x=value,y=blup, color = gen))+
+        ggplot2::ggplot(aes(x=value,y=regblup, color = gen))+
         ggplot2::geom_point(size=3, alpha = alpha_p)+
         ggplot2::facet_grid(~loading, scales = "free_x")+
         ggplot2::theme_bw(base_size = 15)+
-        # ggplot2::geom_smooth(aes(x=value,y=regblup), method = "lm", formula = y~x, se = F)+
         ggplot2::geom_abline(aes(slope = blupr, intercept = 0, color = gen))+
         ggplot2::geom_hline(yintercept = 0,linetype = 2,color="grey")+
         ggplot2::theme(legend.position="bottom")  + 
         ggplot2::labs(x = " ", color = "Genotype")
     
-  if(text_labs) p <- p  +  geom_text(aes(label = site), nudge_y= 0.05, nudge_x=-0.03, check_overlap = T)
+  if(text_labs) p <- p  + geom_label_repel(aes(label = site),
+                                           nudge_y= 0.05, 
+                                           nudge_x=-0.03,
+                                           force=1, 
+                                           size = size_text,
+                                           alpha = alpha_text) 
         
   
   if(scale) p <- p + ggplot2::ylim(c(u,l))

@@ -238,13 +238,15 @@ mod_MET_FA_server <- function(input, output, session, model){
     input$scale
     input$text_lab
     input$alpha_p
+    input$size_text
+    input$alpha_text
     isolate({
       req(model$model())
       req(length(grep("fa", model$model()$mod$call))!=0)
       validate(need(input$geno_filter, message = "Please select at least one genotype."  ) )
       mod <- model$model()$mod
       gen <- input$geno_filter
-      latent_regress(mod, gen, input$scale, input$text_lab, input$alpha_p)
+      latent_regress(mod, gen, input$scale, input$text_lab, input$size_text, input$alpha_text, input$alpha_p)
     })
   })
 
@@ -257,7 +259,7 @@ mod_MET_FA_server <- function(input, output, session, model){
         label = "Search Genotype:",
         choices = "", multiple = T,
         options = list(
-          `live-search` = TRUE, size = 5), width = "100%"
+          `live-search` = TRUE, `actions-box` = TRUE, size = 5), width = "100%"
       ),
       actionBttn(
         inputId = ns("search"),
@@ -265,6 +267,29 @@ mod_MET_FA_server <- function(input, output, session, model){
         style = "fill",
         color = "primary",size = "sm"
       ), rep_br(2),
+      dropdown(
+        prettyRadioButtons(inputId = ns("filetype"),label = "Download Plot File Type", outline = TRUE,fill = FALSE,shape = "square",inline = TRUE,
+                           choices = list(PNG="png",PDF="pdf"),
+                           icon = icon("check"),animation = "tada" ),
+        conditionalPanel(condition="input.filetype=='png'", ns = ns,
+                         sliderInput(inputId=ns("png.wid.corr"),min = 200,max = 2000,value = 900,label = "Width pixels") ,
+                         sliderInput(inputId=ns("png.hei.corr"),min = 200,max = 2000,value = 600,label = "Height pixels")
+        ),
+        conditionalPanel(condition="input.filetype=='pdf'", ns = ns,
+                         sliderInput(inputId=ns("pdf.wid.corr"),min = 2,max = 20,value = 10,label = "Width") ,
+                         sliderInput(inputId=ns("pdf.hei.corr"),min = 2,max = 20,value = 8,label = "Height")
+        ),
+        
+        downloadButton(ns("descargar"), "Download Plot", class="btn-success",
+                       style= " color: white ; background-color: #28a745"), br() ,
+        animate = shinyWidgets::animateOptions(
+          enter = shinyWidgets::animations$fading_entrances$fadeInLeftBig,
+          exit  = shinyWidgets::animations$fading_exits$fadeOutLeftBig
+        ),
+        style = "unite", icon = icon("gear"),
+        tooltip = tooltipOptions(title = "Click to Download!"),
+        status = "warning", width = "300px"
+      ),
       shinycssloaders::withSpinner(
         plotOutput(ns("regress")),type = 6,color = "#28a745"
       ),
@@ -293,15 +318,29 @@ mod_MET_FA_server <- function(input, output, session, model){
         )
       ),
       fluidRow(
-        col_3(),
-        col_6(
+        # col_3(),
+        col_4(
           sliderTextInput(
-            inputId = ns("alpha_p"), label = "Choose alpha:", 
+            inputId = ns("alpha_p"), label = "Opacity Point:", 
             choices = seq(0.05,1, by = 0.1), 
             grid = TRUE, selected = 0.55, width = "100%"
           )
         ),
-        col_3()
+        col_4(
+          sliderTextInput(
+            inputId = ns("size_text"), label = "Size Text:", 
+            choices = seq(1,8, by = 0.2), 
+            grid = TRUE, selected = 4, width = "100%"
+          )
+        ),
+        col_4(
+          sliderTextInput(
+            inputId = ns("alpha_text"), label = "Opacity Text:", 
+            choices = seq(0.1,1, by = 0.1), 
+            grid = TRUE, selected = 0.7, width = "100%"
+          )
+        )
+        # col_3()
       ), 
       footer = tagList(
         downloadButton(ns("downloadFA"), 
@@ -317,6 +356,36 @@ mod_MET_FA_server <- function(input, output, session, model){
   
 
   # Downloads ---------------------------------------------------------------
+  
+  
+  output$descargar <- downloadHandler(
+    filename = function() {
+      paste("latent_regress", input$filetype, sep = ".")
+    },
+    content = function(file){
+      if(input$filetype=="png") {
+        png(file,width = input$png.wid.corr ,height = input$png.hei.corr)
+        req(model$model())
+        req(length(grep("fa", model$model()$mod$call))!=0)
+        validate(need(input$geno_filter, message = "Please select at least one genotype."  ) )
+        mod <- model$model()$mod
+        gen <- input$geno_filter
+        p <- latent_regress(mod, gen, input$scale, input$text_lab, input$size_text, input$alpha_text, input$alpha_p)
+        print(p)
+        dev.off()
+      } else { 
+        pdf(file,width = input$pdf.wid.corr , height = input$pdf.hei.corr )
+        req(model$model())
+        req(length(grep("fa", model$model()$mod$call))!=0)
+        validate(need(input$geno_filter, message = "Please select at least one genotype."  ) )
+        mod <- model$model()$mod
+        gen <- input$geno_filter
+        p <- latent_regress(mod, gen, input$scale, input$text_lab, input$size_text, input$alpha_text, input$alpha_p)
+        print(p)
+        dev.off()
+      }
+    }
+  )
 
   
   
@@ -362,8 +431,10 @@ mod_MET_FA_server <- function(input, output, session, model){
       req(length(grep("fa", model$model()$mod$call))!=0)
       model <- model$model()$mod
       ASM <- fa.asreml( model , trunc.char = NULL)
-      ASM <- ASM$gammas[[1]]$`rotated loads`
-      write.csv(ASM, file, row.names = T)
+      psi <- ASM$gammas[[1]]$`specific var`
+      ASM <- ASM$gammas[[1]]$`rotated loads` %>% as.data.frame() %>% tibble::rownames_to_column(var = "site")
+      ASM$psi <- psi
+      write.csv(ASM, file, row.names = F)
     }
   )
 
