@@ -43,11 +43,11 @@ Imports:
     reshape,
     factoextra,
     sever,
-    geoR,
     psych,
     lmerTest,
     broom.mixed,
-    Matrix
+    Matrix,
+    ggrepel
 Encoding: UTF-8
 LazyData: true
 RoxygenNote: 7.1.1
