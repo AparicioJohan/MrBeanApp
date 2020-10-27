@@ -44,10 +44,10 @@ usethis::use_package( "tibble" )
 usethis::use_package( "Matrix" )
 usethis::use_package( "reshape" )
 usethis::use_package( "factoextra" )
-usethis::use_package( "geoR" )
 usethis::use_package( "psych" )
 usethis::use_package( "sever" )
 usethis::use_package( "waiter" )
+usethis::use_package( "ggrepel" )
 
 ## Add modules ----
 ## Create a module infrastructure in R/
