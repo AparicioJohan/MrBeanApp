@@ -26,15 +26,20 @@ mod_lme4_single_ui <- function(id){
                                             <li><strong>Interaction Random:</strong> (1|Rep:Block) </li>
                                             </ul>  ")),
       bs4Card( width = 3,status = "success", solidHeader = TRUE,
-               background = "blue",selectInput(inputId=ns("variable2"),
-                                               label="Response variable",choices=""),
+               title = tagList(icon=icon("ruler"), "Trait and Genotype"),
+               background = "blue",
+               selectInput(inputId=ns("variable2"),
+                           label="Response variable",choices="", width = "100%"),
                selectInput(inputId=ns("genotipo2"),
                            label="Genotype",
-                           choices=""),
-               checkboxInput(inputId=ns('res_ran2'),
-                             label='Random Genotype?', 
-                             value=TRUE)),
-      bs4Card( width = 2,status = "success",solidHeader = TRUE,title = "Model",
+                           choices="", width = "100%"),
+               awesomeCheckbox(inputId = ns('res_ran2') ,
+                               label='Random Genotype',  
+                               value = TRUE ,status = "danger"  )),
+               # checkboxInput(inputId=ns('res_ran2'),
+               #               label='Random Genotype?', 
+               #               value=TRUE)),
+      bs4Card( width = 2,status = "success",solidHeader = TRUE,title =tagList(icon=icon("tasks"), "Model") ,
                prettyRadioButtons(
                  inputId = ns("Id039"),
                  label = "Choose:", 
@@ -48,10 +53,10 @@ mod_lme4_single_ui <- function(id){
                             style="display:rigth ;color: white  ; background-color: #dd4b39"),
                actionButton(ns("infomix"),label = "Info Model", class="btn-success",
                             style="display:rigth ;color: white  ; background-color: #00a65a",icon = icon("info")),br(),br(),
-               disabled(actionLink(inputId = "Rlinklme", label = "Residuals", icon = icon("arrow-right"), style = "color: #28a745"))),
+               actionLink(inputId = ns("Rlinklme"), label = "Residuals", icon = icon("arrow-right"), style = "color: #28a745")),
       column(3,
              conditionalPanel(condition="input.Id039==1|input.Id039==2",ns = ns,
-                              bs4Card( width = NULL,status = "success",solidHeader = TRUE,title="Components", 
+                              bs4Card( width = NULL,status = "success",solidHeader = TRUE,title=tagList(icon=icon("tasks"), "Components"), 
                                        selectInput(inputId = ns("Id086"), label = "Replicate",choices = "", width =  '100%'  ),
                                        conditionalPanel(condition="input.Id039==1",ns = ns,
                                                         selectInput(inputId = ns("Id087"), label = "Block",choices = "", width =  '100%'  )
@@ -143,7 +148,7 @@ mod_lme4_single_server <- function(input, output, session, data){
     }
     )
     
-    },ignoreNULL = T, ignoreInit = T)
+    }) # ,ignoreNULL = T, ignoreInit = T
   
   # observe({
   #   print(class(alpha()))
@@ -215,6 +220,7 @@ mod_lme4_single_server <- function(input, output, session, data){
     validate(need(input$run!=0," "))
     gen <- ifelse(input$Id039==3,input$genotipo2,"Gen")
     req(alpha())
+    req(isTRUE(input$res_ran2))
     vc.g <- sqrt(VarG(alpha(), gen ))
     v <- round(vc.g,2)
     bs4ValueBox(v,subtitle = "Genotypic SD",
@@ -226,6 +232,7 @@ mod_lme4_single_server <- function(input, output, session, data){
   # VALUEBOX for HERITABILIY 
   output$hcullis <- renderbs4ValueBox({
     req(alpha())
+    req(isTRUE(input$res_ran2))
     H <- h.cullis(alpha(), ifelse(input$Id039==3,input$genotipo2,"Gen"))
     H <- round(H,2)
     bs4ValueBox(H,subtitle = "Heritability", 
@@ -322,7 +329,7 @@ mod_lme4_single_server <- function(input, output, session, data){
                 valueBoxOutput(ns("hcullis"),width = 4)),
       DT::dataTableOutput(ns("glance")), 
       shinycssloaders::withSpinner(verbatimTextOutput(ns("printranova")),type = 5,color = "#28a745"), 
-      DT::dataTableOutput(ns("anovamix")) ,
+      shinycssloaders::withSpinner(DT::dataTableOutput(ns("anovamix")),type = 5,color = "#28a745") ,
       footer = tagList(   modalButton("Cancel") )
     ))
   })
@@ -345,7 +352,8 @@ mod_lme4_single_server <- function(input, output, session, data){
          model = alpha,
          effects = blup_mix,
          run = reactive(input$run),
-         res_ran2 = reactive(input$res_ran2))
+         res_ran2 = reactive(input$res_ran2),
+         Rlink   = reactive(input$Rlinklme))
   )
   
 }

@@ -38,6 +38,7 @@ app_server <- function( input, output, session ) {
   # Lme4
   lme4_model <- callModule(mod_lme4_single_server, "lme4_single_ui_1", data = data)
   lme4_model
+  observeEvent(lme4_model$Rlink(),updatebs4TabItems(session, inputId = "tabs", selected = "boxes"))
   callModule(mod_residuals_lme4_server, "residuals_lme4_ui_1", model = lme4_model)
   
   # MSA

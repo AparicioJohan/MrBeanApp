@@ -71,8 +71,8 @@ mod_residuals_lme4_server <- function(input, output, session, model){
       if(isFALSE(model$res_ran2())){ 
         req(model$effects())
         BLUPS <- model$effects()
-        v <- as.character(BLUPS[order(BLUPS$Estimate,decreasing = TRUE),2])
-        g1 <-  ggplot(BLUPS,aes(x =levels,Estimate))+geom_point(size = 1) +
+        v <- as.character(BLUPS[order(BLUPS$Estimation,decreasing = TRUE),2])
+        g1 <-  ggplot(BLUPS,aes(x =Genotype,Estimation))+geom_point(size = 1) +
           geom_errorbar(aes(ymax = upper, ymin = lower))+ theme_bw() +
           theme(axis.title.x=element_blank(),axis.text.x=element_blank(),axis.ticks.x=element_blank())+
           scale_x_discrete(limits=v)
@@ -106,6 +106,7 @@ mod_residuals_lme4_server <- function(input, output, session, model){
   
   output$plotati3 <- plotly::renderPlotly({
     model$run()
+    input$swicht
     isolate({
       if(input$swicht){
         res_fitted(data_out())

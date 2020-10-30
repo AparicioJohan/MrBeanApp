@@ -119,10 +119,15 @@ lme4_effects <- function(model, genotype, res_ran, model_class){
     if (model_class==3) {
       BLUES <- data.frame(lmerTest::ls_means(model,genotype))
       BLUES <-  dplyr::arrange(BLUES,desc(Estimate))
+      BLUES
     }
-    BLUES <-data.frame(lmerTest::ls_means(model,"Gen"))  # "Gen"  fue cambiado por input$genotipo2
+    BLUES <- data.frame(lmerTest::ls_means(model,"Gen"))  # "Gen"  fue cambiado por input$genotipo2
     BLUES <-  dplyr::arrange(BLUES,desc(Estimate))
-    BLUES %>% dplyr::mutate_if(is.numeric, round, digits=2) 
+    BLUES <- BLUES %>%
+              dplyr::mutate_if(is.numeric, round, digits=2) %>%
+              dplyr::select(levels, Estimate, "Std..Error", lower, upper )
+    names(BLUES) <- c("Genotype","Estimation", "Std.Error", "lower", "upper")
+    BLUES
   }
 }
 
