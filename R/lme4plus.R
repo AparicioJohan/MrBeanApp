@@ -231,7 +231,7 @@ res_data_lme4 <- function(Model){
 
 mult_comp <- function(model, res_ran, genotype, model_class, ngen){
   
-  if(ngen > 35) return()
+  if(ngen > 50) return()
   if(res_ran==TRUE){
     return()
   } else{

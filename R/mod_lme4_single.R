@@ -390,7 +390,7 @@ mod_lme4_single_server <- function(input, output, session, data){
       validate(need(input$res_ran2!=TRUE,"Multiple Comparisons only when the genotype is taken as random factor."))
       predict <- blup_mix()
       ngen <- nrow(predict)
-      validate(need(ngen<35,"Too many genotypes for Multiple Comparisons"))
+      validate(need(ngen<50,"Too many genotypes for Multiple Comparisons"))
       
       tryCatch(
         { 
