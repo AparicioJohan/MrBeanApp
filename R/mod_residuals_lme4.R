@@ -21,35 +21,37 @@ mod_residuals_lme4_ui <- function(id){
     
     fluidRow(
       column(width=6,
-        bs4TabCard(width = 12,id = "Res_lme4", title = tagList(shiny::icon("bar-chart-o"), "Residuals") ,
-                               status = "danger",tabStatus = "light",collapsible = T , maximizable = T,solidHeader = T,
-                               bs4TabPanel(tabName = "Residual",active = T, helpText("First run the Mixed Model"),
-                                           prettySwitch(
-                                             inputId = ns("swicht"),
-                                             label = "Fitted Values", 
-                                             status = "success",
-                                             slim = TRUE
-                                           ),
-                                           shinycssloaders::withSpinner(
-                                             plotly::plotlyOutput(ns("plotati3")),type = 5,color = "#28a745"),icon = icon("arrow-circle-right")
-                                           ),
-                               bs4TabPanel(tabName = "QQplot",
-                                           shinycssloaders::withSpinner(
-                                             plotly::plotlyOutput(ns("Normality")),type = 5,color = "#28a745"),icon = icon("ellipsis-h")
-                                           ),
-                               bs4TabPanel(tabName = "Hist",
-                                           shinycssloaders::withSpinner(
-                                             plotly::plotlyOutput(ns("Hgram")),type = 5,color = "#28a745"),icon = icon("ellipsis-h"))
-                    )
-                    
-                    #
+             fluidRow(
+               bs4TabCard(width = 12,id = "Res_lme4", title = tagList(shiny::icon("bar-chart-o"), "Residuals") ,
+                          status = "danger",tabStatus = "light",collapsible = T , maximizable = T,solidHeader = T,
+                          bs4TabPanel(tabName = "Residual",active = T, helpText("First run the Mixed Model"),
+                                      prettySwitch(
+                                        inputId = ns("swicht"),
+                                        label = "Fitted Values", 
+                                        status = "success",
+                                        slim = TRUE
+                                      ),
+                                      shinycssloaders::withSpinner(
+                                        plotly::plotlyOutput(ns("plotati3")),type = 5,color = "#28a745"),icon = icon("arrow-circle-right")
+                          ),
+                          bs4TabPanel(tabName = "QQplot",
+                                      shinycssloaders::withSpinner(
+                                        plotly::plotlyOutput(ns("Normality")),type = 5,color = "#28a745"),icon = icon("ellipsis-h")
+                          ),
+                          bs4TabPanel(tabName = "Hist",
+                                      shinycssloaders::withSpinner(
+                                        plotly::plotlyOutput(ns("Hgram")),type = 5,color = "#28a745"),icon = icon("ellipsis-h"))
+               )
+             )
                     
       ),
       column(width=6,
-        bs4Card(width = 12,style = "overflow-x: scroll;",
-                status = "success",title = "Outliers Residuals",solidHeader = TRUE,collapsible = TRUE,collapsed = TRUE,
-                shinycssloaders::withSpinner(DT::dataTableOutput(ns("OUT3")),type = 5,color = "#28a745")
-          )
+             fluidRow(
+               bs4Card(width = 12,style = "overflow-x: scroll;",
+                       status = "success",title = "Outliers Residuals",solidHeader = TRUE,collapsible = TRUE,collapsed = FALSE,
+                       shinycssloaders::withSpinner(DT::dataTableOutput(ns("OUT3")),type = 5,color = "#28a745")
+               )
+             )
       )
     
     )
@@ -71,7 +73,7 @@ mod_residuals_lme4_server <- function(input, output, session, model){
       if(isFALSE(model$res_ran2())){ 
         req(model$effects())
         BLUPS <- model$effects()
-        v <- as.character(BLUPS[order(BLUPS$Estimation,decreasing = TRUE),2])
+        v <- as.character(BLUPS[order(BLUPS$Estimation,decreasing = TRUE),1])
         g1 <-  ggplot(BLUPS,aes(x =Genotype,Estimation))+geom_point(size = 1) +
           geom_errorbar(aes(ymax = upper, ymin = lower))+ theme_bw() +
           theme(axis.title.x=element_blank(),axis.text.x=element_blank(),axis.ticks.x=element_blank())+

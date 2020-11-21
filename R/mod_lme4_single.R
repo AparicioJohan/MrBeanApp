@@ -16,8 +16,8 @@ mod_lme4_single_ui <- function(id){
     ),
     fluidRow(
       bs4Card(title =  tagList(shiny::icon("question-circle"), "Help"), 
-              solidHeader = TRUE, footer =  "Let's start",width =4,status = "danger",
-              h3("Factors in Lme4 package"),
+              solidHeader = TRUE, footer =  "Let's start",width =3,status = "danger",
+              h3("Factors in the formula:"),
               hr(),
               HTML("<ul>
                                             <li><strong>Fixed:</strong> Rep + Block  </li>
@@ -39,11 +39,11 @@ mod_lme4_single_ui <- function(id){
                # checkboxInput(inputId=ns('res_ran2'),
                #               label='Random Genotype?', 
                #               value=TRUE)),
-      bs4Card( width = 2,status = "success",solidHeader = TRUE,title =tagList(icon=icon("tasks"), "Model") ,
+      bs4Card( width = 3,status = "success",solidHeader = TRUE,title =tagList(icon=icon("tasks"), "Model") ,
                prettyRadioButtons(
                  inputId = ns("Id039"),
                  label = "Choose:", 
-                 choices = c("Lattice"=1, "RCBD"=2, "Other model"=3),
+                 choices = c("Alpha-Lattice"=1, "RCBD"=2, "CRD"=4 , "Other model"=3),
                  icon = icon("check"), 
                  bigger = TRUE,
                  status = "success",
@@ -52,14 +52,25 @@ mod_lme4_single_ui <- function(id){
                actionButton(ns("run"),label = "Run",icon = icon("check"), class="btn-danger",
                             style="display:rigth ;color: white  ; background-color: #dd4b39"),
                actionButton(ns("infomix"),label = "Info Model", class="btn-success",
-                            style="display:rigth ;color: white  ; background-color: #00a65a",icon = icon("info")),br(),br(),
+                            style="display:rigth ;color: white  ; background-color: #00a65a",icon = icon("info")),
+               br(),br(),
+               actionButton(ns("multcmp"),label = "Multiple Comp",icon = icon("compress-arrows-alt")),
+               br(),br(),
                actionLink(inputId = ns("Rlinklme"), label = "Residuals", icon = icon("arrow-right"), style = "color: #28a745")),
       column(3,
-             conditionalPanel(condition="input.Id039==1|input.Id039==2",ns = ns,
-                              bs4Card( width = NULL,status = "success",solidHeader = TRUE,title=tagList(icon=icon("tasks"), "Components"), 
-                                       selectInput(inputId = ns("Id086"), label = "Replicate",choices = "", width =  '100%'  ),
+             conditionalPanel(condition="input.Id039==1|input.Id039==2|input.Id039==4",ns = ns,
+                              bs4Card( width = NULL,status = "success",solidHeader = TRUE,title=tagList(icon=icon("tasks"), "Components"),
+                                       conditionalPanel(condition = "input.Id039==1|input.Id039==2", ns = ns,
+                                                        selectInput(inputId = ns("Id086"), label = "Replicate",choices = "", width =  '100%'  ),
+                                                        awesomeCheckbox(inputId = ns('rep_ran') ,
+                                                                        label='Random Replicate',  
+                                                                        value = FALSE ,status = "danger"  )
+                                                        ),
                                        conditionalPanel(condition="input.Id039==1",ns = ns,
-                                                        selectInput(inputId = ns("Id087"), label = "Block",choices = "", width =  '100%'  )
+                                                        selectInput(inputId = ns("Id087"), label = "Block",choices = "", width =  '100%'  ),
+                                                        awesomeCheckbox(inputId = ns('block_ran') ,
+                                                                        label='Random Block',  
+                                                                        value = TRUE ,status = "danger"  ),
                                        ),
                                        selectizeInput(ns("Id089"), "Covariate ",width = "100%",
                                                       choices = "", multiple = TRUE)
@@ -103,7 +114,7 @@ mod_lme4_single_server <- function(input, output, session, data){
     updateSelectInput(session, "variable2", choices=names(data$data()),selected = "YdHa_clean")
     updateSelectInput(session, "genotipo2", choices=names(data$data()),selected = "line")
     updateSelectInput(session, "Id086", choices=names(data$data()),selected = "rep")
-    updateSelectInput(session, "Id087", choices=names(data$data()),selected = "block")
+    updateSelectInput(session, "Id087", choices=names(data$data()),selected = "NNNNN")
     updateSelectInput(session, "Id089", choices=names(data$data()),selected = NULL)
   })
   
@@ -139,8 +150,17 @@ mod_lme4_single_server <- function(input, output, session, data){
     
     tryCatch(
       { 
-        lme4_single(dt, input$variable2, input$genotipo2, input$res_ran2,
-                input$Id039, input$Id086, input$Id087, input$Id089, input$formula)
+        lme4_single(data = dt,
+                    response =  input$variable2, 
+                    genotype =  input$genotipo2, 
+                    res_ran =  input$res_ran2, 
+                    model = input$Id039, 
+                    replicate =  input$Id086, 
+                    rep_ran = input$rep_ran,
+                    block =  input$Id087, 
+                    block_ran = input$block_ran,
+                    covariate = input$Id089, 
+                    formula =  input$formula)
       },
     error = function(e) {
       shinytoastr::toastr_error(title = "Error:", conditionMessage(e),position =  "bottom-full-width",
@@ -248,7 +268,11 @@ mod_lme4_single_server <- function(input, output, session, data){
       isolate({   
         req(alpha())
         DT::datatable({
-          round((broom.mixed::glance(alpha())),2)
+          if(class(alpha())=="lm"){
+            round(broom.mixed::glance(alpha())[,-c(1:5)],2)
+          } else {
+            round((broom.mixed::glance(alpha())),2)
+          }
         },  options = list(paging = FALSE,searching = FALSE))
       })
     }
@@ -257,20 +281,28 @@ mod_lme4_single_server <- function(input, output, session, data){
   output$printranova<- renderPrint({
     validate(need(input$run!=0,"Run the model"))
     req(alpha())
-    dt <- alpha()@frame
-    lmerTest::ranova(alpha())
+    if(class(alpha())=="lm"){
+      return()
+    } else{
+      dt <- alpha()@frame
+      lmerTest::ranova(alpha())
+    }
   })
   
   output$anovamix <- DT::renderDataTable({  
     req(alpha())
-    nfixed <- nrow(anova(alpha(),ddf = "Kenward-Roger", type = 1))
+    nfixed <- nrow(anova(alpha()))
     if (input$run==0) {return()}
     else if (nfixed<1) {validate(need(nfixed>1,"ANOVA is only calculated for fixed effects"))} 
     else{
-      isolate({    
-        k <- suppressWarnings((broom.mixed::tidy(anova(alpha(),ddf = "Kenward-Roger", type = 1))))
+      isolate({  
+        if(class(alpha())=="lm"){
+          k <- suppressWarnings((broom.mixed::tidy(anova(alpha()))))
+        } else {
+          k <- suppressWarnings((broom.mixed::tidy(anova(alpha(),ddf = "Kenward-Roger", type = 1))))
+        }
         DT::datatable({
-          cbind(term=k[,1],round(k[,2:7],2))
+           dplyr::mutate_if(k, is.numeric, round, digits=2) # cbind(term=k[,1],round(k[,2:7],2))
         },  options = list(paging = FALSE,searching = FALSE))
       })
     }
@@ -323,7 +355,7 @@ mod_lme4_single_server <- function(input, output, session, data){
   
   observeEvent(input$infomix,{
     showModal(modalDialog(
-      title = "Information about Mixed Model", size = "l", easyClose = T,
+      title = "Information about the Model", size = "l", easyClose = T,
       fluidRow( valueBoxOutput(ns("varres"),width = 4),
                 valueBoxOutput(ns("vargen"),width = 4),
                 valueBoxOutput(ns("hcullis"),width = 4)),
@@ -343,6 +375,72 @@ mod_lme4_single_server <- function(input, output, session, data){
     content = function(file) {
       BLUPS <- blup_mix()
       write.csv(BLUPS, file, row.names = FALSE)
+    }
+  )
+  
+  
+
+  # Multiple comp -----------------------------------------------------------
+  
+  differences <- reactive({
+    input$run
+    isolate({
+      req(input$genotipo2)
+      req(alpha())
+      validate(need(input$res_ran2!=TRUE,"Multiple Comparisons only when the genotype is taken as random factor."))
+      predict <- blup_mix()
+      ngen <- nrow(predict)
+      validate(need(ngen<35,"Too many genotypes for Multiple Comparisons"))
+      
+      tryCatch(
+        { 
+          comp <- mult_comp(model = alpha(),
+                            res_ran = input$res_ran2,
+                            genotype = input$genotipo2,
+                            model_class = input$Id039, 
+                            ngen = ngen)
+        },
+        error = function(e) {
+          shinytoastr::toastr_error(title = "Error:", conditionMessage(e),position =  "bottom-full-width",
+                                    showMethod ="slideDown", hideMethod="hide")
+        }
+      )
+      if(!exists("comp")) comp <- NULL
+      return(comp)
+    })
+  })
+  
+  output$table_multcomp <- DT::renderDataTable(
+    if (input$run==0) {return()}
+    else {
+      req(differences())
+      DT::datatable({
+        differences() %>% dplyr::mutate_if(is.numeric, round, 3)
+      },
+      option=list(pageLength=10,columnDefs = list(list(className = 'dt-center', targets = 0:ncol(differences())))),
+      filter="top",
+      selection="multiple"
+      )} )
+  
+  observeEvent(input$multcmp,{
+    showModal(modalDialog(
+      title = "Multiple Comparisons", size = "l", easyClose = T,
+      shinycssloaders::withSpinner(DT::dataTableOutput(ns("table_multcomp")),type = 5,color = "#28a745"),
+      footer = tagList(
+        downloadButton(ns("downloadData"),
+                       "Download", class="btn-success",
+                       style= " color: white ; background-color: #28a745; float:left"),
+        modalButton("Cancel")
+      )
+    ))
+  })
+
+  output$downloadData <- downloadHandler(
+    filename = function() {
+      paste("multp_comparisons_mrbean", ".csv", sep = "")
+    },
+    content = function(file) {
+      write.csv(differences(), file, row.names = FALSE)
     }
   )
   

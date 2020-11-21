@@ -6,8 +6,12 @@ VarG <- function(model, comp){
 }
 
 VarE <- function(model){
-  v <- as.data.frame(VarCorr(model))
-  v <- v[v$grp=="Residual","vcov"]
+  if(class(model)=="lm"){
+    v <- sigma(model)^2
+  } else {
+    v <- as.data.frame(VarCorr(model))
+    v <- v[v$grp=="Residual","vcov"]
+  }
   return(v)
 }
 
@@ -24,7 +28,17 @@ ran <- function(var){
 }
 
 
-lme4_single <- function(data, response, genotype, res_ran, model, replicate, block, covariate, formula){
+lme4_single <- function(data, 
+                        response, 
+                        genotype, 
+                        res_ran, 
+                        model, 
+                        replicate,
+                        rep_ran = FALSE,
+                        block, 
+                        block_ran = TRUE,
+                        covariate,
+                        formula){
   
   dt <- data
   dt$Response  <- dt[ ,response] 
@@ -34,12 +48,19 @@ lme4_single <- function(data, response, genotype, res_ran, model, replicate, blo
     if (model==1) {                                # Alpha-lattice
       dt$Replicate <-as.factor(dt[ ,replicate]  )
       dt$Block  <-as.factor(dt[ ,block] )
-      equation <- reformulate(c(ran("Gen"), "Replicate", ran("Replicate:Block"), covariate), response = "Response")
+      equation <- reformulate(c(ran("Gen"), 
+                                ifelse(rep_ran, ran("Replicate"), "Replicate" ) ,
+                                ifelse(block_ran, ran("Replicate:Block"), "Replicate:Block"),
+                                covariate),
+                              response = "Response")
       Modelo <-  lmerTest::lmer(equation,data=dt)
     }
     else if (model==2)   {                         # Bloques
       dt$Replicate <- as.factor(dt[ ,replicate]  )
-      equation <- reformulate(c(ran("Gen"), "Replicate", covariate), response = "Response")
+      equation <- reformulate(c(ran("Gen"),
+                                ifelse(rep_ran, ran("Replicate"), "Replicate" ),
+                                covariate), 
+                              response = "Response")
       Modelo = lmerTest::lmer(equation, data = dt)
     }
     else if (model==3)  {                          # Free
@@ -53,19 +74,39 @@ lme4_single <- function(data, response, genotype, res_ran, model, replicate, blo
                error = function(e) { shinytoastr::toastr_error(title = "Warning:", conditionMessage(e),position =  "bottom-right",progressBar = TRUE)})
       validate(need(class(Modelo)!="try-error", "Check the formula"))
       Modelo     }
+    else if (model==4) {                           # CRD
+      equation <- reformulate(c(ran("Gen"), covariate), response = "Response")
+      Modelo = lmerTest::lmer(equation, data = dt)
+    }
   }
   
   if(res_ran==FALSE) {
     if (model==1){ 
       dt$Replicate <-as.factor(dt[ ,replicate]  )
       dt$Block  <-as.factor(dt[ ,block]     )
-      equation <- reformulate(c("Gen", "Replicate", ran("Replicate:Block"), covariate), response = "Response")
-      Modelo = lmerTest::lmer(equation, data=dt)
+      if(rep_ran&block_ran){
+        equation <- reformulate(c("Gen", ran("Replicate"), ran("Replicate:Block"), covariate), response = "Response")
+        Modelo = lmerTest::lmer(equation, data=dt)
+      } else if(rep_ran&!block_ran){
+        equation <- reformulate(c("Gen", ran("Replicate"), "Replicate:Block", covariate), response = "Response")
+        Modelo = lmerTest::lmer(equation, data=dt)
+      } else if(!rep_ran&block_ran){
+        equation <- reformulate(c("Gen", "Replicate", ran("Replicate:Block"), covariate), response = "Response")
+        Modelo = lmerTest::lmer(equation, data=dt)
+      } else {
+        equation <- reformulate(c("Gen", "Replicate", "Replicate:Block", covariate), response = "Response")
+        Modelo = lm(equation, data = dt)
+      }
       Modelo }
     else if (model==2)   {
       dt$Replicate <-as.factor(dt[ ,replicate]  )
-      equation <- reformulate(c("Gen", ran("Replicate"), covariate), response = "Response")
-      Modelo = lmerTest::lmer(equation,data=dt)
+      if(rep_ran){
+        equation <- reformulate(c("Gen", ran("Replicate"), covariate), response = "Response")
+        Modelo = lmerTest::lmer(equation,data=dt)
+      } else {
+        equation <- reformulate(c("Gen", "Replicate", covariate), response = "Response")
+        Modelo = lm(equation,data=dt)
+      }
       Modelo }
     else if (model==3)  {  
       gen <-  paste(genotype)
@@ -74,17 +115,26 @@ lme4_single <- function(data, response, genotype, res_ran, model, replicate, blo
       } else { gen <- gen }
       
       equation <- as.formula(paste0(response," ~ ", gen, formula))
-      Modelo = try(lmerTest::lmer(formula = equation , data=dt ),silent = TRUE)
+      ind <- sum(grepl("(", equation, fixed = TRUE))==0
+      if(ind){
+        Modelo <- try(lm(formula = equation , data=dt ),silent = TRUE)
+      } else {
+        Modelo = try(lmerTest::lmer(formula = equation , data=dt ),silent = TRUE)
+      }
+      
       tryCatch({ if(class(Modelo)=="try-error") stop("Error in formula")},
                error = function(e) { shinytoastr::toastr_error(title = "Warning:", conditionMessage(e),position =  "bottom-right",progressBar = TRUE)})
       validate(need(class(Modelo)!="try-error", "Check the formula"))
       Modelo     
     }
+    else if (model==4) {                           # CRD
+      equation <- reformulate(c("Gen", covariate), response = "Response")
+      Modelo = lm(equation, data = dt)
+    }
   }
   
   return(Modelo)
 }
-
 
 
 
@@ -117,25 +167,52 @@ lme4_effects <- function(model, genotype, res_ran, model_class){
     }
   } else {
     if (model_class==3) {
-      BLUES <- data.frame(lmerTest::ls_means(model,genotype))
-      BLUES <-  dplyr::arrange(BLUES,desc(Estimate))
-      BLUES
+      if(class(model)=="lm"){
+        form_equa <- reformulate(termlabels = genotype)
+        BLUES <-  data.frame(emmeans::emmeans(model, form_equa))  # Instalar emmeans
+        BLUES <- BLUES %>% dplyr::select(-df) %>% dplyr::mutate_if(is.numeric, round, digits=2)
+        names(BLUES) <- c("Genotype","Estimation", "Std.Error", "lower", "upper")
+        BLUES
+      } else {
+        BLUES <- data.frame(lmerTest::ls_means(model,genotype))
+        BLUES <-  dplyr::arrange(BLUES,desc(Estimate))
+        BLUES <- BLUES %>%
+          dplyr::mutate_if(is.numeric, round, digits=2) %>%
+          dplyr::select(levels, Estimate, "Std..Error", lower, upper )
+        names(BLUES) <- c("Genotype","Estimation", "Std.Error", "lower", "upper")
+        BLUES
+      }
+    } else {
+      
+      if(class(model)=="lm"){
+        BLUES <-  data.frame(emmeans::emmeans(model, ~ Gen))  # Instalar emmeans
+        BLUES <- BLUES %>% dplyr::select(-df) %>% dplyr::mutate_if(is.numeric, round, digits=2)
+        names(BLUES) <- c("Genotype","Estimation", "Std.Error", "lower", "upper")
+        BLUES
+      } else{
+        BLUES <- data.frame(lmerTest::ls_means(model,"Gen"))  # "Gen"  fue cambiado por input$genotipo2
+        BLUES <-  dplyr::arrange(BLUES,desc(Estimate))
+        BLUES <- BLUES %>%
+          dplyr::mutate_if(is.numeric, round, digits=2) %>%
+          dplyr::select(levels, Estimate, "Std..Error", lower, upper )
+        names(BLUES) <- c("Genotype","Estimation", "Std.Error", "lower", "upper")
+        BLUES
+      }
     }
-    BLUES <- data.frame(lmerTest::ls_means(model,"Gen"))  # "Gen"  fue cambiado por input$genotipo2
-    BLUES <-  dplyr::arrange(BLUES,desc(Estimate))
-    BLUES <- BLUES %>%
-              dplyr::mutate_if(is.numeric, round, digits=2) %>%
-              dplyr::select(levels, Estimate, "Std..Error", lower, upper )
-    names(BLUES) <- c("Genotype","Estimation", "Std.Error", "lower", "upper")
-    BLUES
+
   }
 }
 
 
 
 res_data_lme4 <- function(Model){
-  Data <- Model@frame
-  VarE <- VarE(Model)  
+  if(class(Model)=="lm"){
+    Data <- Model$model
+    VarE <- sigma(Model)^2
+  } else {
+    Data <- Model@frame
+    VarE <- VarE(Model) 
+  }
   Data$Index <- 1:length(residuals(Model))
   Data$Residuals <- residuals(Model)
   u <- +3*sqrt(VarE)
@@ -152,7 +229,24 @@ res_data_lme4 <- function(Model){
 
 
 
-
+mult_comp <- function(model, res_ran, genotype, model_class, ngen){
+  
+  if(ngen > 35) return()
+  if(res_ran==TRUE){
+    return()
+  } else{
+    if(model_class==3){
+      pair <-  model %>%
+        emmeans::emmeans(pairwise ~ genotype, adjust="tukey") %>%  .$contrasts %>% data.frame() %>% 
+        dplyr::mutate_if(is.numeric, round, digits=3)
+    } else {
+      pair <- model %>% 
+        emmeans::emmeans(pairwise ~ "Gen", adjust="tukey") %>% .$contrasts %>% data.frame() %>% 
+        dplyr::mutate_if(is.numeric, round, digits=3)
+    }
+  }
+  return(pair)
+}
 
 
 
