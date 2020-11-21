@@ -48,6 +48,7 @@ usethis::use_package( "psych" )
 usethis::use_package( "sever" )
 usethis::use_package( "waiter" )
 usethis::use_package( "ggrepel" )
+usethis::use_package( "emmeans" )
 
 ## Add modules ----
 ## Create a module infrastructure in R/
