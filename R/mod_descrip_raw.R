@@ -129,7 +129,10 @@ mod_descrip_raw_server <- function(input, output, session, data, plot = c(1,2) )
         return(
           tagList(
             br(),
-            h5(Corr) # style="text-align: center;"
+            materialSwitch(ns("corr_togg"),label = "Correlation",status = "success", right = T, width = "100%"),
+            div(id=ns("corr_show"),
+                h5(Corr) # style="text-align: center;"
+                )
               )
             )
     } else {
@@ -137,6 +140,8 @@ mod_descrip_raw_server <- function(input, output, session, data, plot = c(1,2) )
     }
     })
   })  
+  
+  observeEvent(input$corr_togg==TRUE, toggle("corr_show",anim = TRUE,time = 1,animType = "fade"))
   
 
 # valuebox ----------------------------------------------------------------

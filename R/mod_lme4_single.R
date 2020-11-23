@@ -387,7 +387,7 @@ mod_lme4_single_server <- function(input, output, session, data){
     isolate({
       req(input$genotipo2)
       req(alpha())
-      validate(need(input$res_ran2!=TRUE,"Multiple Comparisons only when the genotype is taken as random factor."))
+      validate(need(input$res_ran2!=TRUE,"Multiple Comparisons only when the genotype is taken as fixed factor."))
       predict <- blup_mix()
       ngen <- nrow(predict)
       validate(need(ngen<50,"Too many genotypes for Multiple Comparisons"))
