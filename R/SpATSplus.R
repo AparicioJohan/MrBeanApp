@@ -404,8 +404,113 @@ weight_SpATS <- function(model){
               se2 = Se2, se = sqrt(Se2), data_weights= data_weights))
 }
 
+Lik.ratio.test <- function(Model_nested,Model_full){
+  
+  lo.lik1 <- Model_nested/-2
+  lo.lik2 <- Model_full/-2
+  
+  d <- 2*(lo.lik2-lo.lik1)
+  
+  p.value1=round(1 - pchisq(d, 1), 3)
+  
+  siglevel <- 0
+  if (abs(p.value1) < 0.05) {
+    siglevel <- "*"
+  }
+  else {
+    siglevel <- "Not signif"
+  }
+  if (abs(p.value1) < 0.01) {
+    siglevel <- "**"
+  }
+  if (abs(p.value1) < 0.001) {
+    siglevel <- "***"
+  }
+  
+  names(p.value1) <- "p-value"
+  cat("\n========================================================")
+  cat("\n", "Likelihood Ratio Test")
+  cat("\n", "p-value =" ,p.value1, siglevel)
+  cat("\n", "Sig.level: 0'***' 0.001 '**' 0.01 '*' 0.05 'Not signif' 1\n")
+  cat("========================================================")
+  
+}
 
-
+varComp <- function(object, which = "variances"){
+  which <- match.arg(which)
+  var.comp <- object$var.comp
+  psi <- object$psi[1]
+  nterms <- length(var.comp)
+  model <- names(var.comp)
+  col.names <- c("Variance", "SD", "log10(lambda)")
+  row.names <- c(model, NA, "Residual")
+  vc <- matrix(ncol = 3, nrow = nterms + 2, dimnames = list(row.names, 
+                                                            col.names))
+  vc[, 1] <- c(sprintf("%.3e", var.comp), NA, sprintf("%.3e", 
+                                                      psi))
+  vc[, 2] <- c(sprintf("%.3e", sqrt(var.comp)), NA, sprintf("%.3e", 
+                                                            sqrt(psi)))
+  vc[, 3] <- c(sprintf("%.5f", log10(psi/var.comp)), NA, NA)
+  eff.dim <- object$eff.dim
+  dim <- object$dim
+  dim.nom <- object$dim.nom
+  tot_ed <- sum(eff.dim, na.rm = TRUE)
+  tot_dim <- sum(dim, na.rm = TRUE)
+  dim.new <- dim[match(names(eff.dim), names(dim))]
+  dim.nom <- dim.nom[match(names(eff.dim), names(dim.nom))]
+  type <- rep(NA, length = length(dim.new))
+  type[(attr(dim, "random") & !attr(dim, "spatial"))[match(names(eff.dim), 
+                                                           names(dim))]] <- "R"
+  type[(!attr(dim, "random") & !attr(dim, "spatial"))[match(names(eff.dim), 
+                                                            names(dim))]] <- "F"
+  type[is.na(type)] <- "S"
+  eff.dim.new <- eff.dim
+  smooth.comp <- attr(object$terms$spatial, "term")
+  if (paste(smooth.comp, "Global") %in% names(dim)) {
+    dim.new <- c(dim.new, dim[paste(smooth.comp, "Global")])
+    dim.nom <- c(dim.nom, dim[paste(smooth.comp, "Global")])
+    eff.dim.new <- c(eff.dim.new, sum(eff.dim.new[grep(smooth.comp, 
+                                                       names(eff.dim.new), fixed = TRUE)]))
+    names(eff.dim.new)[length(eff.dim.new)] <- paste(smooth.comp, 
+                                                     "Global")
+    type <- c(type, "S")
+  }
+  ord <- c(which(type == "F"), which(type == "R"), which(type == 
+                                                           "S"))
+  eff.dim.new <- eff.dim.new[ord]
+  dim.new <- dim.new[ord]
+  dim.nom <- dim.nom[ord]
+  model <- model[ord]
+  type <- type[ord]
+  nterms <- length(eff.dim.new)
+  model <- names(eff.dim.new)
+  Nobs <- object$nobs
+  col.names <- c("Effective", "Model", "Nominal", "Ratio", 
+                 "Type")
+  row.names <- c(model, NA, "Total", "Residual", "Nobs")
+  m <- matrix(ncol = 5, nrow = nterms + 4, dimnames = list(row.names, 
+                                                           col.names))
+  m[, 1] <- c(sprintf("%.1f", eff.dim.new), NA, sprintf("%.1f", 
+                                                        tot_ed), sprintf("%.1f", Nobs - tot_ed), sprintf("%.0f", 
+                                                                                                         Nobs))
+  m[, 2] <- c(sprintf("%.0f", dim.new), NA, sprintf("%.0f", 
+                                                    tot_dim), NA, NA)
+  m[, 3] <- c(sprintf("%.0f", dim.nom), NA, sprintf("%.0f", 
+                                                    sum(dim.nom, na.rm = TRUE)), NA, NA)
+  m[, 4] <- c(sprintf("%.2f", eff.dim.new/dim.nom), NA, sprintf("%.2f", 
+                                                                tot_ed/sum(dim.nom, na.rm = TRUE)), NA, NA)
+  m[, 5] <- c(type, NA, NA, NA, NA)
+  object$p.table.vc <- vc
+  object$p.table.dim <- m
+  class(object) <- "summary.SpATS"
+  
+  v_name <- as.character(na.omit(row.names(vc)))
+  vc <- vc %>% as.data.frame() %>% type.convert() %>%  dplyr::mutate_if(is.numeric, round, 3)
+  vc <- vc[-c(nrow(vc)-1),]
+  vc$Component <- v_name
+  vc <- vc[,c(4,1:3)]
+  return(vc)
+}
 
 
 # Daniel Ariza

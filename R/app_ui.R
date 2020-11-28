@@ -20,14 +20,10 @@ app_ui <- function(request) {
           show = FALSE,
           labelText = "!",
           status = "danger",
-          src = "https://www.google.fr",
+          src = "http://buymeacoffee.com/mrbean",
           bs4DropdownMenuItem(
-            message  = "message 1",
-            time = "today"
-          ),
-          bs4DropdownMenuItem(
-            message = "message 2",
-            time = "yesterday"
+            message  = "If you want to contribute...",
+            type = "notification"
           )
         )
       ),

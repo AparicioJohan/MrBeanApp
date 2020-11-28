@@ -129,7 +129,10 @@ mod_descrip_raw_server <- function(input, output, session, data, plot = c(1,2) )
         return(
           tagList(
             br(),
-            materialSwitch(ns("corr_togg"),label = "Correlation",status = "success", right = T, width = "100%"),
+            prettyCheckbox(
+              inputId = ns("corr_togg"), label = "Correlation", icon = icon("check"),outline = TRUE,fill = FALSE,shape="square",
+              animation = "tada", value=TRUE,status = "success"
+            ),
             div(id=ns("corr_show"),
                 h5(Corr) # style="text-align: center;"
                 )
@@ -141,8 +144,13 @@ mod_descrip_raw_server <- function(input, output, session, data, plot = c(1,2) )
     })
   })  
   
-  observeEvent(input$corr_togg==TRUE, toggle("corr_show",anim = TRUE,time = 1,animType = "fade"))
-  
+  observeEvent(input$corr_togg,{
+    if(input$corr_togg==F ){
+      shinyjs::hide("corr_show",animType = "fade",anim = TRUE)
+    } else {
+      shinyjs::show("corr_show",animType = "fade",anim = TRUE)
+    }
+  })
 
 # valuebox ----------------------------------------------------------------
 

@@ -141,7 +141,7 @@ lme4_single <- function(data,
 lme4_effects <- function(model, genotype, res_ran, model_class){
   if (res_ran==TRUE) {
     if (model_class==3) {
-      BLUPS <- ranef(model)[[genotype]]#+fixef(model)[1]
+      BLUPS <- ranef(model)[[genotype]] + mean(model@frame[[1]], na.rm = T)
       BLUPS <- data.frame(as.factor(row.names(BLUPS)),BLUPS[,1])
       colnames(BLUPS) <- c("Genotype","Effect")
       BLUPS <- dplyr::arrange(BLUPS,desc(Effect))
@@ -153,7 +153,7 @@ lme4_effects <- function(model, genotype, res_ran, model_class){
       BLUPS <- merge(BLUPS,d,by.x="Line",by.y="level")
       BLUPS
     } else {     
-      BLUPS <- ranef(model)[["Gen"]]#+fixef(model)[1]
+      BLUPS <- ranef(model)[["Gen"]] + mean(model@frame[[1]], na.rm = T)
       BLUPS <- data.frame(as.factor(row.names(BLUPS)),BLUPS[,1])
       colnames(BLUPS) <- c("Genotype","Effect")
       BLUPS <- dplyr::arrange(BLUPS,desc(Effect))

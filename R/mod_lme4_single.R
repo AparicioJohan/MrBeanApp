@@ -99,7 +99,8 @@ mod_lme4_single_ui <- function(id){
               bs4Card(width = 6,status = "success", solidHeader = TRUE, style = "overflow-x: scroll;",
                       title=tagList(icon=icon("sort-numeric-up "), "Effects"),
                       shinycssloaders::withSpinner(DT::dataTableOutput(ns("blups_mixed")),type = 6,color = "#28a745"),
-                      downloadButton(ns("desc_mixed"), "Download table",style= " color: white ; background-color: #28a745")))
+                      downloadButton(ns("desc_mixed"), "Download table", class="btn-success",
+                                     style="display:rigth ;color: white  ; background-color: #00a65a")))
   )
 }
     

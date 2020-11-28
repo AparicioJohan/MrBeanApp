@@ -16,7 +16,7 @@ mod_distribution_ui <- function(id){
             bs4Dash::box(width = 12,status = "success",title = "Descriptive",
                    selectInput(inputId = ns("Id088"), label = "Select variable",choices = "", width =  '100%'  ),
                    sliderInput(ns("alphagg"), label = "Alpha Bar", min = 0, max =  1, value =  0.9 ,width = "100%" ),
-                   sliderInput(ns("bindwidth"), label = "Bindwidth", min = 3, max =  150, value =  30 ,width = "100%", step = 10 ),
+                   sliderInput(ns("bindwidth"), label = "Bindwidth", min = 3, max =  150, value =  30 ,width = "100%", step = 2 ),
                    awesomeCheckbox(inputId = ns("factor_hist"),
                                    label = "Grouping variable?",
                                    value = F,

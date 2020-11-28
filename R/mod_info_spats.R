@@ -54,9 +54,15 @@ mod_info_spats_ui <- function(id){
                              ),
                              shinycssloaders::withSpinner(plotOutput(ns("plot_spats")),type = 5,color = "#28a745"),icon = icon("th")
                  ),
-                 bs4TabPanel(tabName = "Var-Components",icon = icon("signal"),
+                 bs4TabPanel(tabName = "Variance-Plot",icon = icon("signal"),
                              shinycssloaders::withSpinner(plotly::plotlyOutput(ns("varcomp"),height = "500px"),type = 5,color = "#28a745")
-                             )
+                             ),
+                 bs4TabPanel(tabName = "Variance-Table",icon = icon("table"),
+                             shinycssloaders::withSpinner(DT::dataTableOutput(ns("vartable")),type = 6,color = "#28a745"),
+                             downloadButton(ns("downloadTable"), 
+                                            "Download Table", class="btn-success",
+                                            style= " color: white ; background-color: #28a745; float:left")
+                 )
       ),
       bs4Dash::box(status = "success",width = 6,collapsible = TRUE,collapsed = T,
                    title =   tagList(icon=icon("cloud-sun-rain"), "Spatial Trend")  ,solidHeader = TRUE,maximizable = T,
@@ -130,6 +136,34 @@ mod_info_spats_server <- function(input, output, session, Model){
       p
     })
   })
+  
+  ## to output varcomponents
+  variances <- reactive({
+    Model$action()
+    req(modelo())
+    varComp(modelo())
+  })
+  
+  output$vartable <- DT::renderDataTable(
+    if (Model$action()==0) {return()}
+    else {
+      DT::datatable({
+        variances() %>% dplyr::mutate_if(is.numeric, round, 3)
+      },
+      option=list(pageLength=5, lengthMenu = c(1:nrow(variances())),
+                  columnDefs = list(list(className = 'dt-center', targets = 0:ncol(variances())))),
+      filter="top",
+      selection="multiple"
+      )} )
+  
+  output$downloadTable <- downloadHandler(
+    filename = function() {
+      paste("varcomp_SpATS", ".csv", sep = "")
+    },
+    content = function(file) {
+      write.csv(variances(), file, row.names = FALSE)
+    }
+  )
   
   
   # BOXES
