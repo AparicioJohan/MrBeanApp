@@ -52,7 +52,9 @@ mod_info_spats_ui <- function(id){
                                style = "unite", icon = icon("gear"),
                                status = "warning", width = "300px"
                              ),
-                             shinycssloaders::withSpinner(plotOutput(ns("plot_spats")),type = 5,color = "#28a745"),icon = icon("th")
+                             shinycssloaders::withSpinner(plotOutput(ns("plot_spats")),type = 5,color = "#28a745"),
+                             materialSwitch(ns("tog_plot"),label = "Percentage",status = "success", value = FALSE),
+                             icon = icon("th")
                  ),
                  bs4TabPanel(tabName = "Variance-Plot",icon = icon("signal"),
                              shinycssloaders::withSpinner(plotly::plotlyOutput(ns("varcomp"),height = "500px"),type = 5,color = "#28a745")
@@ -86,7 +88,11 @@ mod_info_spats_server <- function(input, output, session, Model){
   
   output$plot_spats <- renderPlot({
     Model$action()
-      plot(isolate(modelo()))
+    input$tog_plot
+    isolate({
+      spaTrend <- ifelse(input$tog_plot==TRUE, "percentage", "raw")  
+      plot(modelo(), spaTrend = spaTrend)
+    })
   })
 
   output$summary2 <- renderPrint({
@@ -232,11 +238,13 @@ mod_info_spats_server <- function(input, output, session, Model){
     content = function(file){
       if(input$typefile=="png") {
         png(file,width = input$png.wid ,height = input$png.hei)
-        plot(modelo(),cex.lab = 1.5, cex.main = 2, cex.axis = 1.5, axis.args = list(cex.axis = 1.2))
+        spaTrend <- ifelse(input$tog_plot==TRUE, "percentage", "raw") 
+        plot(modelo(),spaTrend = spaTrend, cex.lab = 1.5, cex.main = 2, cex.axis = 1.5, axis.args = list(cex.axis = 1.2))
         dev.off()
       } else { 
         pdf(file,width = input$pdf.wid , height = input$pdf.hei )
-        plot(modelo(),cex.lab = 1.5, cex.main = 2, cex.axis = 1.5, axis.args = list(cex.axis = 1.2))
+        spaTrend <- ifelse(input$tog_plot==TRUE, "percentage", "raw") 
+        plot(modelo(),spaTrend = spaTrend, cex.lab = 1.5, cex.main = 2, cex.axis = 1.5, axis.args = list(cex.axis = 1.2))
         dev.off()
       }
     }

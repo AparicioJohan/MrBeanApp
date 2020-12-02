@@ -37,7 +37,30 @@ mod_MSA_results_ui <- function(id){
                               bs4TabCard(width = 12,id = "tabcards",tabStatus = "light",maximizable = T,solidHeader = T,closable = F,
                                          status ="success", 
                                          bs4TabPanel(tabName = "Correlation",
-                                                     echarts4r::echarts4rOutput(ns("correlation")),
+                                                     # echarts4r::echarts4rOutput(ns("correlation")),
+                                                     dropdown(
+                                                       prettyRadioButtons(inputId = ns("type"),label = "Download Plot File Type", outline = TRUE,fill = FALSE,shape = "square",inline = TRUE,
+                                                                          choices = list(PNG="png",PDF="pdf"),
+                                                                          icon = icon("check"),animation = "tada" ),
+                                                       conditionalPanel(condition="input.type=='png'", ns = ns,
+                                                                        sliderInput(inputId=ns("png.wid.c"),min = 200,max = 2000,value = 900,label = "Width pixels") ,
+                                                                        sliderInput(inputId=ns("png.hei.c"),min = 200,max = 2000,value = 600,label = "Height pixels")
+                                                       ),
+                                                       conditionalPanel(condition="input.type=='pdf'", ns = ns,
+                                                                        sliderInput(inputId=ns("pdf.wid.c"),min = 2,max = 20,value = 10,label = "Width") ,
+                                                                        sliderInput(inputId=ns("pdf.hei.c"),min = 2,max = 20,value = 8,label = "Height")
+                                                       ),
+                                                       
+                                                       downloadButton(ns("descargar2"), "Download Plot", class="btn-success",
+                                                                      style= " color: white ; background-color: #28a745"), br() ,
+                                                       animate = shinyWidgets::animateOptions(
+                                                         enter = shinyWidgets::animations$fading_entrances$fadeInLeftBig,
+                                                         exit  = shinyWidgets::animations$fading_exits$fadeOutLeftBig
+                                                       ),
+                                                       style = "unite", icon = icon("gear"),
+                                                       status = "warning", width = "300px"
+                                                     ),
+                                                     shinycssloaders::withSpinner(plotOutput(ns("corr")),type = 5,color = "#28a745"),
                                                      icon = icon("arrow-circle-right")
                                          ),
                                          bs4TabPanel(tabName = "Summary", 
@@ -299,43 +322,72 @@ mod_MSA_results_server <- function(input, output, session, msa){
     )
   })
 
-
-  output$correlation <- echarts4r::renderEcharts4r({
+  ## Interactive  Correlation 
+  
+  # output$correlation <- echarts4r::renderEcharts4r({
+  #   msa$run()
+  #   req(blups())
+  #   req(summary_msa())
+  #   
+  #   tryCatch(
+  #     {
+  #       var2 <- names(summary_msa())[2]
+  #       # exp <- summary_msa() %>% dplyr::filter(!.data[[var2]]==0) %>% dplyr::pull(Experiment) %>% as.character()  # check when genotype is fixed
+  #       bl <- blups() # %>% dplyr::filter(Experiment %in% exp) %>% droplevels()
+  #       bl <- bl[,1:3] %>% tidyr::spread(., "Experiment", "predicted.values" )
+  #       
+  #       CC <- round(cor(bl[,-1], use = "pairwise.complete.obs"),3)
+  #       g3 <- CC %>%
+  #         e_charts() %>%
+  #         e_correlations(order = "hclust",visual_map = F) %>%
+  #         e_tooltip() %>%   e_visual_map( color=c("#4285f4" ,"white","#db4437"),
+  #                                         min = -1 ,
+  #                                         max =  1 ,
+  #                                         orient= 'horizontal',
+  #                                         left= 'center',
+  #                                         bottom = 'bottom'
+  #         ) %>%
+  #         e_title("Correlation", "Between experiments") %>%
+  #         e_toolbox_feature(feature = "saveAsImage") %>%
+  #         e_x_axis(axisLabel = list(interval = 0, rotate = -45, fontSize=12 , margin=8  ))  %>% # rotate
+  #         e_grid(left = "20%",height = "60%")
+  #     },
+  #     error = function(e) {
+  #       shinytoastr::toastr_error(title = "Error:", conditionMessage(e),position =  "bottom-full-width",
+  #                                 showMethod ="slideDown", hideMethod="hide", hideEasing = "linear")
+  #     }
+  #   )
+  #   if(!exists("g3")) g3 <- NULL
+  #   
+  #   return(g3)
+  #   
+  # })
+  
+  output$corr <- renderPlot({
     msa$run()
-    req(blups())
-    req(summary_msa())
-    
-    tryCatch(
-      {
-        var2 <- names(summary_msa())[2]
-        # exp <- summary_msa() %>% dplyr::filter(!.data[[var2]]==0) %>% dplyr::pull(Experiment) %>% as.character()  # check when genotype is fixed
-        bl <- blups() # %>% dplyr::filter(Experiment %in% exp) %>% droplevels()
-        bl <- bl[,1:3] %>% tidyr::spread(., "Experiment", "predicted.values" )
-        
-        CC <- round(cor(bl[,-1], use = "pairwise.complete.obs"),3)
-        g3 <- CC %>%
-          e_charts() %>%
-          e_correlations(order = "hclust",visual_map = F) %>%
-          e_tooltip() %>%   e_visual_map( color=c("#4285f4" ,"white","#db4437"),
-                                          min = -1 ,
-                                          max =  1 ,
-                                          orient= 'horizontal',
-                                          left= 'center',
-                                          bottom = 'bottom'
-          ) %>%
-          e_title("Correlation", "Between experiments") %>%
-          e_toolbox_feature(feature = "saveAsImage") %>%
-          e_x_axis(axisLabel = list(interval = 0, rotate = -45, fontSize=12 , margin=8  ))  %>% # rotate
-          e_grid(left = "20%",height = "60%")
-      },
-      error = function(e) {
-        shinytoastr::toastr_error(title = "Error:", conditionMessage(e),position =  "bottom-full-width",
-                                  showMethod ="slideDown", hideMethod="hide", hideEasing = "linear")
-      }
-    )
-    if(!exists("g3")) g3 <- NULL
-    
-    return(g3)
+    isolate({
+      req(blups())
+      req(summary_msa())
+      tryCatch(
+        {
+          bl <- blups()
+          bl <- bl[,1:3] %>% tidyr::spread(., "Experiment", "predicted.values" )  
+          resum <- msa_table(models(), msa$gen_ran())
+          names(resum)[1] <- "Experiment"
+          if(msa$gen_ran()==TRUE){
+            Heritability <- resum$h2
+            names(Heritability) <- resum$Experiment
+            ggCor(bl[,-1],colours = c("#db4437","white","#4285f4"), Diag = Heritability) 
+          } else {
+            ggCor(bl[,-1],colours = c("#db4437","white","#4285f4")) 
+          }
+        },
+            error = function(e) {
+              shinytoastr::toastr_error(title = "Error:", conditionMessage(e),position =  "bottom-full-width",
+                                        showMethod ="slideDown", hideMethod="hide", hideEasing = "linear")
+            }
+      )
+    })
     
   })
 
@@ -403,6 +455,52 @@ mod_MSA_results_server <- function(input, output, session, msa){
       req(blups())
       datos <- data.frame(blups()[,1:3] %>% tidyr::spread(., "Experiment", "predicted.values" ))
       write.csv(datos, file, row.names = FALSE)
+    }
+  )
+  
+  
+  # Download correlation plot
+  
+  output$descargar2 <- downloadHandler(
+    filename = function() {
+      paste("corrPlot", input$type, sep = ".")
+    },
+    content = function(file){
+      if(input$type=="png") {
+        png(file,width = input$png.wid.c ,height = input$png.hei.c)
+        req(blups())
+        bl <- blups()
+        bl <- bl[,1:3] %>% tidyr::spread(., "Experiment", "predicted.values" )  
+        resum <- msa_table(models(), msa$gen_ran())
+        names(resum)[1] <- "Experiment"
+        if(msa$gen_ran()==TRUE){
+          Heritability <- resum$h2
+          names(Heritability) <- resum$Experiment
+          g1 <- ggCor(bl[,-1],colours = c("#db4437","white","#4285f4"), Diag = Heritability) 
+          print(g1)
+        } else {
+          g1 <- ggCor(bl[,-1],colours = c("#db4437","white","#4285f4")) 
+          print(g1)
+        }
+        dev.off()
+      } else { 
+        pdf(file,width = input$pdf.wid.c , height = input$pdf.hei.c )
+        req(blups())
+        bl <- blups()
+        bl <- bl[,1:3] %>% tidyr::spread(., "Experiment", "predicted.values" )  
+        resum <- msa_table(models(), msa$gen_ran())
+        names(resum)[1] <- "Experiment"
+        if(msa$gen_ran()==TRUE){
+          Heritability <- resum$h2
+          names(Heritability) <- resum$Experiment
+          g1 <- ggCor(bl[,-1],colours = c("#db4437","white","#4285f4"), Diag = Heritability) 
+          print(g1)
+        } else {
+          g1 <- ggCor(bl[,-1],colours = c("#db4437","white","#4285f4")) 
+          print(g1)
+        }
+        dev.off()
+      }
     }
   )
 
