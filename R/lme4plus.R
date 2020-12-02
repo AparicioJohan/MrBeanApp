@@ -37,6 +37,10 @@ lme4_single <- function(data,
                         rep_ran = FALSE,
                         block, 
                         block_ran = TRUE,
+                        col = "",
+                        col_ran = TRUE,
+                        row = "",
+                        row_ran = TRUE,
                         covariate,
                         formula){
   
@@ -76,6 +80,26 @@ lme4_single <- function(data,
       Modelo     }
     else if (model==4) {                           # CRD
       equation <- reformulate(c(ran("Gen"), covariate), response = "Response")
+      Modelo = lmerTest::lmer(equation, data = dt)
+    }
+    else if (model==5) {
+      dt$col_f  <- as.factor(dt[ ,col] )
+      dt$row_f  <- as.factor(dt[ ,row] )
+      if(replicate!=""){
+        dt$Replicate <-as.factor(dt[ ,replicate])
+        equation <- reformulate(c(ran("Gen"), 
+                                  ifelse(rep_ran, ran("Replicate"), "Replicate" ),
+                                  ifelse(col_ran, ran("Replicate:col_f"), "Replicate:col_f" ) ,
+                                  ifelse(row_ran, ran("Replicate:row_f"), "Replicate:row_f"),
+                                  covariate),
+                                response = "Response")
+      } else {
+        equation <- reformulate(c(ran("Gen"), 
+                                  ifelse(col_ran, ran("col_f"), "col_f" ) ,
+                                  ifelse(row_ran, ran("row_f"), "row_f"),
+                                  covariate),
+                                response = "Response")
+      }
       Modelo = lmerTest::lmer(equation, data = dt)
     }
   }
@@ -130,6 +154,32 @@ lme4_single <- function(data,
     else if (model==4) {                           # CRD
       equation <- reformulate(c("Gen", covariate), response = "Response")
       Modelo = lm(equation, data = dt)
+    }
+    else if (model==5) {
+      dt$col_f  <- as.factor(dt[ ,col] )
+      dt$row_f  <- as.factor(dt[ ,row] )
+      if(replicate!=""){
+        dt$Replicate <-as.factor(dt[ ,replicate])
+        equation <- reformulate(c("Gen", 
+                                  ifelse(rep_ran, ran("Replicate"), "Replicate" ),
+                                  ifelse(col_ran, ran("Replicate:col_f"), "Replicate:col_f" ) ,
+                                  ifelse(row_ran, ran("Replicate:row_f"), "Replicate:row_f"),
+                                  covariate),
+                                response = "Response")
+   
+      } else {
+        equation <- reformulate(c("Gen", 
+                                  ifelse(col_ran, ran("col_f"), "col_f" ) ,
+                                  ifelse(row_ran, ran("row_f"), "row_f"),
+                                  covariate),
+                                response = "Response")
+      }
+      ind <- sum(grepl("(", equation, fixed = TRUE))==0
+      if(ind){
+        Modelo <- lm(formula = equation , data=dt )
+      } else {
+        Modelo = lmerTest::lmer(formula = equation , data=dt )
+      }
     }
   }
   
@@ -236,8 +286,9 @@ mult_comp <- function(model, res_ran, genotype, model_class, ngen){
     return()
   } else{
     if(model_class==3){
+      form_equa <- reformulate(termlabels = genotype,  response = "pairwise")
       pair <-  model %>%
-        emmeans::emmeans(pairwise ~ genotype, adjust="tukey") %>%  .$contrasts %>% data.frame() %>% 
+        emmeans::emmeans(form_equa, adjust="tukey") %>%  .$contrasts %>% data.frame() %>% 
         dplyr::mutate_if(is.numeric, round, digits=3)
     } else {
       pair <- model %>% 

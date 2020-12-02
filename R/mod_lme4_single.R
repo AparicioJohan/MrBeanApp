@@ -43,7 +43,7 @@ mod_lme4_single_ui <- function(id){
                prettyRadioButtons(
                  inputId = ns("Id039"),
                  label = "Choose:", 
-                 choices = c("Alpha-Lattice"=1, "RCBD"=2, "CRD"=4 , "Other model"=3),
+                 choices = c("Alpha-Lattice"=1,"Row-Col"=5, "RCBD"=2, "CRD"=4 , "Other model"=3),
                  icon = icon("check"), 
                  bigger = TRUE,
                  status = "success",
@@ -58,9 +58,9 @@ mod_lme4_single_ui <- function(id){
                br(),br(),
                actionLink(inputId = ns("Rlinklme"), label = "Residuals", icon = icon("arrow-right"), style = "color: #28a745")),
       column(3,
-             conditionalPanel(condition="input.Id039==1|input.Id039==2|input.Id039==4",ns = ns,
+             conditionalPanel(condition="input.Id039==1|input.Id039==2|input.Id039==4|input.Id039==5",ns = ns,
                               bs4Card( width = NULL,status = "success",solidHeader = TRUE,title=tagList(icon=icon("tasks"), "Components"),
-                                       conditionalPanel(condition = "input.Id039==1|input.Id039==2", ns = ns,
+                                       conditionalPanel(condition = "input.Id039==1|input.Id039==2|input.Id039==5", ns = ns,
                                                         selectInput(inputId = ns("Id086"), label = "Replicate",choices = "", width =  '100%'  ),
                                                         awesomeCheckbox(inputId = ns('rep_ran') ,
                                                                         label='Random Replicate',  
@@ -71,6 +71,22 @@ mod_lme4_single_ui <- function(id){
                                                         awesomeCheckbox(inputId = ns('block_ran') ,
                                                                         label='Random Block',  
                                                                         value = TRUE ,status = "danger"  ),
+                                       ),
+                                       conditionalPanel(condition="input.Id039==5",ns = ns,
+                                                        fluidRow(
+                                                          col_6(
+                                                            selectInput(inputId = ns("ccol"), label = "Col", choices = "", width =  '100%'  ),
+                                                            awesomeCheckbox(inputId = ns('col_ran') ,
+                                                                            label='Random Col',  
+                                                                            value = TRUE ,status = "danger"  )
+                                                          ),
+                                                          col_6(
+                                                            selectInput(inputId = ns("rrow"), label = "Row", choices = "", width =  '100%'  ),
+                                                            awesomeCheckbox(inputId = ns('row_ran') ,
+                                                                            label='Random Row',  
+                                                                            value = TRUE ,status = "danger"  )
+                                                          )
+                                                        )
                                        ),
                                        selectizeInput(ns("Id089"), "Covariate ",width = "100%",
                                                       choices = "", multiple = TRUE)
@@ -117,6 +133,8 @@ mod_lme4_single_server <- function(input, output, session, data){
     updateSelectInput(session, "Id086", choices=names(data$data()),selected = "rep")
     updateSelectInput(session, "Id087", choices=names(data$data()),selected = "NNNNN")
     updateSelectInput(session, "Id089", choices=names(data$data()),selected = NULL)
+    updateSelectInput(session, "ccol", choices=names(data$data()),selected = "col")
+    updateSelectInput(session, "rrow", choices=names(data$data()),selected = "row")
   })
   
   
@@ -159,7 +177,11 @@ mod_lme4_single_server <- function(input, output, session, data){
                     replicate =  input$Id086, 
                     rep_ran = input$rep_ran,
                     block =  input$Id087, 
-                    block_ran = input$block_ran,
+                    block_ran = input$block_ran, 
+                    col = input$ccol,
+                    col_ran = input$col_ran,
+                    row = input$rrow,
+                    row_ran = input$row_ran,
                     covariate = input$Id089, 
                     formula =  input$formula)
       },
