@@ -12,11 +12,15 @@ mod_spats_single_ui <- function(id){
   tagList(
     HTML('<h1 style="font-weight: bold; color: #00a65a;">Single-Site Spatial Analysis</h1>'),
     fluidRow(
-      bs4Dash::box( width = 3,status = "success", solidHeader = TRUE,title = tagList(icon=icon("braille"), "SpATS"),   # background = "light-blue"  
-                    actionButton(ns("btn"),
-                                 tagList(icon=icon("question-circle"), "Guide"),
-                                 style= "color: white ; background-color: #dd4b39", class="btn-danger"),
-                    hr(),
+      bs4Dash::box( width = 3,status = "success", solidHeader = TRUE,
+                    title = tagList(icon=icon("braille"), "SpATS",
+                                    actionButton(ns("btn"),
+                                                 tagList(icon=icon("question-circle"), "Guide"),
+                                                 style= "color: white ; background-color: #dd4b39", class="btn-danger")),   # background = "light-blue"  
+                    # actionButton(ns("btn"),
+                    #              tagList(icon=icon("question-circle"), "Guide"),
+                    #              style= "color: white ; background-color: #dd4b39", class="btn-danger"),
+                    # hr(),
                     rintrojs::introBox(
                       
                       selectInput(inputId=ns("variable"),
@@ -29,7 +33,21 @@ mod_spats_single_ui <- function(id){
                                   choices="", width = "100%"),
                       awesomeCheckbox(inputId = ns('res_ran') ,
                                      label='Random Genotype',  
-                                     value = TRUE ,status = "danger"  ),data.step = 2,data.intro = "Select the column that contains the genotype IDs.
+                                     value = TRUE ,status = "danger"  ),
+                      shinyjs::hidden(
+                        pickerInput(
+                          inputId = ns("selected"),
+                          label = tagList( "Checks",
+                                           icon=bs4TooltipUI(icon("question-circle"),
+                                                             title = "Select Checks",
+                                                             placement = "top")
+                          ), 
+                          choices = NULL,
+                          options = list(
+                            `actions-box` = TRUE, size = 5, `live-search` = TRUE), 
+                          multiple = TRUE, width = "100%"
+                        )
+                      ), data.step = 2,data.intro = "Select the column that contains the genotype IDs.
                                                                                          Check/Uncheck the box if you want to treat this as a random/fixed
                                                                                               effect factor in the MLM.",data.position = "right",color="red"   ) ),
       
@@ -112,6 +130,15 @@ mod_spats_single_server <- function(input, output, session, data){
     updateSelectInput(session, "show_random", choices=names(dt),selected = NULL)
     updateSelectInput(session, "covariate", choices=names(dt),selected = NULL)
     
+  })
+  
+  observe({
+    shinyjs::toggle(id = "selected", anim = T, time = 1, animType = "fade", condition = input$genotipo != "")
+    req(input$genotipo)
+    req(data$data())
+    req(input$genotipo  %in% names(data$data()))
+    lvl <- as.character(unique(data$data()[,input$genotipo]))
+    updatePickerInput(session, inputId = "selected", choices = lvl)
   })
   
   output$segcol <- renderUI({
@@ -218,7 +245,7 @@ mod_spats_single_server <- function(input, output, session, data){
       Modelo <- SpATS_mrbean(data$data(), input$variable, input$genotipo, 
                    input$column, input$fila, input$able , input$segcol, input$segrow,
                    input$show_fixed, input$show_random, input$res_ran, input$covariate,
-                   input$outliers, input$times  )
+                   input$outliers, input$times, input$selected  )
       Modelo
     }
     

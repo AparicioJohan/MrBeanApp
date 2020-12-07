@@ -123,6 +123,7 @@ mod_MSA_results_ui <- function(id){
                                     status = "warning", width = "300px"
                                   ),
                                   shinycssloaders::withSpinner(plotOutput(ns("plot_spats")),type = 5,color = "#28a745"),
+                                  materialSwitch(ns("tog_plot"),label = "Percentage",status = "success", value = FALSE),
                                   fluidRow(
                                     col_3(),
                                     col_4(
@@ -271,9 +272,14 @@ mod_MSA_results_server <- function(input, output, session, msa){
 
   output$plot_spats <- renderPlot({
     msa$run()
-    mod_selected <- models()[[input$selected]]
-    req(mod_selected)
-    plot(isolate(mod_selected))
+    input$tog_plot
+    input$selected
+    isolate({
+      mod_selected <- models()[[input$selected]]
+      req(mod_selected)
+      spaTrend <- ifelse(input$tog_plot==TRUE, "percentage", "raw")
+      plot(mod_selected,spaTrend = spaTrend)
+    })
   })
 
 
@@ -424,11 +430,13 @@ mod_MSA_results_server <- function(input, output, session, msa){
     content = function(file){
       if(input$typefile=="png") {
         png(file,width = input$png.wid ,height = input$png.hei)
-        plot(models()[[input$selected]],cex.lab = 1.5, cex.main = 2, cex.axis = 1.5, axis.args = list(cex.axis = 1.2))
+        spaTrend <- ifelse(input$tog_plot==TRUE, "percentage", "raw") 
+        plot(models()[[input$selected]],spaTrend = spaTrend,cex.lab = 1.5, cex.main = 2, cex.axis = 1.5, axis.args = list(cex.axis = 1.2))
         dev.off()
       } else {
         pdf(file,width = input$pdf.wid , height = input$pdf.hei )
-        plot(models()[[input$selected]],cex.lab = 1.5, cex.main = 2, cex.axis = 1.5, axis.args = list(cex.axis = 1.2))
+        spaTrend <- ifelse(input$tog_plot==TRUE, "percentage", "raw") 
+        plot(models()[[input$selected]],spaTrend = spaTrend,cex.lab = 1.5, cex.main = 2, cex.axis = 1.5, axis.args = list(cex.axis = 1.2))
         dev.off()
       }
     }

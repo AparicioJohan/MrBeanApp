@@ -32,6 +32,22 @@ mod_M_traits_ui <- function(id){
                             awesomeCheckbox(inputId = ns('res_ran') ,
                                             label='Random Genotype',  
                                             value = TRUE ,status = "danger"  ),
+                            hr(),
+                            shinyjs::hidden(
+                              pickerInput(
+                                inputId = ns("selected_checks"),
+                                label = tagList( "Checks",
+                                                 icon=bs4TooltipUI(icon("question-circle"),
+                                                                   title = "Select Checks",
+                                                                   placement = "top")
+                                ), 
+                                choices = NULL,
+                                options = list(
+                                  `actions-box` = TRUE, size = 5, `live-search` = TRUE), 
+                                multiple = TRUE, width = "100%"
+                              )
+                            ),
+                            hr(),
                             fluidRow(
                               column(6,
                                      selectInput(inputId=ns("column"),label = "Column",choices="", width = "100%")
@@ -131,12 +147,30 @@ mod_M_traits_ui <- function(id){
                                                        status = "warning", width = "300px"
                                                      ),
                                                      shinycssloaders::withSpinner(plotOutput(ns("plot_spats")),type = 5,color = "#28a745"),
+                                                     materialSwitch(ns("tog_plot"),label = "Percentage",status = "success", value = FALSE),
                                                      fluidRow(
-                                                       col_4(),
+                                                       col_3(),
                                                        col_4(
-                                                         selectInput(ns("selected"), label = HTML("<center> Trait </center>"), choices = "", width = "100%")),
-                                                       col_4()
-                                                     ),icon = icon("th")
+                                                         selectInput(ns("selected"), label = HTML("<center> Trait </center>"), choices = "", width = "100%")
+                                                       ),
+                                                       col_3(
+                                                         rep_br(1),
+                                                         actionBttn(
+                                                           inputId = ns("sum_mod"),
+                                                           label = "summary",
+                                                           style = "unite", size = "sm",block = F,
+                                                           color = "warning",icon = icon("spinner")
+                                                         )
+                                                       ),
+                                                       col_2()
+                                                     ),
+                                                     # fluidRow(
+                                                     #   col_4(),
+                                                     #   col_4(
+                                                     #     selectInput(ns("selected"), label = HTML("<center> Trait </center>"), choices = "", width = "100%")),
+                                                     #   col_4()
+                                                     # ),
+                                                     icon = icon("th")
                                          ),
                                          # bs4TabPanel(tabName = "Corr-1",
                                          #             echarts4r::echarts4rOutput(ns("correlation")),
@@ -166,6 +200,13 @@ mod_M_traits_ui <- function(id){
                                                        status = "warning", width = "300px"
                                                      ),
                                                      shinycssloaders::withSpinner(plotOutput(ns("corr")),type = 5,color = "#28a745"),
+                                                     actionBttn(
+                                                       inputId = ns("pca"), 
+                                                       label = "PCA",
+                                                       style = "minimal", 
+                                                       color = "success",
+                                                       icon = icon("chart-pie")
+                                                     ),
                                                      icon = icon("arrow-circle-right")
                                          ),
                                          bs4TabPanel(tabName = "Summary", 
@@ -239,6 +280,15 @@ mod_M_traits_server <- function(input, output, session, data){
     updatePickerInput(session, "ran_traits", choices = input$variable, selected = "NNNN")
   })
   
+  observe({
+    shinyjs::toggle(id = "selected_checks", anim = T, time = 1, animType = "fade", condition = input$genotype != "")
+    req(input$genotype)
+    req(data$data())
+    req(input$genotype  %in% names(data$data()))
+    lvl <- as.character(unique(data$data()[,input$genotype]))
+    updatePickerInput(session, inputId = "selected_checks", choices = lvl)
+  })
+  
   w <- Waiter$new(
     html = HTML("<center> <div class='ball-loader'></div> </center>"), 
     color = transparent(0.3)
@@ -294,7 +344,7 @@ mod_M_traits_server <- function(input, output, session, data){
           Models[[var]] = SpATS_mrbean(dt, var, input$genotype,
                                        input$column, input$row, FALSE , NULL, NULL,
                                        fixed , random , input$res_ran, input$covariate,
-                                       input$outliers, input$times)
+                                       input$outliers, input$times, input$selected_checks )
           
           if(class(Models[[var]] )=="try-error"){
             Models[[var]]  <-  NULL
@@ -346,11 +396,13 @@ mod_M_traits_server <- function(input, output, session, data){
   output$plot_spats <- renderPlot({
     input$check
     input$selected
+    input$tog_plot
     isolate({
       req(Modelo())
       mod_selected <- Modelo()[[input$selected]]
       req(mod_selected)
-      plot(mod_selected)  
+      spaTrend <- ifelse(input$tog_plot==TRUE, "percentage", "raw")  
+      plot(mod_selected, spaTrend = spaTrend)  
     })
   })
 
@@ -460,6 +512,176 @@ mod_M_traits_server <- function(input, output, session, data){
       selection="multiple"
       )} )
   
+  
+  # Single Summary 
+  
+  output$summary2 <- renderPrint({
+    input$check
+    mod_selected <- Modelo()[[input$selected]]
+    req(mod_selected)
+    summary(mod_selected)
+  })
+  
+  observeEvent(input$sum_mod,{
+    showModal(modalDialog(
+      title = "Summary", size = "l", easyClose = T,
+      shinycssloaders::withSpinner(
+        verbatimTextOutput(ns("summary2")),
+        type = 5,color = "#28a745")
+    )
+    )
+  })
+  
+
+# PCA ---------------------------------------------------------------------
+
+  output$plot_pca <- renderPlot({
+    input$pca
+    input$typep
+    input$number
+    input$ind_pca
+    input$var_pca
+    input$scale
+    input$invisible_pca
+    isolate({
+      # req(model$model())
+      # m <- model$model()
+      # data <- model$model()$predictions[,1:3] %>% 
+      #   tidyr::spread(., "trial", "predicted.value" ) %>%
+      #   tibble::column_to_rownames("gen")
+      
+      req(blups())
+      data <- blups()
+      data <- data[,1:3] %>% tidyr::spread(., "Trait", "predicted.values" ) 
+      validate(
+        need(ncol(data)>=3, "Only one trait fitted.")
+      )
+      names(data)[1] <- "gen"
+      data <- data %>% tibble::column_to_rownames("gen")
+      
+      res.pca <- prcomp(data, scale. = T)
+      
+      if(input$typep=="var"){
+        
+        res.pca.non <- prcomp(data, scale. = input$scale)
+        factoextra::fviz_pca_var(res.pca.non, col.var="steelblue", repel = T, alpha.var = 0.2)
+        
+      } else if(input$typep=="ind"){
+        
+        top <- as.numeric(input$number)
+        req(top<=nrow(data))
+        fa12_scores <- res.pca$x[,1:2] %>% data.frame() %>%  tibble::rownames_to_column("Genotypes")
+        fa12_scores$Score <- sqrt(fa12_scores$PC1^2+fa12_scores$PC2^2)
+        gen <- fa12_scores %>% dplyr::arrange(desc(Score)) %>% dplyr::top_n(top) %>% dplyr::pull(Genotypes)
+        factoextra::fviz_pca_ind(res.pca, repel = T, alpha.ind = 0.5, select.ind = list(name = gen ), labelsize = 4)
+        
+      } else{
+        
+        geom.ind <- c("point","text")
+        geom.var =  c("arrow","text")
+        invisible <- "none"
+        
+        if(!is.null(input$ind_pca))  geom.ind = input$ind_pca
+        if(!is.null(input$var_pca))  geom.var = input$var_pca
+        if(!is.null(input$invisible_pca))  invisible = input$invisible_pca
+        
+        factoextra::fviz_pca_biplot(res.pca, repel = F, alpha.ind=0.5, geom.ind = geom.ind, geom.var = geom.var, invisible =  invisible )
+        
+      }
+      
+    })
+  })
+
+  observeEvent(input$pca,{
+    showModal(modalDialog(
+      title = tagList(icon=icon("chart-pie"), "PCA"), size = "l", easyClose = T,
+      prettyRadioButtons(
+        inputId = ns("typep"),
+        label = "Choose:", 
+        choices = c("Biplot"="bip", "Variables"="var", "Individuals"="ind"),
+        selected = "bip",
+        inline = TRUE, 
+        status = "danger",
+        fill = TRUE,
+        icon = icon("check"),  animation = "jelly"
+      ),
+      shinycssloaders::withSpinner(plotOutput(ns("plot_pca")),type = 6,color = "#28a745"),icon = icon("arrow-circle-right"),
+      conditionalPanel(condition = "input.typep=='ind'",  ns = ns,
+                       fluidRow(
+                         col_4(
+                         ),
+                         col_4(
+                           pickerInput(
+                             inputId = ns("number"),
+                             label = "Top (n)", 
+                             choices = 4:100, selected = 20,
+                             options = list(
+                               size = 5)
+                           )
+                         ),
+                         col_4(
+                         )
+                       )
+      ),
+      conditionalPanel(condition = "input.typep=='var'",  ns = ns,
+                       fluidRow(
+                         col_4(
+                         ),
+                         col_4(
+                           switchInput(
+                             inputId = ns("scale"),
+                             label = "Scale?", 
+                             labelWidth = "100%",  
+                             onStatus = "success", 
+                             offStatus = "danger",
+                             width = "100%", value = TRUE
+                           )
+                         ),
+                         col_4(
+                         )
+                       )
+      ),
+      conditionalPanel(condition = "input.typep=='bip'",  ns = ns,
+                       fluidRow(
+                         col_1(
+                         ),
+                         col_3(
+                           checkboxGroupButtons(
+                             inputId = ns("ind_pca"),
+                             label = "Individuals",
+                             choices = c("point","text"),justified = T,
+                             status = "success",
+                             checkIcon = list(yes = icon("ok", lib = "glyphicon"),
+                                              no = icon("remove", lib = "glyphicon"))
+                           )
+                         ),
+                         col_3(
+                           checkboxGroupButtons(
+                             inputId = ns("var_pca"),
+                             label = "Variables",
+                             choices = c("arrow","text"),justified = T,
+                             status = "success",
+                             checkIcon = list(yes = icon("ok", lib = "glyphicon"),
+                                              no = icon("remove", lib = "glyphicon"))
+                           )
+                         ),
+                         col_3(
+                           checkboxGroupButtons(
+                             inputId = ns("invisible_pca"),
+                             label = "Invisible",
+                             choices = c("ind", "var"),justified = T,
+                             status = "success",
+                             checkIcon = list(yes = icon("ok", lib = "glyphicon"),
+                                              no = icon("remove", lib = "glyphicon"))
+                           )
+                         )
+                       )
+      )
+      # br()
+    )
+    )
+  }, ignoreInit = T, ignoreNULL = T)
+  
 
 # Tabla Out ---------------------------------------------------------------
 
@@ -519,11 +741,13 @@ mod_M_traits_server <- function(input, output, session, data){
     content = function(file){
       if(input$typefile=="png") {
         png(file,width = input$png.wid ,height = input$png.hei)
-        plot(Modelo()[[input$selected]],cex.lab = 1.5, cex.main = 2, cex.axis = 1.5, axis.args = list(cex.axis = 1.2))
+        spaTrend <- ifelse(input$tog_plot==TRUE, "percentage", "raw") 
+        plot(Modelo()[[input$selected]],spaTrend = spaTrend,cex.lab = 1.5, cex.main = 2, cex.axis = 1.5, axis.args = list(cex.axis = 1.2))
         dev.off()
       } else {
         pdf(file,width = input$pdf.wid , height = input$pdf.hei )
-        plot(Modelo()[[input$selected]],cex.lab = 1.5, cex.main = 2, cex.axis = 1.5, axis.args = list(cex.axis = 1.2))
+        spaTrend <- ifelse(input$tog_plot==TRUE, "percentage", "raw") 
+        plot(Modelo()[[input$selected]],spaTrend = spaTrend,cex.lab = 1.5, cex.main = 2, cex.axis = 1.5, axis.args = list(cex.axis = 1.2))
         dev.off()
       }
     }

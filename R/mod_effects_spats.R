@@ -61,11 +61,19 @@ mod_effects_spats_server <- function(input, output, session, Model){
       v <- as.character(BLUPS[order(BLUPS[,2],decreasing = TRUE),1])
       names(BLUPS)[1] <- "Line"
       names(BLUPS)[2] <- "predicted.value"
-      p <- ggplot(BLUPS,aes(x=Line , y=predicted.value))+
+      
+      
+      if("type" %in% names(BLUPS)){
+        q <- ggplot(BLUPS,aes(x=Line , y=predicted.value , color=type))
+      } else{
+        q <- ggplot(BLUPS,aes(x=Line , y=predicted.value ))
+      } 
+      
+      p <- q +
             geom_point(size = 1) +
             geom_errorbar(aes(ymax = Ls, ymin = Lu))+
             theme_bw() +
-            geom_hline(yintercept = mean(BLUPS[,2]), linetype=2 ,color="red")+
+            geom_hline(yintercept = mean(BLUPS[,2]), linetype=2 ,color="grey")+
             theme(axis.title.x=element_blank(),axis.text.x=element_blank(),axis.ticks.x=element_blank())+
             ylab(names(BLUPS)[2])+scale_x_discrete(limits=v)
       isolate(plotly::ggplotly(p)) 

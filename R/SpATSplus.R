@@ -107,10 +107,24 @@ res_compare <- function(Model, variable, factor){
 }
 
 
+check_gen_SpATS <- function(gen , data, check_gen = c("ci", "st", "wa")){
+  data <- as.data.frame(data)
+  indx <- sum(check_gen %in% data[,gen]) >= 1
+  if(indx){
+    genotypes_id <- as.character(data[,gen])
+    data[,gen] <- as.factor(ifelse(genotypes_id %in% check_gen, NA,  genotypes_id ))
+    data$checks <- as.factor(ifelse(genotypes_id %in% check_gen, genotypes_id , "_NoCheck" ))
+  } else {
+    message("No checks in this trial")
+  }
+  return(data)
+}
+
+
 SpATS_mrbean <- function(data, response ,genotype, 
                          col, row, segm ,ncols, nrows, 
                          fix_fact, ran_fact, gen_ran, covariate,
-                         clean_out= FALSE, iterations=1){
+                         clean_out= FALSE, iterations=1, checks = NULL){
   dt <- data
   dt[ , genotype] <- as.factor(dt[ , genotype])
   dt$col =  dt[,col]
@@ -132,6 +146,18 @@ SpATS_mrbean <- function(data, response ,genotype,
   
   if(is.null(ran_fact)) Random <- as.formula(~ col_f+row_f)
   else Random <-  as.formula(paste("" ,paste(c(ran_fact,"col_f","row_f"), collapse=" + "), sep=" ~ "))   
+  
+  if(!is.null(checks)){
+    dt <- check_gen_SpATS(gen = genotype, data = dt, check_gen = checks )
+    if("checks" %in% names(dt) ){
+      if(is.null(fix_fact)&is.null(covariate)){
+        Fijo <- as.formula(~ checks)
+      } else {
+        Fijo <-  paste(paste0(as.character(Fijo), collapse = ""), "+ checks" )
+      }
+    } 
+  }
+  
   Modelo=try(SpATS(response=response,
                    genotype=genotype, genotype.as.random=gen_ran,
                    fixed= Fijo,
@@ -347,8 +373,23 @@ msa_table <- function(models, gen_ran){
 
 msa_effects <- function(model){
   gen <- model$model$geno$genotype
-  effects <- predict(model, which = gen)[,c(gen, "predicted.values", "standard.errors")] %>% 
-             dplyr::mutate_if(is.numeric, round, 3) %>% data.frame()
+  
+  ind <-  sum(grepl("checks", model$model$fixed, fixed = TRUE))!=0
+  if(ind){
+    PP <- predict(model, which = gen) %>% dplyr::select(.data[[gen]], predicted.values, standard.errors )
+    PP$type <- "test"
+    PC <- predict(model, which = "checks") %>% dplyr::select(checks, predicted.values, standard.errors )
+    PC <- PC[PC$checks!="_NoCheck", ]
+    PC$type <- "check"
+    names(PC)[1] <- gen
+    effects <- rbind(PP,PC) %>% dplyr::mutate_if(is.numeric, round, 3) %>% data.frame()
+  } else {
+    effects <- predict(model, which = gen)[,c(gen, "predicted.values", "standard.errors")] %>%
+                 dplyr::mutate_if(is.numeric, round, 3) %>% data.frame()
+  }
+  
+  # effects <- predict(model, which = gen)[,c(gen, "predicted.values", "standard.errors")] %>%
+  #            dplyr::mutate_if(is.numeric, round, 3) %>% data.frame()
   if(!model$model$geno$as.random){
     effects <- weight_SpATS(model)$data_weights
   }

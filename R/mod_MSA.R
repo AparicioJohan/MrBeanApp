@@ -31,6 +31,22 @@ mod_MSA_ui <- function(id){
                       awesomeCheckbox(inputId = ns('res_ran') ,
                                       label='Random Genotype',  
                                       value = TRUE ,status = "danger"  ),
+                      hr(),
+                      shinyjs::hidden(
+                        pickerInput(
+                          inputId = ns("selected_checks"),
+                          label = tagList( "Checks",
+                                           icon=bs4TooltipUI(icon("question-circle"),
+                                                             title = "Select Checks",
+                                                             placement = "top")
+                          ), 
+                          choices = NULL,
+                          options = list(
+                            `actions-box` = TRUE, size = 5, `live-search` = TRUE), 
+                          multiple = TRUE, width = "100%"
+                        )
+                      ),
+                      hr(),
                       selectInput(inputId=ns("experiment"),
                                   label=tagList( "Experiment",
                                                  icon=bs4TooltipUI(icon("question-circle"),
@@ -178,6 +194,15 @@ mod_MSA_server <- function(input, output, session, data){
     updatePickerInput(session, "ran_traits", choices = unique(dt[,input$experiment]), selected = "NNNN")
   })
   
+  observe({
+    shinyjs::toggle(id = "selected_checks", anim = T, time = 1, animType = "fade", condition = input$genotype != "")
+    req(input$genotype)
+    req(data$data())
+    req(input$genotype  %in% names(data$data()))
+    lvl <- as.character(unique(data$data()[,input$genotype]))
+    updatePickerInput(session, inputId = "selected_checks", choices = lvl)
+  })
+  
 
   w <- Waiter$new(
     html = HTML("<center> <div class='ball-loader'></div> </center>"), 
@@ -319,7 +344,7 @@ mod_MSA_server <- function(input, output, session, data){
       models_list[[exp]] <- SpATS_mrbean(dt_tmp, input$variable, input$genotype, 
                                          input$column, input$row, FALSE , NULL, NULL,
                                          fixed , random, input$res_ran, input$covariate,
-                                         input$outliers, input$times)
+                                         input$outliers, input$times, input$selected_checks)
       prg$update(html= HTML("<center>",
                             '<div class="dots-loader"></div>',
                             "<br>","<br>","<br>",
