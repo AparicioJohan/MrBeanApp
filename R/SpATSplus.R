@@ -147,7 +147,7 @@ SpATS_mrbean <- function(data, response ,genotype,
   if(is.null(ran_fact)) Random <- as.formula(~ col_f+row_f)
   else Random <-  as.formula(paste("" ,paste(c(ran_fact,"col_f","row_f"), collapse=" + "), sep=" ~ "))   
   
-  if(!is.null(checks)){
+  if(!is.null(checks)& gen_ran == T){
     dt <- check_gen_SpATS(gen = genotype, data = dt, check_gen = checks )
     if("checks" %in% names(dt) ){
       if(is.null(fix_fact)&is.null(covariate)){
