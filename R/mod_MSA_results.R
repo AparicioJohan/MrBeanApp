@@ -139,7 +139,7 @@ mod_MSA_results_ui <- function(id){
                                       )
                                     ),
                                     col_2()
-                                  ),icon = icon("th")
+                                  )
                      ),
                      bs4Dash::box(width = 12, status = "success", solidHeader = FALSE,title = "Predictions Plot",
                                   collapsible = T, maximizable = T,

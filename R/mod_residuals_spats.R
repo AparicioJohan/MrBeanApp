@@ -44,7 +44,7 @@ mod_residuals_spats_ui <- function(id){
         column(width=6,
                bs4TabCard(
                  width = 12,id = "tabcard",maximizable = T,solidHeader = FALSE,closable = F,
-                 status ="success", side = "left", type = "tabs", background = "success",
+                 status ="success", side = "left", type = "tabs", 
                  tabPanel(title = "QQplot",
                              shinycssloaders::withSpinner(plotly::plotlyOutput(ns("qqplot")),type = 5,color = "#28a745")
                  ),
