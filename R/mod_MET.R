@@ -16,7 +16,7 @@ mod_MET_ui <- function(id){
     fluidRow(
       col_3(
         fluidRow(
-          bs4Dash::box(title =  tagList(shiny::icon("file-upload"), "Import Data"),solidHeader = TRUE,width = 12, status = "success",
+          bs4Dash::box(title =  tagList(shiny::icon("file-upload"), "Import Data"),solidHeader = FALSE,width = 12, status = "success",
                        maximizable = T,closable = F,
                        fileInput(inputId=ns('file1'),width = "100%",
                                  label='Load your database',
@@ -60,16 +60,16 @@ mod_MET_ui <- function(id){
         shinyjs::hidden(
           div(id = ns("when_file1"),
               fluidRow(
-                bs4Dash::box(width = 12,status = "success", solidHeader = TRUE,title = tagList(icon=icon("cogs"), "Components"),   # background = "light-blue"  
+                bs4Dash::box(width = 12,status = "success", solidHeader = FALSE,title = tagList(icon=icon("cogs"), "Components"),   # background = "light-blue"  
                              selectInput(inputId=ns("variable"),
                                          label= tagList( "Response Variable",
-                                                         icon=bs4TooltipUI(icon("question-circle"),
+                                                         icon=tooltip(icon("question-circle"),
                                                                            title = "The column with the continous response variable.",
                                                                            placement = "top")),
                                          choices="", width = "100%"),
                              selectInput(inputId=ns("genotype"),
                                          label=tagList( "Genotype",
-                                                        icon=bs4TooltipUI(icon("question-circle"),
+                                                        icon=tooltip(icon("question-circle"),
                                                                           title = "The column with genotypes.",
                                                                           placement = "top")),
                                          choices="", width = "100%"),
@@ -78,7 +78,7 @@ mod_MET_ui <- function(id){
                                              value = TRUE ,status = "danger"  ),
                              selectInput(inputId=ns("experiment"),
                                          label=tagList( "Experiment",
-                                                        icon=bs4TooltipUI(icon("question-circle"),
+                                                        icon=tooltip(icon("question-circle"),
                                                                           title = "Select the variable with Experiment-ID",
                                                                           placement = "top")),
                                          choices="", width = "100%"),
@@ -89,7 +89,7 @@ mod_MET_ui <- function(id){
                                pickerInput(
                                  inputId = ns("selected"),
                                  label = tagList( "Subset",
-                                                 icon=bs4TooltipUI(icon("question-circle"),
+                                                 icon=tooltip(icon("question-circle"),
                                                                    title = "Select the experiments that you want to analyze.",
                                                                    placement = "top")
                                                  ), 
@@ -101,13 +101,13 @@ mod_MET_ui <- function(id){
                              ),
                              selectInput(inputId=ns("weight"),
                                          label=tagList( "Weights",
-                                                        icon=bs4TooltipUI(icon("question-circle"),
+                                                        icon=tooltip(icon("question-circle"),
                                                                           title = "Select the variable with weights",
                                                                           placement = "top")),
                                          choices="", width = "100%"),
                              selectInput(inputId=ns("VC"),
                                          label=tagList( "Covariance Structure",
-                                                        icon=bs4TooltipUI(icon("question-circle"),
+                                                        icon=tooltip(icon("question-circle"),
                                                                           title = "Select the Variance-covariance Structure",
                                                                           placement = "top")),
                                          choices=list(diag='diag', corv='corv',
@@ -125,7 +125,7 @@ mod_MET_ui <- function(id){
                    fluidRow(
                      bs4Dash::box(width = 12, 
                                   title =  tagList(icon=icon("pagelines"), "Genotypes"), maximizable = T,
-                                  status = "success", solidHeader = TRUE,collapsible = TRUE,
+                                  status = "success", solidHeader = FALSE,collapsible = TRUE,
                                   radioGroupButtons(
                                     inputId = ns("visual"),
                                     label = "Plot",
@@ -299,9 +299,9 @@ mod_MET_server <- function(input, output, session){
       var <- paste0("(NA: ",na," / ",co,")")
       bs4InfoBox(
         title = paste0("Response: ", datafilter()$resp),
-        gradientColor = "grey", iconStatus = "info", iconElevation = 2,
+        color = "info", iconElevation = 2,
         value = var,
-        icon = "ruler", elevation = 1)
+        icon = shiny::icon("ruler"), elevation = 1)
     })
   })
   
@@ -314,10 +314,9 @@ mod_MET_server <- function(input, output, session){
       req(datafilter()$gen%in%names(dt))
       gen <- length(unique(dt[, datafilter()$gen]))
       bs4InfoBox(
-        title = "Number of Genotypes", iconStatus = "success", iconElevation = 2,
-        gradientColor = "grey",
+        title = "Number of Genotypes", color = "success", iconElevation = 2,
         value = gen,
-        icon = "pagelines", elevation = 1)
+        icon = shiny::icon("pagelines"), elevation = 1)
     })
   })
   
@@ -330,10 +329,9 @@ mod_MET_server <- function(input, output, session){
       req(datafilter()$trial%in%names(dt))
       num <- length(unique(dt[, datafilter()$trial]))
       bs4InfoBox(
-        title = "Number of Trials", iconStatus = "info", iconElevation = 2,
-        gradientColor = "grey",
+        title = "Number of Trials", color = "info", iconElevation = 2,
         value = num,
-        icon = "sort-amount-down", elevation = 1)
+        icon = shiny::icon("sort-amount-down"), elevation = 1)
     })
   })
   

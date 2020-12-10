@@ -20,9 +20,9 @@ mod_MET_FA_ui <- function(id){
           fluidRow(
             column(6,
                    fluidRow(
-                     bs4TabCard(width = 12,id = "MET_fa",tabStatus = "light",maximizable = T,solidHeader = T,closable = F,
-                                status ="success", 
-                                bs4TabPanel(tabName = "Genotypic Variance", active = T,
+                     bs4TabCard(width = 12,id = "MET_fa",maximizable = T,solidHeader = FALSE,closable = F,
+                                status ="success", side = "left", type = "tabs",
+                                tabPanel(title = "Genotypic Variance", active = T,
                                             shinycssloaders::withSpinner(
                                               echarts4r::echarts4rOutput(ns("g1")),type = 5,color = "#28a745"
                                               )
@@ -34,7 +34,7 @@ mod_MET_FA_ui <- function(id){
                                             #   col_3()
                                             # )
                                 ),
-                                bs4TabPanel(tabName = "Variance Explained",icon = icon("signal"),
+                                tabPanel(title = "Variance Explained",icon = icon("signal"),
                                             shinycssloaders::withSpinner(
                                               echarts4r::echarts4rOutput(ns("g2")),
                                               type = 5,color = "#28a745")
@@ -65,7 +65,7 @@ mod_MET_FA_ui <- function(id){
                                       class="btn-success",
                                       style= " color: white ; background-color: #28a745; float:left"),
                        width = 12,title = tagList(icon=icon("exchange-alt"), "Scores"),
-                       status = "success",solidHeader = TRUE, maximizable = T
+                       status = "success",solidHeader = FALSE, maximizable = T
                      )
                    )
             ),
@@ -85,7 +85,7 @@ mod_MET_FA_ui <- function(id){
                          icon = icon("chart-pie")
                        ),
                        width = 12,title = tagList(icon=icon("chart-line"), "Total Variance"),
-                       status = "success",solidHeader = TRUE, maximizable = T
+                       status = "success",solidHeader = FALSE, maximizable = T
                      )
                    ),
                    fluidRow(
@@ -112,7 +112,7 @@ mod_MET_FA_ui <- function(id){
                                         class="btn-success",
                                         style= " color: white ; background-color: #28a745; float:left"),
                        width = 12,title = tagList(icon=icon("exchange-alt"), "Loadings"),
-                       status = "success",solidHeader = TRUE, maximizable = T
+                       status = "success",solidHeader = FALSE, maximizable = T
                      )
                    )
             )

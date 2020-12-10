@@ -15,7 +15,7 @@ mod_spats_asreml_ui <- function(id){
     fluidRow(
       column(width = 4,
              fluidRow(
-               bs4Dash::box(width = 12,status = "success", solidHeader = TRUE,title = tagList(icon=icon("cogs"), "ASReml"),   # background = "light-blue"  
+               bs4Dash::box(width = 12,status = "success", solidHeader = FALSE,title = tagList(icon=icon("cogs"), "ASReml"),   # background = "light-blue"  
                             # fluidRow(
                             #   col_3(),
                             #   col_6(
@@ -25,13 +25,13 @@ mod_spats_asreml_ui <- function(id){
                             # ),
                             selectInput(inputId=ns("variable"),
                                         label= tagList( "Response Variable",
-                                                        icon=bs4TooltipUI(icon("question-circle"),
+                                                        icon=tooltip(icon("question-circle"),
                                                                           title = "The column with the continous response variable.",
                                                                           placement = "top")),
                                         choices="", width = "100%"),
                             selectInput(inputId=ns("genotype"),
                                         label=tagList( "Genotype",
-                                                       icon=bs4TooltipUI(icon("question-circle"),
+                                                       icon=tooltip(icon("question-circle"),
                                                                          title = "The column with genotypes.",
                                                                          placement = "top")),
                                         choices="", width = "100%"),
@@ -84,7 +84,7 @@ mod_spats_asreml_ui <- function(id){
                               column(6,
                                      selectInput(inputId=ns("block"),
                                                  label=tagList( "Block",
-                                                                icon=bs4TooltipUI(icon("question-circle"),
+                                                                icon=tooltip(icon("question-circle"),
                                                                                   title = "Select the replicate or complete block",
                                                                                   placement = "top")),
                                                  choices="", width = "100%")
@@ -92,7 +92,7 @@ mod_spats_asreml_ui <- function(id){
                               column(6,
                                      selectInput(inputId=ns("incomplete"),
                                                  label=tagList( "InBlock",
-                                                                icon=bs4TooltipUI(icon("question-circle"),
+                                                                icon=tooltip(icon("question-circle"),
                                                                                   title = "Select Incomplete Block",
                                                                                   placement = "top")),
                                                  choices="", width = "100%")
@@ -108,7 +108,7 @@ mod_spats_asreml_ui <- function(id){
                                   column(6,
                                          selectInput(inputId=ns("cov1"),
                                                      label=tagList( "Covariate 1",
-                                                                    icon=bs4TooltipUI(icon("question-circle"),
+                                                                    icon=tooltip(icon("question-circle"),
                                                                                       title = "Select a covariate",
                                                                                       placement = "top")),
                                                      choices="", width = "100%")
@@ -116,7 +116,7 @@ mod_spats_asreml_ui <- function(id){
                                   column(6,
                                          selectInput(inputId=ns("cov2"),
                                                      label=tagList( "Covariate 2",
-                                                                    icon=bs4TooltipUI(icon("question-circle"),
+                                                                    icon=tooltip(icon("question-circle"),
                                                                                       title = "Select a covariate",
                                                                                       placement = "top")),
                                                      choices="", width = "100%")
@@ -139,9 +139,9 @@ mod_spats_asreml_ui <- function(id){
                    fluidRow(
                      column(12,
                         fluidRow(
-                          bs4TabCard(width = 12,id = "single_model",tabStatus = "light",maximizable = T,solidHeader = T,closable = F,
-                                     status ="success", 
-                                     bs4TabPanel(tabName = "Spatial-Plot",active = T,
+                          bs4TabCard(width = 12,id = "single_model",maximizable = T,solidHeader = FALSE,closable = F,
+                                     status ="success", side = "left", type = "tabs",
+                                     tabPanel(title = "Spatial-Plot",active = T,
                                                  dropdown(
                                                    prettyRadioButtons(inputId = ns("typefile"),label = "Download Plot File Type", outline = TRUE,fill = FALSE,shape = "square",inline = TRUE,
                                                                       choices = list(PNG="png",PDF="pdf"),
@@ -166,7 +166,7 @@ mod_spats_asreml_ui <- function(id){
                                                  ),
                                                  shinycssloaders::withSpinner(plotOutput(ns("plot_spats")),type = 5,color = "#28a745"),icon = icon("th")
                                      ),
-                                     bs4TabPanel(tabName = "Diagnostics", 
+                                     tabPanel(title = "Diagnostics", 
                                                  prettySwitch(
                                                    inputId = ns("swicht1"),
                                                    label = "Residuals", 
@@ -175,7 +175,7 @@ mod_spats_asreml_ui <- function(id){
                                                  ),
                                                  shinycssloaders::withSpinner(plotOutput(ns("residuals_aug")),type = 6,color = "#28a745"),icon = icon("arrow-circle-right")
                                      ),
-                                     bs4TabPanel(tabName = "Info",icon = icon("signal"),
+                                     tabPanel(title = "Info",icon = icon("signal"),
                                                  strong("Formula:"),
                                                  shinycssloaders::withSpinner(verbatimTextOutput(ns("callModel")),type = 6,color = "#28a745" ),
                                                  hr(),
@@ -185,7 +185,7 @@ mod_spats_asreml_ui <- function(id){
                                                  strong("ANOVA wald-test:"),
                                                  shinycssloaders::withSpinner(verbatimTextOutput(ns("aov")),type = 6,color = "#28a745" )
                                      ),
-                                     bs4TabPanel(tabName = "Semi-Variogram", 
+                                     tabPanel(title = "Semi-Variogram", 
                                                  prettySwitch(
                                                    inputId = ns("swicht2"),
                                                    label = "Residuals", 
@@ -201,7 +201,7 @@ mod_spats_asreml_ui <- function(id){
                    fluidRow(
                      column(12,
                             fluidRow(
-                              bs4Dash::box(width = 12, title =  tagList(icon=icon("wrench"), "Goodness-of-fit Statistics"),status = "success", solidHeader = TRUE,collapsible = TRUE ,
+                              bs4Dash::box(width = 12, title =  tagList(icon=icon("wrench"), "Goodness-of-fit Statistics"),status = "success", solidHeader = FALSE,collapsible = TRUE ,
                                            HTML(
                                              paste0("<center>",tableOutput(ns("INFO")),"</center>")
                                            ),

@@ -15,16 +15,16 @@ mod_MSA_ui <- function(id){
     fluidRow(
       column(width = 3,
         fluidRow(
-         bs4Dash::box(width = 12,status = "success", solidHeader = TRUE,title = tagList(icon=icon("cogs"), "Configuration"),   # background = "light-blue"  
+         bs4Dash::box(width = 12,status = "success", solidHeader = FALSE,title = tagList(icon=icon("cogs"), "Configuration"),   # background = "light-blue"  
                       selectInput(inputId=ns("variable"),
                                   label= tagList( "Response Variable",
-                                                  icon=bs4TooltipUI(icon("question-circle"),
+                                                  icon=tooltip(icon("question-circle"),
                                                                     title = "The column with the continous response variable.",
                                                                     placement = "top")),
                                   choices="", width = "100%"),
                       selectInput(inputId=ns("genotype"),
                                   label=tagList( "Genotype",
-                                                 icon=bs4TooltipUI(icon("question-circle"),
+                                                 icon=tooltip(icon("question-circle"),
                                                                    title = "The column with genotypes.",
                                                                    placement = "top")),
                                   choices="", width = "100%"),
@@ -36,7 +36,7 @@ mod_MSA_ui <- function(id){
                         pickerInput(
                           inputId = ns("selected_checks"),
                           label = tagList( "Checks",
-                                           icon=bs4TooltipUI(icon("question-circle"),
+                                           icon=tooltip(icon("question-circle"),
                                                              title = "Select Checks",
                                                              placement = "top")
                           ), 
@@ -49,7 +49,7 @@ mod_MSA_ui <- function(id){
                       hr(),
                       selectInput(inputId=ns("experiment"),
                                   label=tagList( "Experiment",
-                                                 icon=bs4TooltipUI(icon("question-circle"),
+                                                 icon=tooltip(icon("question-circle"),
                                                                    title = "Select the variable with Experiment-ID",
                                                                    placement = "top")),
                                   choices="", width = "100%"),
@@ -69,12 +69,12 @@ mod_MSA_ui <- function(id){
          shinyjs::hidden(
            div(id=ns("only"),
                fluidRow(
-               bs4Dash::box(width = 12, title =  tagList(icon=icon("wrench"), "Additional Components"),status = "success", solidHeader = TRUE,collapsible = TRUE ,
+               bs4Dash::box(width = 12, title =  tagList(icon=icon("wrench"), "Additional Components"),status = "success", solidHeader = FALSE,collapsible = TRUE ,
                             actionBttn(inputId = ns("tabBut"), icon = icon("sliders"), size = "xs",
                                        label = "Info About the Experiments",style = "unite",color = "warning",block = T ),
                     selectizeInput(ns("show_fixed"), width = "100%",
                                    label=tagList( "Fixed",
-                                                  icon=bs4TooltipUI(icon("question-circle"),
+                                                  icon=tooltip(icon("question-circle"),
                                                                     title = "Additional fixed factors.",
                                                                     placement = "top")),
                                    choices = "", multiple = TRUE),
@@ -91,7 +91,7 @@ mod_MSA_ui <- function(id){
                     ),
                     selectizeInput(ns("show_random"), width = "100%",
                                    label=tagList( "Random",
-                                                  icon=bs4TooltipUI(icon("question-circle"),
+                                                  icon=tooltip(icon("question-circle"),
                                                                     title = "Additional random factors.",
                                                                     placement = "top")),
                                    choices = "", multiple = TRUE),
@@ -108,7 +108,7 @@ mod_MSA_ui <- function(id){
                     ),
                     selectizeInput(ns("covariate"), width = "100%",
                                    label=tagList( "Covariate",
-                                                  icon=bs4TooltipUI(icon("question-circle"),
+                                                  icon=tooltip(icon("question-circle"),
                                                                     title = "Additional covariate.",
                                                                     placement = "top")),
                                    choices = "", multiple = TRUE,selected=NULL),
@@ -129,7 +129,7 @@ mod_MSA_ui <- function(id){
                    fluidRow(
                      bs4Dash::box(width = 12, 
                                   title =  tagList(icon=icon("pagelines"), "Genotypes Statistics"), maximizable = T,
-                                  status = "success", solidHeader = TRUE,collapsible = TRUE,
+                                  status = "success", solidHeader = FALSE,collapsible = TRUE,
                                   prettySwitch(
                                     inputId = ns("swicht"),
                                     label = "Shared Genotypes", 

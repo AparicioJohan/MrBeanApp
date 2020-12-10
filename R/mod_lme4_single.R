@@ -16,7 +16,7 @@ mod_lme4_single_ui <- function(id){
     ),
     fluidRow(
       bs4Card(title =  tagList(shiny::icon("question-circle"), "Help"), 
-              solidHeader = TRUE, footer =  "Let's start",width =3,status = "danger",
+              solidHeader = FALSE, footer =  "Let's start",width =3,status = "danger",
               h3("Factors in the formula:"),
               hr(),
               HTML("<ul>
@@ -25,9 +25,9 @@ mod_lme4_single_ui <- function(id){
                                             <li><strong>Interaction Fixed:</strong> Rep:Block </li>
                                             <li><strong>Interaction Random:</strong> (1|Rep:Block) </li>
                                             </ul>  ")),
-      bs4Card( width = 3,status = "success", solidHeader = TRUE,
+      bs4Card( width = 3,status = "success", solidHeader = FALSE,
                title = tagList(icon=icon("ruler"), "Trait and Genotype"),
-               background = "blue",
+               # background = "blue",
                selectInput(inputId=ns("variable2"),
                            label="Response variable",choices="", width = "100%"),
                selectInput(inputId=ns("genotipo2"),
@@ -39,7 +39,7 @@ mod_lme4_single_ui <- function(id){
                # checkboxInput(inputId=ns('res_ran2'),
                #               label='Random Genotype?', 
                #               value=TRUE)),
-      bs4Card( width = 3,status = "success",solidHeader = TRUE,title =tagList(icon=icon("tasks"), "Model") ,
+      bs4Card( width = 3,status = "success",solidHeader = FALSE,title =tagList(icon=icon("tasks"), "Model") ,
                prettyRadioButtons(
                  inputId = ns("Id039"),
                  label = "Choose:", 
@@ -59,7 +59,7 @@ mod_lme4_single_ui <- function(id){
                actionLink(inputId = ns("Rlinklme"), label = "Residuals", icon = icon("arrow-right"), style = "color: #28a745")),
       column(3,
              conditionalPanel(condition="input.Id039==1|input.Id039==2|input.Id039==4|input.Id039==5",ns = ns,
-                              bs4Card( width = NULL,status = "success",solidHeader = TRUE,title=tagList(icon=icon("tasks"), "Components"),
+                              bs4Card( width = NULL,status = "success",solidHeader = FALSE,title=tagList(icon=icon("tasks"), "Components"),
                                        conditionalPanel(condition = "input.Id039==1|input.Id039==2|input.Id039==5", ns = ns,
                                                         selectInput(inputId = ns("Id086"), label = "Replicate",choices = "", width =  '100%'  ),
                                                         awesomeCheckbox(inputId = ns('rep_ran') ,
@@ -102,17 +102,17 @@ mod_lme4_single_ui <- function(id){
              # ),
              conditionalPanel(condition="input.Id039==3",ns = ns,
                               fluidRow(
-                                bs4Card(title = "Formula",status = "success",solidHeader = TRUE , 
+                                bs4Card(title = "Formula",status = "success",solidHeader = FALSE , 
                                         textInput(ns("formula"),label = strong("Write the formula:"),
                                                   value = "" , placeholder = " (1|Line) + (1|Rep) + (1|Rep:Block)", width = "100%"), 
                                         infoBoxOutput(ns("form"),width = 12),   width = 12))
              )
       )
     ),
-    fluidRow( bs4Card(width = 6,status = "success", solidHeader = TRUE, 
+    fluidRow( bs4Card(width = 6,status = "success", solidHeader = FALSE, 
                       title=tagList(icon=icon("leaf"), "Summary Model"),
                       shinycssloaders::withSpinner(verbatimTextOutput(ns("summaryalpha")),type = 6,color = "#28a745")),
-              bs4Card(width = 6,status = "success", solidHeader = TRUE, style = "overflow-x: scroll;",
+              bs4Card(width = 6,status = "success", solidHeader = FALSE, style = "overflow-x: scroll;",
                       title=tagList(icon=icon("sort-numeric-up "), "Effects"),
                       shinycssloaders::withSpinner(DT::dataTableOutput(ns("blups_mixed")),type = 6,color = "#28a745"),
                       downloadButton(ns("desc_mixed"), "Download table", class="btn-success",
@@ -253,8 +253,8 @@ mod_lme4_single_server <- function(input, output, session, data){
     vc.e <- sqrt(VarE(alpha()))
     v <- round(vc.e,2)
     bs4ValueBox(v,subtitle = "Residual SD", 
-                icon="arrow-down", 
-                status = "danger", elevation = 3 ,
+                icon=shiny::icon("arrow-down"), 
+                color = "danger", elevation = 3 ,
                 footer = HTML("<center> Looking for low <center>"))
   })
   
@@ -267,8 +267,8 @@ mod_lme4_single_server <- function(input, output, session, data){
     vc.g <- sqrt(VarG(alpha(), gen ))
     v <- round(vc.g,2)
     bs4ValueBox(v,subtitle = "Genotypic SD",
-                icon=("arrow-up"),
-                status =  "success", elevation = 3,
+                icon=shiny::icon("arrow-up"),
+                color =  "success", elevation = 3,
                 footer = HTML("<center> Looking for high <center>"))
   })
   
@@ -279,8 +279,8 @@ mod_lme4_single_server <- function(input, output, session, data){
     H <- h.cullis(alpha(), ifelse(input$Id039==3,input$genotipo2,"Gen"))
     H <- round(H,2)
     bs4ValueBox(H,subtitle = "Heritability", 
-                icon=("seedling"),  
-                status = "info",elevation = 3,
+                icon=shiny::icon("seedling"),  
+                color = "info",elevation = 3,
                 footer = HTML("<center> 0 = Bad / 1 = Good  <center>"))
   })
   
@@ -336,9 +336,11 @@ mod_lme4_single_server <- function(input, output, session, data){
     var <- input$variable2
     bs4InfoBox(
       title = "Response Variable",
-      gradientColor = "info",
+      color = "info",
+      gradient = TRUE,
+      fill = TRUE,
       value = var,
-      icon = "ruler", elevation = 3 )
+      icon = shiny::icon("ruler"), elevation = 3 )
   })
   
   output$ngenot <- renderbs4InfoBox({
@@ -346,9 +348,11 @@ mod_lme4_single_server <- function(input, output, session, data){
     ngen <- length(unique(as.factor(data$data()[,input$genotipo2])))
     bs4InfoBox(
       title = "Num of Genotypes",
-      gradientColor = "success",
+      color = "success",
+      gradient = TRUE,
+      fill = TRUE,
       value = ngen,
-      icon = "sort-amount-down", elevation = 3)
+      icon = shiny::icon("sort-amount-down"), elevation = 3)
   })
 
   output$rep <- renderbs4InfoBox({
@@ -356,9 +360,11 @@ mod_lme4_single_server <- function(input, output, session, data){
     nreps <- length(unique(as.factor(data$data()[,input$Id086])))
     bs4InfoBox(
       title = "Num of Replicates",
-      gradientColor = "danger",
+      color = "danger",
+      gradient = TRUE,
+      fill = TRUE,
       value = nreps,
-      icon = "sync", elevation = 3
+      icon = shiny::icon("sync"), elevation = 3
     )
     
   })
@@ -368,9 +374,11 @@ mod_lme4_single_server <- function(input, output, session, data){
     nbl <- length(unique(as.factor(data$data()[,input$Id087])))
     bs4InfoBox(
       title = "Num of Blocks",
-      gradientColor = "warning",
+      color = "warning",
+      gradient = TRUE,
+      fill = TRUE,
       value = nbl,
-      icon = "th", elevation = 3
+      icon = shiny::icon("th"), elevation = 3
     )
   })
   

@@ -22,7 +22,7 @@ mod_MSA_results_ui <- function(id){
                   fluidRow(
                     bs4Dash::box(width = 12,
                                  status = "success",
-                                 solidHeader = TRUE,
+                                 solidHeader = FALSE,
                                  title = tagList(icon=icon("info-circle"), "Variance Component Estimates"),
                                  echarts4r::echarts4rOutput(ns("comparison"))
                       )
@@ -34,9 +34,9 @@ mod_MSA_results_ui <- function(id){
                       shinyjs::hidden(
                         div(id=ns("summ"),
                             fluidRow(
-                              bs4TabCard(width = 12,id = "tabcards",tabStatus = "light",maximizable = T,solidHeader = T,closable = F,
-                                         status ="success", 
-                                         bs4TabPanel(tabName = "Correlation",
+                              bs4TabCard(width = 12,id = "tabcards",maximizable = T,solidHeader = FALSE,closable = F,
+                                         status ="success", side = "left", type = "tabs",
+                                         tabPanel(title = "Correlation",
                                                      # echarts4r::echarts4rOutput(ns("correlation")),
                                                      dropdown(
                                                        prettyRadioButtons(inputId = ns("type"),label = "Download Plot File Type", outline = TRUE,fill = FALSE,shape = "square",inline = TRUE,
@@ -60,16 +60,16 @@ mod_MSA_results_ui <- function(id){
                                                        style = "unite", icon = icon("gear"),
                                                        status = "warning", width = "300px"
                                                      ),
-                                                     shinycssloaders::withSpinner(plotOutput(ns("corr")),type = 5,color = "#28a745"),
-                                                     icon = icon("arrow-circle-right")
+                                                     shinycssloaders::withSpinner(plotOutput(ns("corr")),type = 5,color = "#28a745")
+                                                     # icon = icon("arrow-circle-right")
                                          ),
-                                         bs4TabPanel(tabName = "Summary", 
+                                         tabPanel(title = "Summary", 
                                                      shinycssloaders::withSpinner(
                                                        DT::dataTableOutput(ns("table")),
-                                                       type = 5,color = "#28a745"),
-                                                     icon = icon("arrow-circle-right")
+                                                       type = 5,color = "#28a745")
+                                                     # icon = icon("arrow-circle-right")
                                          ),
-                                         bs4TabPanel(tabName = "Predictions", 
+                                         tabPanel(title = "Predictions", 
                                                      DT::dataTableOutput(ns("effects")),
                                                      downloadButton(ns("downloadeffects"), 
                                                                     "Download Table",
@@ -78,12 +78,12 @@ mod_MSA_results_ui <- function(id){
                                                      downloadButton(ns("spread_effects"), 
                                                                     "Spread Table",
                                                                     class="btn-danger",
-                                                                    style= " color: white ; background-color: #d9534f; float:left"),
-                                                     icon = icon("arrow-circle-right")
+                                                                    style= " color: white ; background-color: #d9534f; float:left")
+                                                     # icon = icon("arrow-circle-right")
                                          ),
-                                         bs4TabPanel(tabName = "Potential Outliers", 
-                                                     DT::dataTableOutput(ns("extrem")),
-                                                     icon = icon("arrow-circle-right")
+                                         tabPanel(title = "Potential Outliers", 
+                                                     DT::dataTableOutput(ns("extrem"))
+                                                     # icon = icon("arrow-circle-right")
                                          )
                               )
                             )
@@ -99,7 +99,7 @@ mod_MSA_results_ui <- function(id){
                    fluidRow(
                      bs4Dash::box(width = 12,
                                   status = "success",
-                                  solidHeader = TRUE,
+                                  solidHeader = FALSE,
                                   title = tagList(icon=icon("braille"), "Spatial Trend"),
                                   dropdown(
                                     prettyRadioButtons(inputId = ns("typefile"),label = "Download Plot File Type", outline = TRUE,fill = FALSE,shape = "square",inline = TRUE,
@@ -141,7 +141,7 @@ mod_MSA_results_ui <- function(id){
                                     col_2()
                                   ),icon = icon("th")
                      ),
-                     bs4Dash::box(width = 12, status = "success", solidHeader = T,title = "Predictions Plot",
+                     bs4Dash::box(width = 12, status = "success", solidHeader = FALSE,title = "Predictions Plot",
                                   collapsible = T, maximizable = T,
                                   echarts4r::echarts4rOutput(ns("ranking"))
                                   )

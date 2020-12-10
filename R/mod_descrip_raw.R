@@ -42,7 +42,7 @@ mod_descrip_raw_ui <- function(id, title=c("Scatterplot", "Boxplot"), In , Out, 
         plotly::plotlyOutput(ns("plot")),type = 5,color = "#28a745"
         ),
       if(corr) uiOutput(ns("correlation")),
-        width = 12,title = title ,status = "success",solidHeader = TRUE, maximizable = T
+        width = 12,title = title ,status = "success",solidHeader = FALSE, maximizable = T
       )
     )
   )
@@ -168,7 +168,7 @@ mod_descrip_raw_server <- function(input, output, session, data, plot = c(1,2) )
         title = title,
         value = y,
         icon = "ruler-vertical",
-        status = st,
+        color = st,
         iconElevation = 3
       )
     })
@@ -187,7 +187,7 @@ mod_descrip_raw_server <- function(input, output, session, data, plot = c(1,2) )
         title = title,
         value = x,
         icon = "ruler-horizontal",
-        status = st,
+        color = st,
         iconElevation = 3
       )
     })

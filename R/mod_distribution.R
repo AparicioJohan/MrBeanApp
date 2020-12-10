@@ -13,7 +13,7 @@ mod_distribution_ui <- function(id){
     fluidRow(
       column(width = 3,
           fluidRow(
-            bs4Dash::box(width = 12,status = "success",title = "Descriptive",
+            bs4Dash::box(width = 12,status = "success",title = "Descriptive",solidHeader = TRUE,
                    selectInput(inputId = ns("Id088"), label = "Select variable",choices = "", width =  '100%'  ),
                    sliderInput(ns("alphagg"), label = "Alpha Bar", min = 0, max =  1, value =  0.9 ,width = "100%" ),
                    sliderInput(ns("bindwidth"), label = "Bindwidth", min = 3, max =  150, value =  30 ,width = "100%", step = 2 ),
@@ -33,11 +33,11 @@ mod_distribution_ui <- function(id){
       
       column(width = 9,
         fluidRow(
-           bs4TabCard(width = 12,tabStatus = "light",maximizable = T,solidHeader = T,closable = F,
-                 status ="success", 
+           bs4TabCard(width = 12,maximizable = T,solidHeader = FALSE,closable = F, # tabStatus = "light"
+                 status = "success",  side = "left", type = "tabs", 
                  id = "tabcard",
-                 bs4TabPanel(
-                   tabName = "Histogram", 
+                 tabPanel(
+                   title = "Histogram", 
                    active = T,
                    dropdown(
                      prettyRadioButtons(inputId = ns("typefileDes"),label = "Download Plot File Type", outline = TRUE,fill = FALSE,shape = "square",inline = TRUE,
@@ -76,8 +76,8 @@ mod_distribution_ui <- function(id){
                      )
                    )
                  ),
-                 bs4TabPanel(
-                   tabName = "Summary Statistics", 
+                 tabPanel(
+                   title = "Summary Statistics", 
                    active = F,
                    div(style = 'text-align: center', 
                        verbatimTextOutput(ns("statisticSumm")) 

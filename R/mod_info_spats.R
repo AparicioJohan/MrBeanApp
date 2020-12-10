@@ -21,15 +21,15 @@ mod_info_spats_ui <- function(id){
     
     fluidRow(
       
-      bs4TabCard(width = 6,id = "tabcard",tabStatus = "light",maximizable = T,solidHeader = T,closable = F,
-                 status ="success", 
-                 bs4TabPanel(tabName = "Summary", 
+      bs4TabCard(width = 6,id = "tabcard",maximizable = T,closable = F,
+                 status = "success",  side = "left", type = "tabs",
+                 tabPanel(title  = "Summary", 
                              helpText("First upload your data and fill the required fields."),
                              shinycssloaders::withSpinner(
                                verbatimTextOutput(ns("summary2")),
                                type = 5,color = "#28a745"),icon = icon("arrow-circle-right")
                  ),
-                 bs4TabPanel(tabName = "Model Plot",
+                 tabPanel(title = "Model Plot",
                              dropdown(
                                prettyRadioButtons(inputId = ns("typefile"),label = "Download Plot File Type", outline = TRUE,fill = FALSE,shape = "square",inline = TRUE,
                                                   choices = list(PNG="png",PDF="pdf"),
@@ -56,10 +56,10 @@ mod_info_spats_ui <- function(id){
                              materialSwitch(ns("tog_plot"),label = "Percentage",status = "success", value = FALSE),
                              icon = icon("th")
                  ),
-                 bs4TabPanel(tabName = "Variance-Plot",icon = icon("signal"),
+                 tabPanel(title = "Variance-Plot",icon = icon("signal"),
                              shinycssloaders::withSpinner(plotly::plotlyOutput(ns("varcomp"),height = "500px"),type = 5,color = "#28a745")
                              ),
-                 bs4TabPanel(tabName = "Variance-Table",icon = icon("table"),
+                 tabPanel(title = "Variance-Table",icon = icon("table"),
                              shinycssloaders::withSpinner(DT::dataTableOutput(ns("vartable")),type = 6,color = "#28a745"),
                              downloadButton(ns("downloadTable"), 
                                             "Download Table", class="btn-success",
@@ -67,7 +67,7 @@ mod_info_spats_ui <- function(id){
                  )
       ),
       bs4Dash::box(status = "success",width = 6,collapsible = TRUE,collapsed = T,
-                   title =   tagList(icon=icon("cloud-sun-rain"), "Spatial Trend")  ,solidHeader = TRUE,maximizable = T,
+                   title =   tagList(icon=icon("cloud-sun-rain"), "Spatial Trend")  ,solidHeader = FALSE,maximizable = T,
                    shinycssloaders::withSpinner(
                      plotly::plotlyOutput(ns("trend")),type = 5,color = "#28a745")
                    )
@@ -184,8 +184,8 @@ mod_info_spats_server <- function(input, output, session, Model){
     validate(need(ran, "Heritability can only be calculated when genotype is random"))
     H <- getHeritability(modelo())
     bs4ValueBox(value = H,subtitle = "Heritability", 
-                icon="pagelines",  
-                status = "info",elevation = 3,
+                icon= shiny::icon("pagelines"),  
+                color = "info",elevation = 3,
                 footer = HTML("<center> 0 = Bad / 1 = Good <center> "))
   })
   
@@ -204,16 +204,16 @@ mod_info_spats_server <- function(input, output, session, Model){
   output$maxline <- renderbs4ValueBox({
     a <- round(sqrt(modelo()$psi[1]),2)
     bs4ValueBox(value = a,subtitle = "Residual SD", 
-                icon=("arrow-circle-down"),  
-                status = "success",elevation = 3,
+                icon=shiny::icon("arrow-circle-down"),  
+                color = "success",elevation = 3,
                 footer = HTML("<center> Looking for low <center>"))
   })
   
   output$minline <- renderbs4ValueBox({
     a <- R.square(modelo())
     bs4ValueBox(value = a,subtitle = "R-Square", 
-                icon=("arrow-circle-up"),  
-                status = "danger",elevation = 3,
+                icon=shiny::icon("arrow-circle-up"),  
+                color = "danger",elevation = 3,
                 footer = HTML("<center> 0 = Bad / 1 = Good  <center>"))
   })
   
@@ -223,8 +223,8 @@ mod_info_spats_server <- function(input, output, session, Model){
       m0 <- modelo()
       cv <- CV.spats(m0)
       bs4ValueBox(value = paste0(cv,"%"),subtitle = "Coefficient of Variation", 
-                  icon= "arrow-circle-up",  
-                  status = "warning",elevation = 3,
+                  icon= shiny::icon("arrow-circle-up"),  
+                  color = "warning",elevation = 3,
                   footer = HTML("<center> Looking for low <center>"))
     })
   })

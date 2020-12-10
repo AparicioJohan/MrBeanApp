@@ -12,7 +12,7 @@ mod_import_dt_ui <- function(id){
   tagList(
     fluidRow(
       bs4Dash::box(title = tagList(shiny::icon("upload"), "Source"),
-                   solidHeader = TRUE,status = "success",maximizable = F,closable = F,
+                   solidHeader = FALSE,status = "success",maximizable = F,closable = F,
                    width = 3,
                    radioGroupButtons(
                      inputId = ns("Id004"),
@@ -25,7 +25,7 @@ mod_import_dt_ui <- function(id){
       
       column(width = 3,
              conditionalPanel("input.Id004==2", ns = ns,
-                              bs4Dash::box(title =  tagList(shiny::icon("file-upload"), "Import Data"),solidHeader = TRUE,width = 12, status = "success",
+                              bs4Dash::box(title =  tagList(shiny::icon("file-upload"), "Import Data"),solidHeader = FALSE,width = 12, status = "success",
                                            maximizable = T,closable = F,
                                            fileInput(inputId=ns('file1'),width = "100%",
                                                      label='Load your database',
@@ -48,7 +48,7 @@ mod_import_dt_ui <- function(id){
              conditionalPanel("input.Id004==2", ns=ns,
                               shinyjs::hidden(
                                 div(id = ns("when_file1"),
-                                    bs4Dash::box(title =  tagList(shiny::icon("wrench"), "Attributes"),solidHeader = TRUE,
+                                    bs4Dash::box(title =  tagList(shiny::icon("wrench"), "Attributes"),solidHeader = FALSE,
                                                  maximizable = T,closable = F,
                                                  radioButtons(inputId=ns("miss"),label="Missing value character: ",
                                                               choices = list("NA",'Empty', "Other"),inline = T),
@@ -70,7 +70,7 @@ mod_import_dt_ui <- function(id){
              conditionalPanel("input.Id004==2", ns=ns,
                               shinyjs::hidden(
                                 div(id = ns("when_file2"),
-                                    bs4Dash::box(title =  tagList(shiny::icon("filter"), "Subset"),solidHeader = TRUE,
+                                    bs4Dash::box(title =  tagList(shiny::icon("filter"), "Subset"),solidHeader = FALSE,
                                                  maximizable = T,closable = F,
                                                  prettyCheckbox(
                                                    inputId = ns("subset"), label = "Select a data subset", icon = icon("check"),outline = TRUE,fill = FALSE,shape="square",
@@ -97,7 +97,7 @@ mod_import_dt_ui <- function(id){
                           shinycssloaders::withSpinner( 
                             DT::dataTableOutput(ns("data")),type = 5,color = "#28a745" 
                             ),#style = "overflow-x: scroll;",  # overflow-y: scroll;
-                          width = 12,title =  tagList(shiny::icon("file-import"), "Data"),status = "success",solidHeader = TRUE,collapsible = TRUE) 
+                          width = 12,title =  tagList(shiny::icon("file-import"), "Data"),status = "success",solidHeader = FALSE,collapsible = TRUE) 
              ),br() 
   )
 }
@@ -131,7 +131,7 @@ mod_import_dt_server <- function(input, output, session){
           column(width = 4,
                  fluidRow(
                  bs4Dash::box(title =  tagList(shiny::icon("question-circle"), "Help"), 
-                              solidHeader = TRUE,width = 12,status = "success",
+                              solidHeader = FALSE,width = 12,status = "success",
                               h3("How to use BMS within Mr.Bean?"),
                               hr(),
                               includeHTML(
@@ -142,7 +142,7 @@ mod_import_dt_server <- function(input, output, session){
           ),
           column(width = 4,
                  fluidRow(
-                 bs4Dash::box(title = tagList(shiny::icon("users"), "BMS"),solidHeader = TRUE,width = 12,status = "success",
+                 bs4Dash::box(title = tagList(shiny::icon("users"), "BMS"),solidHeader = FALSE,width = 12,status = "success",
                               materialSwitch(ns("config"),label = "Configuration",status = "success", right = T, width = "100%"),
                               div(id=ns("bms_config"),
                                   fluidRow(
@@ -161,7 +161,7 @@ mod_import_dt_server <- function(input, output, session){
           ),
           column(width = 4,
                  fluidRow(
-                 bs4Dash::box(title= tagList(shiny::icon("cogs"), "Information"),status = "success",width = 12,solidHeader = TRUE,
+                 bs4Dash::box(title= tagList(shiny::icon("cogs"), "Information"),status = "success",width = 12,solidHeader = FALSE,
                               selectInput(inputId=ns("Id008"),
                                           label=  "Crops",
                                           choices="",width = "100%"),

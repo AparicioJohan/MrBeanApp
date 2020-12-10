@@ -16,16 +16,16 @@ mod_asreml_selector_ui <- function(id){
     fluidRow(
       column(width = 4,
              fluidRow(
-               bs4Dash::box(width = 12,status = "success", solidHeader = TRUE,title = tagList(icon=icon("cogs"), "Configuration"),   # background = "light-blue"  
+               bs4Dash::box(width = 12,status = "success", solidHeader = FALSE,title = tagList(icon=icon("cogs"), "Configuration"),   # background = "light-blue"  
                             selectInput(inputId=ns("variable"),
                                         label= tagList( "Response Variable",
-                                                        icon=bs4TooltipUI(icon("question-circle"),
+                                                        icon=tooltip(icon("question-circle"),
                                                                           title = "The column with the continous response variable.",
                                                                           placement = "top")),
                                         choices="", width = "100%"),
                             selectInput(inputId=ns("genotype"),
                                         label=tagList( "Genotype",
-                                                       icon=bs4TooltipUI(icon("question-circle"),
+                                                       icon=tooltip(icon("question-circle"),
                                                                          title = "The column with genotypes.",
                                                                          placement = "top")),
                                         choices="", width = "100%"),
@@ -74,7 +74,7 @@ mod_asreml_selector_ui <- function(id){
                                   column(6,
                                          selectInput(inputId=ns("block"),
                                                      label=tagList( "Block",
-                                                                    icon=bs4TooltipUI(icon("question-circle"),
+                                                                    icon=tooltip(icon("question-circle"),
                                                                                       title = "Select the replicate or complete block",
                                                                                       placement = "top")),
                                                      choices="", width = "100%")
@@ -82,7 +82,7 @@ mod_asreml_selector_ui <- function(id){
                                   column(6,
                                          selectInput(inputId=ns("incomplete"),
                                                      label=tagList( "IncBlock",
-                                                                    icon=bs4TooltipUI(icon("question-circle"),
+                                                                    icon=tooltip(icon("question-circle"),
                                                                                       title = "Select Incomplete Block",
                                                                                       placement = "top")),
                                                      choices="", width = "100%")
@@ -98,7 +98,7 @@ mod_asreml_selector_ui <- function(id){
                                   column(6,
                                          selectInput(inputId=ns("cov1"),
                                                      label=tagList( "Covariate 1",
-                                                                    icon=bs4TooltipUI(icon("question-circle"),
+                                                                    icon=tooltip(icon("question-circle"),
                                                                                       title = "Select a covariate",
                                                                                       placement = "top")),
                                                      choices="", width = "100%")
@@ -106,7 +106,7 @@ mod_asreml_selector_ui <- function(id){
                                   column(6,
                                          selectInput(inputId=ns("cov2"),
                                                      label=tagList( "Covariate 2",
-                                                                    icon=bs4TooltipUI(icon("question-circle"),
+                                                                    icon=tooltip(icon("question-circle"),
                                                                                       title = "Select a covariate",
                                                                                       placement = "top")),
                                                      choices="", width = "100%")
@@ -129,9 +129,9 @@ mod_asreml_selector_ui <- function(id){
                    fluidRow(
                      column(12,
                             fluidRow(
-                              bs4TabCard(width = 12,id = "selector",tabStatus = "light",maximizable = T,solidHeader = T,closable = F,
-                                         status ="success", 
-                                         bs4TabPanel(tabName = "Comparison",active = T,
+                              bs4TabCard(width = 12,id = "selector",maximizable = T,solidHeader = FALSE,closable = F,
+                                         status ="success", side = "left", type = "tabs",
+                                         tabPanel(title = "Comparison",active = T,
                                                      fluidRow(
                                                        col_4(),
                                                        col_4(
@@ -149,7 +149,7 @@ mod_asreml_selector_ui <- function(id){
                                                      ),
                                                      icon = icon("th")
                                          ),
-                                         bs4TabPanel(tabName = "Summary",
+                                         tabPanel(title = "Summary",
                                                      shinycssloaders::withSpinner( 
                                                        DT::dataTableOutput(ns("models")),type = 5,color = "#28a745" 
                                                      ),

@@ -20,9 +20,9 @@ mod_MET_results_ui <- function(id){
           fluidRow(
             column(6,
                    fluidRow(
-                     bs4TabCard(width = 12,id = "MET_as",tabStatus = "light",maximizable = T,solidHeader = T,closable = F,
-                                status ="success", 
-                                bs4TabPanel(tabName = "Correlation Matrix",active = T,
+                     bs4TabCard(width = 12,id = "MET_as",maximizable = T,solidHeader = FALSE,closable = F,
+                                status ="success", side = "left", type = "tabs",
+                                tabPanel(title = "Correlation Matrix",active = T,
                                             fluidRow(
                                               col_3(
                                                 dropdown(
@@ -67,7 +67,7 @@ mod_MET_results_ui <- function(id){
                                               col_3()
                                             )
                                 ),
-                                bs4TabPanel(tabName = "Covariance Matrix",icon = icon("signal"),
+                                tabPanel(title = "Covariance Matrix",icon = icon("signal"),
                                             fluidRow(
                                               col_3(
                                                 dropdown(
@@ -108,13 +108,13 @@ mod_MET_results_ui <- function(id){
                      )
                    ),
                    fluidRow(
-                     bs4TabCard(width = 12,id = "MET_summ",tabStatus = "light",maximizable = T,solidHeader = T,closable = F,
-                                status ="success", 
-                                bs4TabPanel(tabName = "Residuals",active = T,
+                     bs4TabCard(width = 12,id = "MET_summ",maximizable = T,solidHeader = FALSE,closable = F,
+                                status ="success", side = "left", type = "tabs",
+                                tabPanel(title = "Residuals",active = T,
                                             shinycssloaders::withSpinner(plotOutput(ns("residuals_aug")),type = 6,color = "#28a745"),
                                             icon = icon("th")
                                 ),
-                                bs4TabPanel(tabName = "Information",icon = icon("signal"),
+                                tabPanel(title = "Information",icon = icon("signal"),
                                             strong("Formula:"),
                                             shinycssloaders::withSpinner(verbatimTextOutput(ns("formula")),type = 6,color = "#28a745" ),
                                             hr(),
@@ -132,7 +132,7 @@ mod_MET_results_ui <- function(id){
                          type = 5,color = "#28a745"
                        ),
                        width = 12,title = tagList(icon=icon("chart-line"), "Predictions"),
-                       status = "success",solidHeader = TRUE, maximizable = T,
+                       status = "success",solidHeader = FALSE, maximizable = T,
                        downloadButton(ns("downloadData2"),label = "Download"),
                        actionBttn(
                          inputId = ns("pca"), 
@@ -189,7 +189,7 @@ mod_MET_results_ui <- function(id){
                          col_3()
                        ),
                        DT::dataTableOutput(ns("anovamix")) ,
-                       width = 12,title = tagList(icon=icon("exchange-alt"), "Comparison"),status = "success",solidHeader = TRUE
+                       width = 12,title = tagList(icon=icon("exchange-alt"), "Comparison"),status = "success",solidHeader = FALSE
                      )
                    )
             )

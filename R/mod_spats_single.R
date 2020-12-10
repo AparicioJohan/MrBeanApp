@@ -12,7 +12,7 @@ mod_spats_single_ui <- function(id){
   tagList(
     HTML('<h1 style="font-weight: bold; color: #00a65a;">Single-Site Spatial Analysis</h1>'),
     fluidRow(
-      bs4Dash::box( width = 3,status = "success", solidHeader = TRUE,
+      bs4Dash::box( width = 3,status = "success", solidHeader = FALSE,
                     title = tagList(icon=icon("braille"), "SpATS",
                                     actionButton(ns("btn"),
                                                  tagList(icon=icon("question-circle"), "Guide"),
@@ -38,7 +38,7 @@ mod_spats_single_ui <- function(id){
                         pickerInput(
                           inputId = ns("selected"),
                           label = tagList( "Checks",
-                                           icon=bs4TooltipUI(icon("question-circle"),
+                                           icon=tooltip(icon("question-circle"),
                                                              title = "Select Checks",
                                                              placement = "top")
                           ), 
@@ -52,7 +52,7 @@ mod_spats_single_ui <- function(id){
                                                                                               effect factor in the MLM.",data.position = "right",color="red"   ) ),
       
       
-      bs4Dash::box(width = 2, status = "success", solidHeader = TRUE,collapsible = TRUE ,
+      bs4Dash::box(width = 2, status = "success", solidHeader = FALSE,collapsible = TRUE ,
                    title=tagList(icon=icon("th"), "Coordinates"),
                    rintrojs::introBox(
                      selectInput(inputId=ns("column"),label=with_red_star("Column"),  choices=""),
@@ -61,7 +61,7 @@ mod_spats_single_ui <- function(id){
                                  choices=""),data.step = 3,data.intro = "Select the columns in your dataset that contain the Row and Column coordinates for the plots in your trial.",data.position = "right" ) ),
       
       
-      bs4Dash::box(width = 2, title =tagList(icon=icon("tractor"), 'Factors')  ,status = "success", solidHeader = TRUE,collapsible = TRUE ,
+      bs4Dash::box(width = 2, title =tagList(icon=icon("tractor"), 'Factors')  ,status = "success", solidHeader = FALSE,collapsible = TRUE ,
                    rintrojs::introBox(
                      selectizeInput(ns("show_fixed"), "Fixed ",
                                     choices = "", multiple = TRUE),
@@ -73,7 +73,7 @@ mod_spats_single_ui <- function(id){
                      selectizeInput(ns("covariate"), "Covariate",
                                     choices = "", multiple = TRUE,selected=NULL),
                      data.step = 5,data.intro = "In case you want to include additional quantitative variables in the MLM.",data.position = "bottom",color="red")),
-      bs4Dash::box(width = 2, status = "success",solidHeader = TRUE, title=tagList(icon=icon("tasks"), "Model"),collapsible = TRUE ,
+      bs4Dash::box(width = 2, status = "success",solidHeader = FALSE, title=tagList(icon=icon("tasks"), "Model"),collapsible = TRUE ,
                    rintrojs::introBox(
                      actionButton(ns("action"), label = "Run Model", class="btn-success",
                                   style="display:rigth; color: white ; background-color: #28a745"),
@@ -94,7 +94,7 @@ mod_spats_single_ui <- function(id){
       #         br()
       #         ),
       
-      bs4Dash::box(width = 3, status = "success",solidHeader = TRUE,title =tagList(icon=icon("sliders-h"), "Segments and Report") ,collapsible = TRUE ,
+      bs4Dash::box(width = 3, status = "success",solidHeader = FALSE,title =tagList(icon=icon("sliders-h"), "Segments and Report") ,collapsible = TRUE ,
                    rintrojs::introBox(
                      materialSwitch(ns("able"),label = "Segments",status = "success"),
                      uiOutput(ns("segcol")),uiOutput(ns("segrow")),data.step=7,data.intro="Enable this box in case you have a large-scale trial (nColumns > 100 ; nRows > 100)

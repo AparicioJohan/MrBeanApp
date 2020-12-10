@@ -15,7 +15,7 @@ mod_residuals_lme4_ui <- function(id){
         shinycssloaders::withSpinner(
           plotly::plotlyOutput(ns("plot_effects")),type = 6,color = "#28a745"
           ),
-        width = 12,title = tagList(shiny::icon("sort-numeric-up"), "Genotype Effects"),status = "success",solidHeader = TRUE
+        width = 12,title = tagList(shiny::icon("sort-numeric-up"), "Genotype Effects"),status = "success",solidHeader = FALSE
         ) 
       ),
     
@@ -23,8 +23,8 @@ mod_residuals_lme4_ui <- function(id){
       column(width=6,
              fluidRow(
                bs4TabCard(width = 12,id = "Res_lme4", title = tagList(shiny::icon("bar-chart-o"), "Residuals") ,
-                          status = "danger",tabStatus = "light",collapsible = T , maximizable = T,solidHeader = T,
-                          bs4TabPanel(tabName = "Residual",active = T, helpText("First run the Mixed Model"),
+                          status = "success", collapsible = T , maximizable = T,solidHeader = FALSE, side = "left", type = "tabs",
+                          tabPanel(title = "Residual",active = T, helpText("First run the Mixed Model"),
                                       prettySwitch(
                                         inputId = ns("swicht"),
                                         label = "Fitted Values", 
@@ -34,11 +34,11 @@ mod_residuals_lme4_ui <- function(id){
                                       shinycssloaders::withSpinner(
                                         plotly::plotlyOutput(ns("plotati3")),type = 5,color = "#28a745"),icon = icon("arrow-circle-right")
                           ),
-                          bs4TabPanel(tabName = "QQplot",
+                          tabPanel(title = "QQplot",
                                       shinycssloaders::withSpinner(
                                         plotly::plotlyOutput(ns("Normality")),type = 5,color = "#28a745"),icon = icon("ellipsis-h")
                           ),
-                          bs4TabPanel(tabName = "Hist",
+                          tabPanel(title = "Hist",
                                       shinycssloaders::withSpinner(
                                         plotly::plotlyOutput(ns("Hgram")),type = 5,color = "#28a745"),icon = icon("ellipsis-h"))
                )
@@ -48,7 +48,7 @@ mod_residuals_lme4_ui <- function(id){
       column(width=6,
              fluidRow(
                bs4Card(width = 12,style = "overflow-x: scroll;",
-                       status = "success",title = "Outliers Residuals",solidHeader = TRUE,collapsible = TRUE,collapsed = FALSE,
+                       status = "success",title = "Outliers Residuals",solidHeader = FALSE,collapsible = TRUE,collapsed = FALSE,
                        shinycssloaders::withSpinner(DT::dataTableOutput(ns("OUT3")),type = 5,color = "#28a745")
                )
              )

@@ -14,16 +14,16 @@ mod_aug_model_ui <- function(id){
     fluidRow(
       column(width = 4,
              fluidRow(
-               bs4Dash::box(width = 12,status = "success", solidHeader = TRUE,title = tagList(icon=icon("cogs"), "Components"),   # background = "light-blue"  
+               bs4Dash::box(width = 12,status = "success", solidHeader = FALSE,title = tagList(icon=icon("cogs"), "Components"),   # background = "light-blue"  
                             selectInput(inputId=ns("variable"),
                                         label= tagList( "Response Variable",
-                                                        icon=bs4TooltipUI(icon("question-circle"),
+                                                        icon=tooltip(icon("question-circle"),
                                                                           title = "The column with the continous response variable.",
                                                                           placement = "top")),
                                         choices="", width = "100%"),
                             selectInput(inputId=ns("genotype"),
                                         label=tagList( "Genotype",
-                                                       icon=bs4TooltipUI(icon("question-circle"),
+                                                       icon=tooltip(icon("question-circle"),
                                                                          title = "The column with genotypes.",
                                                                          placement = "top")),
                                         choices="", width = "100%"),
@@ -42,7 +42,7 @@ mod_aug_model_ui <- function(id){
                             hr(),
                             # selectInput(inputId=ns("block"),
                             #             label=tagList( "Block",
-                            #                            icon=bs4TooltipUI(icon("question-circle"),
+                            #                            icon=tooltip(icon("question-circle"),
                             #                                              title = "Select the variable with Experiment-ID",
                             #                                              placement = "top")),
                             #             choices="", width = "100%"),
@@ -50,7 +50,7 @@ mod_aug_model_ui <- function(id){
                               column(6,
                                      selectInput(inputId=ns("block"),
                                                  label=tagList( "Block",
-                                                                icon=bs4TooltipUI(icon("question-circle"),
+                                                                icon=tooltip(icon("question-circle"),
                                                                                   title = "Select the variable with Experiment-ID",
                                                                                   placement = "top")),
                                                  choices="", width = "100%")
@@ -58,7 +58,7 @@ mod_aug_model_ui <- function(id){
                               column(6,
                                      selectInput(inputId=ns("covariate"),
                                                  label=tagList( "Covariate (Optional)",
-                                                                icon=bs4TooltipUI(icon("question-circle"),
+                                                                icon=tooltip(icon("question-circle"),
                                                                                   title = "Select covariate",
                                                                                   placement = "top")),
                                                  choices="", width = "100%")
@@ -89,7 +89,7 @@ mod_aug_model_ui <- function(id){
              shinyjs::hidden(
                div(id=ns("only"),
                    fluidRow(
-                     bs4Dash::box(width = 12, title =  tagList(icon=icon("wrench"), "Comparison Statistics"),status = "success", solidHeader = TRUE,collapsible = TRUE ,
+                     bs4Dash::box(width = 12, title =  tagList(icon=icon("wrench"), "Comparison Statistics"),status = "success", solidHeader = FALSE,collapsible = TRUE ,
                                   HTML(
                                     paste0("<center>",tableOutput(ns("models_aug")),"</center>")
                                   ),
@@ -124,9 +124,9 @@ mod_aug_model_ui <- function(id){
                      shinyjs::hidden(
                      div(id=ns("spats"),
                      fluidRow(
-                     bs4TabCard(width = 12,id = "augment",tabStatus = "light",maximizable = T,solidHeader = T,closable = F,
-                                status ="success", 
-                                bs4TabPanel(tabName = "Spatial Plots",active = T,
+                     bs4TabCard(width = 12,id = "augment",maximizable = T,solidHeader = FALSE,closable = F,
+                                status ="success", side = "left", type = "tabs",
+                                tabPanel(title = "Spatial Plots",active = T,
                                             dropdown(
                                               prettyRadioButtons(inputId = ns("typefile"),label = "Download Plot File Type", outline = TRUE,fill = FALSE,shape = "square",inline = TRUE,
                                                                  choices = list(PNG="png",PDF="pdf"),
@@ -151,17 +151,17 @@ mod_aug_model_ui <- function(id){
                                             ),
                                             shinycssloaders::withSpinner(plotOutput(ns("plot_spats")),type = 5,color = "#28a745"),icon = icon("th")
                                 ),
-                                bs4TabPanel(tabName = "Diagnostics", 
+                                tabPanel(title = "Diagnostics", 
                                             shinycssloaders::withSpinner(plotOutput(ns("residuals_aug")),type = 6,color = "#28a745"),icon = icon("arrow-circle-right")
                                 ),
-                                bs4TabPanel(tabName = "Var-Components",icon = icon("signal"),
+                                tabPanel(title = "Var-Components",icon = icon("signal"),
                                             strong("Model Formula:"),
                                             shinycssloaders::withSpinner(verbatimTextOutput(ns("callModel")),type = 6,color = "#28a745" ),
                                             hr(),
                                             strong("Variance Component Estimates:"),
                                             shinycssloaders::withSpinner(verbatimTextOutput(ns("summ")),type = 6,color = "#28a745" )
                                 ),
-                                bs4TabPanel(tabName = "Semi-Variogram", 
+                                tabPanel(title = "Semi-Variogram", 
                                             shinycssloaders::withSpinner(plotOutput(ns("semivariogram")),type = 6,color = "#28a745"),icon = icon("arrow-circle-right")
                                 )
                              )#,

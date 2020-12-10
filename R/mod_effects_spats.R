@@ -18,7 +18,7 @@ mod_effects_spats_ui <- function(id){
                  plotly::plotlyOutput(ns("plotblup2")),
                  type = 5,color = "#28a745"
                ),
-               title = "Predictions Plot", solidHeader =  TRUE,status = "success",width = 12,collapsed = T)
+               title = "Predictions Plot", solidHeader = FALSE,status = "success",width = 12,collapsed = T)
       )
     ), 
     fluidRow(
@@ -30,7 +30,7 @@ mod_effects_spats_ui <- function(id){
                      DT::dataTableOutput(ns("blups")),
                      type = 5,color = "#28a745"
                    ),
-                   width = 12,title = "Predictions Table",status = "danger",solidHeader = TRUE,
+                   width = 12,title = "Predictions Table",status = "danger",solidHeader = FALSE,
                    downloadButton(ns("downloadData2"),label = "Download")
                  ),
                  width = 6),
@@ -39,7 +39,7 @@ mod_effects_spats_ui <- function(id){
                    shinycssloaders::withSpinner(
                      plotly::plotlyOutput(ns("hist")),type=5,color = "#28a745"
                    ),
-                   width = 12,title = "Histogram",status = "success",solidHeader = TRUE,collapsed = T),width = 6 
+                   width = 12,title = "Histogram",status = "success",solidHeader = FALSE,collapsed = T),width = 6 
                )
              )
              

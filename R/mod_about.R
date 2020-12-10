@@ -13,44 +13,44 @@ mod_about_ui <- function(id){
     fluidRow(
       column(width = 3,
              cardProfile(
-               src = "www/johan.jpg",
-               title = HTML(paste(bs4Badge("Johan Aparicio", rounded = T,position = "right",  status = "success"))), 
+               image = "www/johan.jpg",
+               title = HTML(paste(bs4Badge("Johan Aparicio", rounded = T,position = "right",  color = "success"))), 
                subtitle = HTML(paste(bs4Badge("Statistician", rounded = T,
                                               position = "right", 
-                                              status = "success"),rep_br(1),
+                                              color = "success"),rep_br(1),
                                      "<a href='https://www.linkedin.com/in/johan-steven-aparicio-arce-b68976193/'>
                                   <img src='https://image.flaticon.com/icons/svg/174/174857.svg' alt='img' style='width:20px;height:20px;border:0;'>
                                       </a>"))
              )),
       column(width = 3,
              cardProfile(
-               src = "www/salvador.png",
-               title = HTML(paste(bs4Badge("Salvador Gezan", rounded = T,position = "right",  status = "success"))), 
+               image = "www/salvador.png",
+               title = HTML(paste(bs4Badge("Salvador Gezan", rounded = T,position = "right",  color = "success"))), 
                subtitle = HTML(paste(bs4Badge("Statistics-Genetics", rounded = T,
                                               position = "right", 
-                                              status = "success"),rep_br(1),
+                                              color = "success"),rep_br(1),
                                      "<a href='https://www.linkedin.com/in/salvador-gezan-54768a1a/'>
                                   <img src='https://image.flaticon.com/icons/svg/174/174857.svg' alt='img' style='width:20px;height:20px;border:0;'>
                                       </a>"))
              )),
       column(width = 3,
              cardProfile(
-               src = "www/Daniel.jpg",
-               title = HTML(paste(bs4Badge("Daniel Ariza", rounded = T,position = "right",  status = "success"))),
+               image = "www/Daniel.jpg",
+               title = HTML(paste(bs4Badge("Daniel Ariza", rounded = T,position = "right",  color = "success"))),
                subtitle = HTML(paste(bs4Badge("Agronomist", rounded = T,
                                               position = "right", 
-                                              status = "success"),rep_br(1),
+                                              color = "success"),rep_br(1),
                                      "<a href='https://www.linkedin.com/in/daniel-ariza-suarez/'>
                                   <img src='https://image.flaticon.com/icons/svg/174/174857.svg' alt='img' style='width:20px;height:20px;border:0;'>
                                       </a>"))
              )),
       column(width = 3,
              cardProfile(
-               src = "www/Bodo2.jpg",
-               title = HTML(paste(bs4Badge("Bodo Raatz", rounded = T,position = "right",  status = "success"))),
+               image = "www/Bodo2.jpg",
+               title = HTML(paste(bs4Badge("Bodo Raatz", rounded = T,position = "right",  color = "success"))),
                subtitle = HTML( paste(bs4Badge( "Geneticist", rounded = T,
                                                   position = "right", 
-                                                  status = "success" ),rep_br(1),
+                                                  color = "success" ),rep_br(1),
                                       "<a href='https://www.linkedin.com/in/bodo-raatz-76786584/'>
                                   <img src='https://image.flaticon.com/icons/svg/174/174857.svg' alt='img' style='width:20px;height:20px;border:0;'>
                                       </a>"))

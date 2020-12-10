@@ -6,7 +6,7 @@
 #' @importFrom shiny shinyApp
 #' @importFrom golem with_golem_options
 #' @importFrom magrittr "%>%"
-#' @rawNamespace import(bs4Dash, except = c(updateTabsetPanel, column, tabsetPanel, tabPanel))
+#' @rawNamespace import(bs4Dash, except = c(progressBar, insertTab, actionButton, updateTabsetPanel, column, tabsetPanel, tabPanel))
 #' @rawNamespace import(shinyjs, except = c(alert, runExample))
 #' @rawNamespace import(lme4, except = show)
 #' @rawNamespace import(Matrix, except = show)

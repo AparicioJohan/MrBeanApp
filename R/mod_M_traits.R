@@ -15,17 +15,17 @@ mod_M_traits_ui <- function(id){
     fluidRow(
       column(width = 4,
              fluidRow(
-               bs4Dash::box(width = 12,status = "success", solidHeader = TRUE,title = tagList(icon=icon("cogs"), "Components"),   # background = "light-blue"  
+               bs4Dash::box(width = 12,status = "success", solidHeader = FALSE,title = tagList(icon=icon("cogs"), "Components"),   # background = "light-blue"  
                             selectInput(inputId=ns("variable"),
                                         label= tagList( "Response Variables",
-                                                        icon=bs4TooltipUI(icon("question-circle"),
+                                                        icon=tooltip(icon("question-circle"),
                                                                           title = "The column with the continous response variable. 
                                                                           (More than one)",
                                                                           placement = "top")),
                                         choices="", width = "100%", multiple = T),
                             selectInput(inputId=ns("genotype"),
                                         label=tagList( "Genotype",
-                                                       icon=bs4TooltipUI(icon("question-circle"),
+                                                       icon=tooltip(icon("question-circle"),
                                                                          title = "The column with genotypes.",
                                                                          placement = "top")),
                                         choices="", width = "100%"),
@@ -37,7 +37,7 @@ mod_M_traits_ui <- function(id){
                               pickerInput(
                                 inputId = ns("selected_checks"),
                                 label = tagList( "Checks",
-                                                 icon=bs4TooltipUI(icon("question-circle"),
+                                                 icon=tooltip(icon("question-circle"),
                                                                    title = "Select Checks",
                                                                    placement = "top")
                                 ), 
@@ -60,7 +60,7 @@ mod_M_traits_ui <- function(id){
                               column(6,
                                      selectizeInput(ns("show_fixed"), width = "100%",
                                                     label=tagList( "Fixed",
-                                                                   icon=bs4TooltipUI(icon("question-circle"),
+                                                                   icon=tooltip(icon("question-circle"),
                                                                                      title = "Additional fixed factors.",
                                                                                      placement = "top")),
                                                     choices = "", multiple = TRUE),
@@ -78,7 +78,7 @@ mod_M_traits_ui <- function(id){
                               column(6,
                                      selectizeInput(ns("show_random"), width = "100%",
                                                     label=tagList( "Random",
-                                                                   icon=bs4TooltipUI(icon("question-circle"),
+                                                                   icon=tooltip(icon("question-circle"),
                                                                                      title = "Additional random factors.",
                                                                                      placement = "top")),
                                                     choices = "", multiple = TRUE),
@@ -96,7 +96,7 @@ mod_M_traits_ui <- function(id){
                             ),
                             selectizeInput(ns("covariate"), width = "100%",
                                            label=tagList( "Covariate",
-                                                          icon=bs4TooltipUI(icon("question-circle"),
+                                                          icon=tooltip(icon("question-circle"),
                                                                             title = "Additional covariate.",
                                                                             placement = "top")),
                                            choices = "", multiple = TRUE,selected=NULL),
@@ -122,9 +122,9 @@ mod_M_traits_ui <- function(id){
                      
                      column(12,
                             fluidRow(
-                              bs4TabCard(width = 12,id = "multi_trait",tabStatus = "light",maximizable = T,solidHeader = T,closable = F,
-                                         status ="success", 
-                                         bs4TabPanel(tabName = "Spatial-Plot",active = T,
+                              bs4TabCard(width = 12,id = "multi_trait",maximizable = T,solidHeader = FALSE,closable = F,
+                                         status ="success", side = "left", type = "tabs", 
+                                         tabPanel(title = "Spatial-Plot",active = T,
                                                      dropdown(
                                                        prettyRadioButtons(inputId = ns("typefile"),label = "Download Plot File Type", outline = TRUE,fill = FALSE,shape = "square",inline = TRUE,
                                                                           choices = list(PNG="png",PDF="pdf"),
@@ -172,11 +172,11 @@ mod_M_traits_ui <- function(id){
                                                      # ),
                                                      icon = icon("th")
                                          ),
-                                         # bs4TabPanel(tabName = "Corr-1",
+                                         # tabPanel(title = "Corr-1",
                                          #             echarts4r::echarts4rOutput(ns("correlation")),
                                          #             icon = icon("arrow-circle-right")
                                          # ),
-                                         bs4TabPanel(tabName = "Correlations",
+                                         tabPanel(title = "Correlations",
                                                      dropdown(
                                                        prettyRadioButtons(inputId = ns("type"),label = "Download Plot File Type", outline = TRUE,fill = FALSE,shape = "square",inline = TRUE,
                                                                           choices = list(PNG="png",PDF="pdf"),
@@ -209,12 +209,13 @@ mod_M_traits_ui <- function(id){
                                                      ),
                                                      icon = icon("arrow-circle-right")
                                          ),
-                                         bs4TabPanel(tabName = "Summary", 
+                                         tabPanel(title = "Summary", 
                                                      shinycssloaders::withSpinner( 
                                                        DT::dataTableOutput(ns("summ")),type = 5,color = "#28a745" 
-                                                     )
+                                                     ),
+                                                  icon = icon("arrow-circle-right")
                                          ),
-                                         bs4TabPanel(tabName = "Predictions", 
+                                         tabPanel(title = "Predictions", 
                                                      DT::dataTableOutput(ns("effects")),
                                                      downloadButton(ns("downloadeffects"), 
                                                                     "Download Table",
@@ -226,19 +227,19 @@ mod_M_traits_ui <- function(id){
                                                                     style= " color: white ; background-color: #d9534f; float:left"),
                                                      icon = icon("arrow-circle-right")
                                          ),
-                                         bs4TabPanel(tabName = "Potential Outliers", 
+                                         tabPanel(title = "Potential Outliers", 
                                                      DT::dataTableOutput(ns("extrem")),
                                                      icon = icon("arrow-circle-right")
                                          )
                               )
                             )
                      ),
-                     bs4Dash::box(width = 12, status = "success", solidHeader = T,title = "Predictions Plot",
+                     bs4Dash::box(width = 12, status = "success", solidHeader = FALSE,title = "Predictions Plot",
                                   collapsible = T, maximizable = T,
                                   echarts4r::echarts4rOutput(ns("ranking")))
                    )
                    # fluidRow(
-                   #   bs4Dash::box(width = 12, title =  tagList(icon=icon("wrench"), "Factors"),status = "success", solidHeader = TRUE,collapsible = TRUE ,
+                   #   bs4Dash::box(width = 12, title =  tagList(icon=icon("wrench"), "Factors"),status = "success", solidHeader = FALSE,collapsible = TRUE ,
                    #                shinycssloaders::withSpinner( 
                    #                  DT::dataTableOutput(ns("summ")),type = 5,color = "#28a745" 
                    #                )

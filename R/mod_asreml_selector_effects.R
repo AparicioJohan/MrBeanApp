@@ -47,7 +47,7 @@ mod_asreml_selector_effects_ui <- function(id){
                          plotly::plotlyOutput(ns("plotblup2")),
                          type = 5,color = "#28a745"
                        ),
-                       title = "Predictions Plot", solidHeader =  TRUE,status = "success",width = 12,collapsed = F)
+                       title = "Predictions Plot", solidHeader = FALSE,status = "success",width = 12,collapsed = F)
                    )
             )
           ),
@@ -61,16 +61,16 @@ mod_asreml_selector_effects_ui <- function(id){
                              DT::dataTableOutput(ns("blups")),
                              type = 5,color = "#28a745"
                            ),
-                           width = 12,title = "Predictions Table",status = "success",solidHeader = TRUE,
+                           width = 12,title = "Predictions Table",status = "success",solidHeader = FALSE,
                            downloadButton(ns("downloadData2"),label = "Download")
                          )),
                        width = 5),
                      column(
                        width = 7 ,
                        fluidRow(
-                         bs4TabCard(width = 12,id = "selected_model",tabStatus = "light",maximizable = T,solidHeader = T,closable = F,
-                                    status ="success", 
-                                    bs4TabPanel(tabName = "Spatial-Plot",active = T,
+                         bs4TabCard(width = 12,id = "selected_model",maximizable = T,solidHeader = FALSE,closable = F,
+                                    status ="success", side = "left", type = "tabs",
+                                    tabPanel(title = "Spatial-Plot",active = T,
                                                 dropdown(
                                                   prettyRadioButtons(inputId = ns("typefile"),label = "Filetype for download plot", outline = TRUE,fill = FALSE,shape = "square",inline = TRUE,
                                                                      choices = list(PNG="png",PDF="pdf"),
@@ -95,7 +95,7 @@ mod_asreml_selector_effects_ui <- function(id){
                                                 ),
                                                 shinycssloaders::withSpinner(plotOutput(ns("plot_spats")),type = 5,color = "#28a745"),icon = icon("th")
                                     ),
-                                    bs4TabPanel(tabName = "Diagnostics", 
+                                    tabPanel(title = "Diagnostics", 
                                                 prettySwitch(
                                                   inputId = ns("swicht1"),
                                                   label = "Residuals", 
@@ -110,7 +110,7 @@ mod_asreml_selector_effects_ui <- function(id){
                                                 ),
                                                 style = "overflow-x: scroll;"
                                     ),
-                                    bs4TabPanel(tabName = "Info",icon = icon("signal"),
+                                    tabPanel(title = "Info",icon = icon("signal"),
                                                 strong("Formula:"),
                                                 shinycssloaders::withSpinner(verbatimTextOutput(ns("callModel")),type = 6,color = "#28a745" ),
                                                 hr(),
@@ -120,7 +120,7 @@ mod_asreml_selector_effects_ui <- function(id){
                                                 strong("ANOVA wald-test:"),
                                                 shinycssloaders::withSpinner(verbatimTextOutput(ns("aov")),type = 6,color = "#28a745" )
                                     ),
-                                    bs4TabPanel(tabName = "Semi-Variogram", 
+                                    tabPanel(title = "Semi-Variogram", 
                                                 prettySwitch(
                                                   inputId = ns("swicht2"),
                                                   label = "Residuals", 
