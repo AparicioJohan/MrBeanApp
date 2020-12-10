@@ -35,6 +35,7 @@ app_ui <- function(request) {
           messageItem(
             from = "MrBean",
             message  = "If you want to contribute...", 
+            time = "today", image = "www/beans3.png", 
             href = "http://buymeacoffee.com/mrbean"
           )
         )
