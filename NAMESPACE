@@ -3,7 +3,7 @@
 export(run_app)
 import(Matrix, except = show)
 import(SpATS)
-import(bs4Dash, except = c(updateTabsetPanel, column, tabsetPanel, tabPanel))
+import(bs4Dash, except = c(progressBar, insertTab, actionButton, updateTabsetPanel, column, tabsetPanel, tabPanel))
 import(data.table)
 import(echarts4r)
 import(ggplot2)
