@@ -26,7 +26,7 @@ app_ui <- function(request) {
         # ),
         HTML("<script type='text/javascript' src='https://cdnjs.buymeacoffee.com/1.0.0/button.prod.min.js' data-name='bmc-button' data-slug='mrbean' data-color='#FFFFFF' data-emoji=''  data-font='Cookie' data-text='Buy MrBean a coffee' data-outline-color='#000' data-font-color='#000' data-coffee-color='#fd0' ></script>"),
         # HTML("<a href='https://www.buymeacoffee.com/mrbean'><img src='https://img.buymeacoffee.com/button-api/?text=Buy me a coffee&emoji=&slug=mrbean&button_colour=039a16&font_colour=ffffff&font_family=Cookie&outline_colour=ffffff&coffee_colour=FFDD00'></a>"),
-        HTML('<a href="https://www.buymeacoffee.com/mrbean"><img src="https://img.buymeacoffee.com/button-api/?text=Buy me a coffee&emoji=&slug=mrbean&button_colour=039a16&font_colour=ffffff&font_family=Cookie&outline_colour=ffffff&coffee_colour=FFDD00"></a>'),
+        # HTML('<a href="https://www.buymeacoffee.com/mrbean"><img src="https://img.buymeacoffee.com/button-api/?text=Buy me a coffee&emoji=&slug=mrbean&button_colour=039a16&font_colour=ffffff&font_family=Cookie&outline_colour=ffffff&coffee_colour=FFDD00"></a>'),
         "Web Application for Spatial Analysis!",
         rightUi = bs4DropdownMenu(
           type = "messages",
@@ -303,9 +303,13 @@ app_ui <- function(request) {
         ),
       footer = bs4DashFooter(
         fixed = F,
-        left  = a(
-          href = "https://www.linkedin.com/in/johan-steven-aparicio-arce-b68976193/", 
-          target = "_blank", "J.aparicio@cgiar.org"
+        left  = tagList(
+          "v.2.0.1",
+          HTML("&nbsp; &nbsp; &nbsp; &nbsp;"),
+          a(
+            href = "https://www.linkedin.com/in/johan-steven-aparicio-arce-b68976193/", 
+            target = "_blank", "J.Aparicio@cgiar.org"
+          )
         ),
         right = "2020"
       ),

@@ -150,7 +150,7 @@ mod_lme4_single_server <- function(input, output, session, data){
     } else { gen <- gen }
     infoBox(title = "Formula",
             value = paste0(input$variable2," ~ ", gen, input$formula),
-            subtitle = "Check this",width = 3,icon = "code",elevation = 3)
+            subtitle = "Check this",width = 3,icon = shiny::icon("code"),elevation = 3)
   })
   
   ## Modelo alpha
