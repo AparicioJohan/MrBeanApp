@@ -207,6 +207,13 @@ mod_M_traits_ui <- function(id){
                                                        color = "success",
                                                        icon = icon("chart-pie")
                                                      ),
+                                                    actionBttn(
+                                                       inputId = ns("dendo"), 
+                                                       label = "Dendogram",
+                                                       style = "minimal", 
+                                                       color = "success",
+                                                       icon = icon("check")
+                                                     ),
                                                      icon = icon("arrow-circle-right")
                                          ),
                                          tabPanel(title = "Summary", 
@@ -682,6 +689,154 @@ mod_M_traits_server <- function(input, output, session, data){
     )
     )
   }, ignoreInit = T, ignoreNULL = T)
+  
+  
+
+# Dendogram ---------------------------------------------------------------
+
+  output$plot_dend <- renderPlot({
+    input$dendo
+    input$box
+    input$horiz
+    input$size_dendo
+    input$size_line
+    input$num_k
+    isolate({
+      req(blups())
+      data <- blups()
+      data <- data[,1:3] %>% tidyr::spread(., "Trait", "predicted.values" ) 
+      corr <- cor(data[,-1], use = "pairwise.complete.obs")
+      validate(need(input$num_k<ncol(corr), "The number of clusters should be less"))
+      res <- factoextra::hcut(corr, k =  input$num_k, stand = FALSE)
+      dend <- factoextra::fviz_dend(res,
+                                    rect = input$box,
+                                    cex = input$size_dendo,
+                                    lwd = input$size_line, main = "Cluster Dendrogram",
+                                    horiz = input$horiz)
+      dend
+    })
+  })
+  
+  observeEvent(input$dendo,{
+    showModal(modalDialog(
+      title = "Dendogram", size = "l", easyClose = T,
+      dropdown(
+        prettyRadioButtons(inputId = ns("filetype3"),label = "Download Plot File Type", outline = TRUE,fill = FALSE,shape = "square",inline = TRUE,
+                           choices = list(PNG="png",PDF="pdf"),
+                           icon = icon("check"),animation = "tada" ),
+        conditionalPanel(condition="input.filetype3=='png'", ns = ns,
+                         sliderInput(inputId=ns("png.wid.den"),min = 200,max = 2000,value = 900,label = "Width pixels") ,
+                         sliderInput(inputId=ns("png.hei.den"),min = 200,max = 2000,value = 600,label = "Height pixels")
+        ),
+        conditionalPanel(condition="input.filetype3=='pdf'", ns = ns,
+                         sliderInput(inputId=ns("pdf.wid.den"),min = 2,max = 20,value = 10,label = "Width") ,
+                         sliderInput(inputId=ns("pdf.hei.den"),min = 2,max = 20,value = 8,label = "Height")
+        ),
+        
+        downloadButton(ns("descargar3"), "Download Plot", class="btn-success",
+                       style= " color: white ; background-color: #28a745"), br() ,
+        animate = shinyWidgets::animateOptions(
+          enter = shinyWidgets::animations$fading_entrances$fadeInLeftBig,
+          exit  = shinyWidgets::animations$fading_exits$fadeOutLeftBig
+        ),
+        style = "unite", icon = icon("gear"),
+        tooltip = tooltipOptions(title = "Click to Download!"),
+        status = "warning", width = "300px"
+      ),
+      shinycssloaders::withSpinner(plotOutput(ns("plot_dend")),type = 6,color = "#28a745"),icon = icon("arrow-circle-right"),
+      br(),
+      strong("Configuration plot:"),
+      fluidRow(
+        col_2(),
+        col_4(
+          switchInput(
+            inputId = ns("box"),
+            label = "Boxes?", 
+            labelWidth = "100%",  
+            onStatus = "success", 
+            offStatus = "danger",
+            width = "100%", value = TRUE
+          )
+        ),
+        col_4(
+          switchInput(
+            inputId = ns("horiz"),
+            label = "Horizontal?", 
+            labelWidth = "100%",
+            onStatus = "success", 
+            offStatus = "danger",
+            width = "100%", value = TRUE
+          )
+        ),
+        col_2(),
+      ),
+      fluidRow(
+        col_4(
+          sliderTextInput(
+            inputId = ns("num_k"), label = "Clusters:", 
+            choices = c(2,3,4,5), 
+            grid = TRUE, selected = 2, width = "100%"
+          )
+        ),
+        col_4(
+          sliderTextInput(
+            inputId = ns("size_dendo"), label = "Letter size:", 
+            choices = c(0.2,0.4,0.6,0.8,1,1.5,2,2.5), 
+            grid = TRUE, selected = 1, width = "100%"
+          )
+        ),
+        col_4(
+          sliderTextInput(
+            inputId = ns("size_line"), label = "Line size:", 
+            choices = c(0.2,0.4,0.6,0.8,1,1.5,2,2.5), 
+            grid = TRUE, selected = 0.8, width = "100%"
+          )
+        )
+      )
+    )
+    )
+  }, ignoreInit = T, ignoreNULL = T)
+  
+  
+  # Download Dendogram
+  output$descargar3 <- downloadHandler(
+    filename = function() {
+      paste("dendogram", input$filetype3, sep = ".")
+    },
+    content = function(file){
+      if(input$filetype3=="png") {
+        png(file,width = input$png.wid.den ,height = input$png.hei.den)
+        req(blups())
+        data <- blups()
+        data <- data[,1:3] %>% tidyr::spread(., "Trait", "predicted.values" ) 
+        corr <- cor(data[,-1], use = "pairwise.complete.obs")
+        validate(need(input$num_k<ncol(corr), "The number of clusters should be less"))
+        res <- factoextra::hcut(corr, k =  input$num_k, stand = FALSE)
+        dend <- factoextra::fviz_dend(res,
+                                      rect = input$box,
+                                      cex = input$size_dendo,
+                                      lwd = input$size_line, main = "Cluster Dendrogram",
+                                      horiz = input$horiz)
+        print(dend)
+        dev.off()
+      } else { 
+        pdf(file,width = input$pdf.wid.den , height = input$pdf.hei.den )
+        req(blups())
+        data <- blups()
+        data <- data[,1:3] %>% tidyr::spread(., "Trait", "predicted.values" ) 
+        corr <- cor(data[,-1], use = "pairwise.complete.obs")
+        validate(need(input$num_k<ncol(corr), "The number of clusters should be less"))
+        res <- factoextra::hcut(corr, k =  input$num_k, stand = FALSE)
+        dend <- factoextra::fviz_dend(res,
+                                      rect = input$box,
+                                      cex = input$size_dendo,
+                                      lwd = input$size_line, main = "Cluster Dendrogram",
+                                      horiz = input$horiz)
+        print(dend)
+        dev.off()
+      }
+    }
+  )  
   
 
 # Tabla Out ---------------------------------------------------------------
