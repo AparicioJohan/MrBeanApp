@@ -565,7 +565,7 @@ mod_M_traits_server <- function(input, output, session, data){
         need(ncol(data)>=3, "Only one trait fitted.")
       )
       names(data)[1] <- "gen"
-      data <- data %>% tibble::column_to_rownames("gen")
+      data <- data %>% tibble::column_to_rownames("gen") %>% na.omit()
       
       res.pca <- prcomp(data, scale. = T)
       

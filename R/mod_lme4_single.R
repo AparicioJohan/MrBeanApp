@@ -115,7 +115,7 @@ mod_lme4_single_ui <- function(id){
               bs4Card(width = 6,status = "success", solidHeader = FALSE, style = "overflow-x: scroll;",
                       title=tagList(icon=icon("sort-numeric-up "), "Effects"),
                       shinycssloaders::withSpinner(DT::dataTableOutput(ns("blups_mixed")),type = 6,color = "#28a745"),
-                      downloadButton(ns("desc_mixed"), "Download table", class="btn-success",
+                      downloadButton(ns("desc_mixed"), "Download Table", class="btn-success",
                                      style="display:rigth ;color: white  ; background-color: #00a65a")))
   )
 }
@@ -240,7 +240,7 @@ mod_lme4_single_server <- function(input, output, session, data){
         DT::datatable({
           blup_mix()
         }, 
-        option=list(pageLength=5,columnDefs = list(list(className = 'dt-center', targets = 0:ncol(blup_mix())))),
+        option=list(pageLength=5, scrollX = TRUE,columnDefs = list(list(className = 'dt-center', targets = 0:ncol(blup_mix())))),
         filter="top",
         selection="multiple"
         )})
@@ -296,7 +296,7 @@ mod_lme4_single_server <- function(input, output, session, data){
           } else {
             round((broom.mixed::glance(alpha())),2)
           }
-        },  options = list(paging = FALSE,searching = FALSE))
+        },  options = list(paging = FALSE, scrollX = TRUE,searching = FALSE))
       })
     }
   })
@@ -326,7 +326,7 @@ mod_lme4_single_server <- function(input, output, session, data){
         }
         DT::datatable({
            dplyr::mutate_if(k, is.numeric, round, digits=2) # cbind(term=k[,1],round(k[,2:7],2))
-        },  options = list(paging = FALSE,searching = FALSE))
+        },  options = list(paging = FALSE, scrollX = TRUE,searching = FALSE))
       })
     }
   })
@@ -448,7 +448,7 @@ mod_lme4_single_server <- function(input, output, session, data){
       DT::datatable({
         differences() %>% dplyr::mutate_if(is.numeric, round, 3)
       },
-      option=list(pageLength=10,columnDefs = list(list(className = 'dt-center', targets = 0:ncol(differences())))),
+      option=list(pageLength=10, scrollX = TRUE,columnDefs = list(list(className = 'dt-center', targets = 0:ncol(differences())))),
       filter="top",
       selection="multiple"
       )} )

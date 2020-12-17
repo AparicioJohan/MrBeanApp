@@ -82,6 +82,7 @@ mod_spats_single_ui <- function(id){
                      disabled(actionButton(ns("spatial"),label = "Spatial Trend",style="display:rigth")),
                      br(),hr(),
                      disabled(actionButton(ns("tabBut"), "View BLUPs/BLUEs")),br(),br(),
+                     disabled(actionButton(ns("coeff"), "Coefficients")),br(),br(),
                      disabled(actionLink(inputId = ns("Rlink"), label = "Residuals", icon = icon("arrow-right"), style = "color: #28a745")),
                      data.step=6,data.intro = "Use this control panel to run the model and display the 3D spatial trend.",data.hint = "Good",data.position = "bottom-middle-aligned")
       ),
@@ -176,6 +177,7 @@ mod_spats_single_server <- function(input, output, session, data){
     shinyjs::enable("inf")
     shinyjs::enable("spatial")
     shinyjs::enable("tabBut")
+    shinyjs::enable("coeff")
     shinyjs::enable("downloadReport")
     shinyjs::enable("Rlink")
   })
@@ -251,7 +253,57 @@ mod_spats_single_server <- function(input, output, session, data){
     
   },ignoreNULL = FALSE) 
   
+  
+  
+
+  # Coefficients ------------------------------------------------------------
+
   ## to output blups
+  co.spats <- reactive({
+    req(Modelo())
+    coef <- coef.SpATS(Modelo())
+    coef
+  })
+  
+  # SALIDA de los coeff en DT TAble
+  output$distTable2 <- DT::renderDataTable(
+    if (input$action==0) {return()}
+    else {
+      DT::datatable({
+        co.spats()
+      },
+      option=list(pageLength=10, scrollX = TRUE,columnDefs = list(list(className = 'dt-center', targets = 0:ncol(co.spats())))),
+      filter="top",
+      selection="multiple"
+      )} )
+  
+  
+  observeEvent(input$coeff,{
+    showModal(modalDialog(
+      title = "Coefficients", size = "l", easyClose = T,
+      shinycssloaders::withSpinner(DT::dataTableOutput(ns("distTable2")),type = 6,color = "#28a745"),
+      footer = tagList(
+        downloadButton(ns("downloadData2"), 
+                       "Download Coefficients", class="btn-success",
+                       style= " color: white ; background-color: #28a745; float:left"),
+        modalButton("Cancel")
+      )
+    ))
+  })
+  
+  output$downloadData2 <- downloadHandler(
+    filename = function() {
+      paste("coeff_SpATS_Model_mrbean", ".csv", sep = "")
+    },
+    content = function(file) {
+      write.csv(co.spats(), file, row.names = FALSE)
+    }
+  )
+  
+  
+
+  # BLUPs / BLUEs -----------------------------------------------------------
+
   blup <- reactive({
     validate(
       need(input$variable != "", " "),
@@ -272,7 +324,7 @@ mod_spats_single_server <- function(input, output, session, data){
       DT::datatable({
         blup() %>% dplyr::mutate_if(is.numeric, round, 3)
       },
-      option=list(pageLength=10,columnDefs = list(list(className = 'dt-center', targets = 0:ncol(blup())))),
+      option=list(pageLength=10, scrollX = TRUE, columnDefs = list(list(className = 'dt-center', targets = 0:ncol(blup())))),
       filter="top",
       selection="multiple"
       )} )

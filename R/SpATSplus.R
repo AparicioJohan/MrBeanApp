@@ -553,6 +553,26 @@ varComp <- function(object, which = "variances"){
   return(vc)
 }
 
+# SpATS coefficients
+
+coef.SpATS <- function(model){
+  # coefficients
+  coef_spats <- model$coeff
+  coef_random <- attr(coef_spats,"random")
+  coef_spats <- data.frame(level = names(coef_spats) , solution = coef_spats , coef_random, row.names = NULL)
+  
+  # diagonal c_Inverse
+  C_inv <- as.matrix(rbind(cbind(model$vcov$C11_inv, model$vcov$C12_inv),cbind(model$vcov$C21_inv, model$vcov$C22_inv)))
+  se <- sqrt(diag(C_inv))
+  C_inv <- data.frame(level = names(se), std.error = se,  row.names = NULL)
+  coef_spats <- merge(coef_spats, C_inv, by = "level", all = T)
+  coef_spats <- coef_spats %>% 
+                  dplyr::mutate(z.ratio = solution / std.error) %>% 
+                  dplyr::mutate_if(is.numeric, round , 4) %>% dplyr::arrange(coef_random)
+  coef_spats <- coef_spats[,c("level", "solution", "std.error", "z.ratio", "coef_random")]
+  return(coef_spats)
+}
+
 
 # Daniel Ariza
 
