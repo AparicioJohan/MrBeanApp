@@ -133,7 +133,12 @@ mod_MET_results_ui <- function(id){
                        ),
                        width = 12,title = tagList(icon=icon("chart-line"), "Predictions"),
                        status = "success",solidHeader = FALSE, maximizable = T,
-                       downloadButton(ns("downloadData2"),label = "Download"),
+                       downloadButton(ns("downloadData2"),label = "Download Table",
+                                      class="btn-success",
+                                      style= " color: white ; background-color: #28a745"),
+                       downloadButton(ns("downloadData3"),
+                                      "Overall", class="btn-success",
+                                      style= " color: white ; background-color: #28a745"),
                        actionBttn(
                          inputId = ns("pca"), 
                          label = "PCA",
@@ -340,6 +345,17 @@ mod_MET_results_server <- function(input, output, session, model){
     },
     content = function(file) {
       write.csv(model$model()$predictions, file, row.names = FALSE)
+    }
+  )
+  
+  output$downloadData3 <- downloadHandler(
+    filename = function() {
+      paste("Overall_predictions_2stage", ".csv", sep = "")
+    },
+    content = function(file) {
+      req(model$model())
+      bl <- model$model()$predictions %>% dplyr::select(-status) %>% group_by(gen) %>% dplyr::summarise(Overall = mean(predicted.value, na.rm = T))
+      write.csv(bl, file, row.names = FALSE)
     }
   )
   

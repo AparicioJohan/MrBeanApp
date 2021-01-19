@@ -38,6 +38,7 @@ mod_distribution_ui <- function(id){
                  id = "tabcard",
                  tabPanel(
                    title = "Histogram", 
+                   icon = icon("chart-bar"),
                    active = T,
                    dropdown(
                      prettyRadioButtons(inputId = ns("typefileDes"),label = "Download Plot File Type", outline = TRUE,fill = FALSE,shape = "square",inline = TRUE,
@@ -79,6 +80,7 @@ mod_distribution_ui <- function(id){
                  tabPanel(
                    title = "Summary Statistics", 
                    active = F,
+                   icon = icon("sort-numeric-up"),
                    div(style = 'text-align: center', 
                        verbatimTextOutput(ns("statisticSumm")) 
                        )

@@ -37,6 +37,7 @@ mod_MSA_results_ui <- function(id){
                               bs4TabCard(width = 12,id = "tabcards",maximizable = T,solidHeader = FALSE,closable = F,
                                          status ="success", side = "left", type = "tabs",
                                          tabPanel(title = "Correlation",
+                                                  icon = icon("arrow-circle-right"),
                                                      # echarts4r::echarts4rOutput(ns("correlation")),
                                                      dropdown(
                                                        prettyRadioButtons(inputId = ns("type"),label = "Download Plot File Type", outline = TRUE,fill = FALSE,shape = "square",inline = TRUE,
@@ -64,12 +65,18 @@ mod_MSA_results_ui <- function(id){
                                                      # icon = icon("arrow-circle-right")
                                          ),
                                          tabPanel(title = "Summary", 
+                                                  icon = icon("info-circle"),
                                                      shinycssloaders::withSpinner(
                                                        DT::dataTableOutput(ns("table")),
-                                                       type = 5,color = "#28a745")
+                                                       type = 5,color = "#28a745"),
+                                                  downloadButton(ns("downloadsummary"), 
+                                                                 "Download Table",
+                                                                 class="btn-success",
+                                                                 style= " color: white ; background-color: #28a745; float:left")
                                                      # icon = icon("arrow-circle-right")
                                          ),
                                          tabPanel(title = "Predictions", 
+                                                  icon = icon("table"),
                                                      DT::dataTableOutput(ns("effects")),
                                                      downloadButton(ns("downloadeffects"), 
                                                                     "Download Table",
@@ -82,6 +89,7 @@ mod_MSA_results_ui <- function(id){
                                                      # icon = icon("arrow-circle-right")
                                          ),
                                          tabPanel(title = "Potential Outliers", 
+                                                  icon = icon("exclamation-triangle"),
                                                      DT::dataTableOutput(ns("extrem"))
                                                      # icon = icon("arrow-circle-right")
                                          )
@@ -141,7 +149,8 @@ mod_MSA_results_ui <- function(id){
                                     col_2()
                                   )
                      ),
-                     bs4Dash::box(width = 12, status = "success", solidHeader = FALSE,title = "Predictions Plot",
+                     bs4Dash::box(width = 12, status = "success", solidHeader = FALSE,
+                                  title = tagList(icon=icon("sort-numeric-up"), "Predictions Plot"),
                                   collapsible = T, maximizable = T,
                                   echarts4r::echarts4rOutput(ns("ranking"))
                                   )
@@ -462,6 +471,19 @@ mod_MSA_results_server <- function(input, output, session, msa){
     content = function(file) {
       req(blups())
       datos <- data.frame(blups()[,1:3] %>% tidyr::spread(., "Experiment", "predicted.values" ))
+      write.csv(datos, file, row.names = FALSE)
+    }
+  )
+  
+  # Download summary
+  
+  output$downloadsummary <- downloadHandler(
+    filename = function() {
+      paste("summary_MSA_mrbean",".csv", sep = "")
+    },
+    content = function(file) {
+      req(summary_msa())
+      datos <- data.frame(summary_msa())
       write.csv(datos, file, row.names = FALSE)
     }
   )

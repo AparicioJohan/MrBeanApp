@@ -19,7 +19,7 @@ mod_residuals_spats_ui <- function(id){
       fluidRow(
         column(width=6,
                bs4Dash::box(status = "success",width = 12,collapsible = TRUE,collapsed = F,
-                            title = "Field Residuals" ,solidHeader = FALSE,maximizable = T,
+                            title = tagList(icon=icon("braille"), "Field Residuals"),solidHeader = FALSE,maximizable = T,
                             prettySwitch(
                               inputId = ns("swicht2"),
                               label = "Histogram", 
@@ -46,9 +46,11 @@ mod_residuals_spats_ui <- function(id){
                  width = 12,id = "tabcard",maximizable = T,solidHeader = FALSE,closable = F,
                  status ="success", side = "left", type = "tabs", 
                  tabPanel(title = "QQplot",
+                          icon = icon("arrow-circle-right"),
                              shinycssloaders::withSpinner(plotly::plotlyOutput(ns("qqplot")),type = 5,color = "#28a745")
                  ),
                  tabPanel(title = "Residual against Other",
+                          icon = icon("exchange-alt"),
                              fluidRow(
                                column(width = 6,
                                       selectInput(ns("variable"), label = "Variable", choices = "", width = "100%")
@@ -69,6 +71,7 @@ mod_residuals_spats_ui <- function(id){
                              shinycssloaders::withSpinner(plotly::plotlyOutput(ns("compare")),type = 5,color = "#28a745")
                  ),
                  tabPanel(title = "Residuals Table",
+                          icon = icon("table"),
                              shinycssloaders::withSpinner(DT::dataTableOutput(ns("Info")),type = 5,color = "#28a745")
                  )
                ),
@@ -77,7 +80,7 @@ mod_residuals_spats_ui <- function(id){
                        disabled(downloadButton(ns("downByhand"), "Download Data Cleaned", class="btn-success",
                                                style= "color: white ; background-color: #28a745")),
                        width = 12,style = "overflow-x: scroll;",
-                       status = "success",title = "Potential Outliers",solidHeader = FALSE,collapsible = TRUE,collapsed = TRUE)
+                       status = "success",title = tagList(icon = icon("exclamation-triangle"), "Potential Outliers") ,solidHeader = FALSE,collapsible = TRUE,collapsed = TRUE)
         )
       )
     )

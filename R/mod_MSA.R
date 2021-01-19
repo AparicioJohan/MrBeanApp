@@ -195,7 +195,7 @@ mod_MSA_server <- function(input, output, session, data){
   })
   
   observe({
-    shinyjs::toggle(id = "selected_checks", anim = T, time = 1, animType = "fade", condition = input$genotype != "")
+    shinyjs::toggle(id = "selected_checks", anim = T, time = 1, animType = "fade", condition = input$genotype != "" & input$res_ran == TRUE)
     req(input$genotype)
     req(data$data())
     req(input$genotype  %in% names(data$data()))

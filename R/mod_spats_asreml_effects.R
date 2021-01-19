@@ -25,7 +25,8 @@ mod_spats_asreml_effects_ui <- function(id){
                    plotly::plotlyOutput(ns("plotblup2")),
                    type = 5,color = "#28a745"
                  ),
-                 title = "Predictions Plot", solidHeader =  FALSE,status = "success",width = 12,collapsed = F)
+                 title = tagList(icon = icon("sort-numeric-up"), "Predictions Plot"),
+                 solidHeader =  FALSE,status = "success",width = 12,collapsed = F)
              )
       )
     ),
@@ -39,7 +40,9 @@ mod_spats_asreml_effects_ui <- function(id){
                        DT::dataTableOutput(ns("blups")),
                        type = 5,color = "#28a745"
                      ),
-                     width = 12,title = "Predictions Table",status = "success",solidHeader = FALSE,
+                     width = 12,
+                     title = tagList(icon = icon("table"), "Predictions Table"),
+                     status = "success",solidHeader = FALSE,
                      downloadButton(ns("downloadData2"),label = "Download")
                    )),
                  width = 6),
@@ -49,7 +52,9 @@ mod_spats_asreml_effects_ui <- function(id){
                      shinycssloaders::withSpinner(
                        plotly::plotlyOutput(ns("hist")),type=5,color = "#28a745"
                      ),
-                     width = 12,title = "Histogram",status = "success",solidHeader = FALSE,collapsed = F)
+                     width = 12,
+                     title = tagList(icon = icon("chart-bar"), "Histogram"),
+                     status = "success",solidHeader = FALSE,collapsed = F)
                  ),
                  width = 6 
                )

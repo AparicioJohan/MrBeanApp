@@ -220,6 +220,10 @@ mod_M_traits_ui <- function(id){
                                                      shinycssloaders::withSpinner( 
                                                        DT::dataTableOutput(ns("summ")),type = 5,color = "#28a745" 
                                                      ),
+                                                  downloadButton(ns("downloadsummary"), 
+                                                                 "Download Table",
+                                                                 class="btn-success",
+                                                                 style= " color: white ; background-color: #28a745; float:left"),
                                                   icon = icon("arrow-circle-right")
                                          ),
                                          tabPanel(title = "Predictions", 
@@ -241,7 +245,8 @@ mod_M_traits_ui <- function(id){
                               )
                             )
                      ),
-                     bs4Dash::box(width = 12, status = "success", solidHeader = FALSE,title = "Predictions Plot",
+                     bs4Dash::box(width = 12, status = "success", solidHeader = FALSE,
+                                  title = tagList(icon=icon("sort-numeric-up"), "Predictions Plot"),
                                   collapsible = T, maximizable = T,
                                   echarts4r::echarts4rOutput(ns("ranking")))
                    )
@@ -289,7 +294,7 @@ mod_M_traits_server <- function(input, output, session, data){
   })
   
   observe({
-    shinyjs::toggle(id = "selected_checks", anim = T, time = 1, animType = "fade", condition = input$genotype != "")
+    shinyjs::toggle(id = "selected_checks", anim = T, time = 1, animType = "fade", condition = input$genotype != "" & input$res_ran == TRUE)
     req(input$genotype)
     req(data$data())
     req(input$genotype  %in% names(data$data()))
@@ -884,6 +889,22 @@ mod_M_traits_server <- function(input, output, session, data){
       req(blups())
       datos <- data.frame(blups()[,1:3] %>% tidyr::spread(., "Trait", "predicted.values" ))
       write.csv(datos, file, row.names = FALSE)
+    }
+  )
+  
+  # Download summary
+  
+  output$downloadsummary <- downloadHandler(
+    filename = function() {
+      paste("summary_MTraits",".csv", sep = "")
+    },
+    content = function(file) {
+      req(Modelo())
+      Models <- Modelo()
+      resum <- msa_table(Models, gen_ran = input$res_ran)
+      names(resum)[1] <- "Trait"
+      dt <- resum %>% dplyr::mutate_if(is.numeric, round, 3)
+      write.csv(dt, file, row.names = FALSE)
     }
   )
   

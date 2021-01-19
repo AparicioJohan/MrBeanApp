@@ -134,7 +134,7 @@ mod_spats_single_server <- function(input, output, session, data){
   })
   
   observe({
-    shinyjs::toggle(id = "selected", anim = T, time = 1, animType = "fade", condition = input$genotipo != "")
+    shinyjs::toggle(id = "selected", anim = T, time = 1, animType = "fade", condition = input$genotipo != "" & input$res_ran == TRUE)
     req(input$genotipo)
     req(data$data())
     req(input$genotipo  %in% names(data$data()))
