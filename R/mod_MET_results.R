@@ -14,7 +14,6 @@ mod_MET_results_ui <- function(id){
         rep_br(2),
         HTML("<center><img src='www/code.svg' width='60%' height='60%'></center>")
     ),
-    
     shinyjs::hidden(
       div(id=ns("second"),  
           fluidRow(
@@ -50,10 +49,16 @@ mod_MET_results_ui <- function(id){
                                                 )
                                               ),
                                               col_6(
-                                                sliderTextInput(
-                                                  inputId = ns("size_corr"), label = "Choose a size:", 
-                                                  choices = c(1,1.5, 2.0 , 2.5, 3, 3.5, 4 , 4.5, 5, 5.5), 
-                                                  grid = TRUE, selected = 4, width = "100%"
+                                                # sliderTextInput(
+                                                #   inputId = ns("size_corr"), label = "Choose a size:", 
+                                                #   choices = c(1,1.5, 2.0 , 2.5, 3, 3.5, 4 , 4.5, 5, 5.5), 
+                                                #   grid = TRUE, selected = 4, width = "100%"
+                                                # )
+                                                sliderInput(
+                                                  inputId	= ns("size_corr"),
+                                                  label = "Choose a size:",
+                                                  min = 1, max =  5.5, value =  4, step = 0.5 ,
+                                                  width = "100%" 
                                                 )
                                               ),
                                               col_3()
@@ -95,11 +100,17 @@ mod_MET_results_ui <- function(id){
                                                 )
                                               ),
                                               col_6(
-                                                sliderTextInput( 
-                                                  inputId = ns("size_gmat"),label = "Choose a size:", 
-                                                  choices = c(1,1.5, 2.0 , 2.5, 3, 3.5, 4 , 4.5, 5, 5.5),
-                                                  grid = TRUE, selected = 2.5, width = "100%"
-                                                  )                                              
+                                                # sliderTextInput( 
+                                                #   inputId = ns("size_gmat"),label = "Choose a size:", 
+                                                #   choices = c(1,1.5, 2.0 , 2.5, 3, 3.5, 4 , 4.5, 5, 5.5),
+                                                #   grid = TRUE, selected = 2.5, width = "100%"
+                                                #   )  
+                                                sliderInput(
+                                                  inputId	= ns("size_gmat"),
+                                                  label = "Choose a size:",
+                                                  min = 1, max =  5.5, value =  2.5, step = 0.5 ,
+                                                  width = "100%" 
+                                                  )
                                                 ),
                                               col_3()
                                             ),

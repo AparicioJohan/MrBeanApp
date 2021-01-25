@@ -320,24 +320,42 @@ mod_MET_FA_server <- function(input, output, session, model){
       fluidRow(
         # col_3(),
         col_4(
-          sliderTextInput(
-            inputId = ns("alpha_p"), label = "Opacity Point:", 
-            choices = seq(0.05,1, by = 0.1), 
-            grid = TRUE, selected = 0.55, width = "100%"
+          # sliderTextInput(
+          #   inputId = ns("alpha_p"), label = "Opacity Point:", 
+          #   choices = seq(0.05,1, by = 0.1), 
+          #   grid = TRUE, selected = 0.55, width = "100%"
+          # )
+          sliderInput(
+            inputId	= ns("alpha_p"),
+            label = "Opacity Point:",
+            min = 0.05, max =  0.95, value =  0.55, step = 0.10 ,
+            width = "100%" 
           )
         ),
         col_4(
-          sliderTextInput(
-            inputId = ns("size_text"), label = "Size Text:", 
-            choices = seq(1,8, by = 0.2), 
-            grid = TRUE, selected = 4, width = "100%"
+          # sliderTextInput(
+          #   inputId = ns("size_text"), label = "Size Text:", 
+          #   choices = seq(1,8, by = 0.2), 
+          #   grid = TRUE, selected = 4, width = "100%"
+          # )
+          sliderInput(
+            inputId	= ns("size_text"),
+            label = "Size Text:",
+            min = 1, max =  8, value =  4, step = 0.2 ,
+            width = "100%" 
           )
         ),
         col_4(
-          sliderTextInput(
-            inputId = ns("alpha_text"), label = "Opacity Text:", 
-            choices = seq(0.1,1, by = 0.1), 
-            grid = TRUE, selected = 0.7, width = "100%"
+          # sliderTextInput(
+          #   inputId = ns("alpha_text"), label = "Opacity Text:", 
+          #   choices = seq(0.1,1, by = 0.1), 
+          #   grid = TRUE, selected = 0.7, width = "100%"
+          # )
+          sliderInput(
+            inputId	= ns("alpha_text"),
+            label = "Opacity Text:",
+            min = 0.1, max =  1, value =  0.7, step = 0.1 ,
+            width = "100%" 
           )
         )
         # col_3()

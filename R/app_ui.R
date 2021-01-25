@@ -10,7 +10,15 @@ app_ui <- function(request) {
     golem_add_external_resources(),
     # List the first level UI elements here 
     bs4DashPage(
+      title = "MrBean",
+      skin = NULL, 
+      freshTheme = NULL,
+      preloader = NULL,
+      options = NULL,
       fullscreen = TRUE,
+      help = FALSE, 
+      dark = FALSE, 
+      scrollToTop = FALSE,
       header = bs4DashNavbar(
         title = dashboardBrand(
           title = "MrBean",
@@ -176,8 +184,8 @@ app_ui <- function(request) {
         )
       ),
       body = bs4DashBody(
-        chooseSliderSkin("Modern"), 
         bs4TabItems( 
+          # chooseSliderSkin("Modern"),
           bs4TabItem(
             tabName = "home",
             mod_home_module1_ui("home_module1_ui_1")
@@ -312,9 +320,7 @@ app_ui <- function(request) {
           )
         ),
         right = "2020"
-      ),
-      title = "MrBean"
-        
+      )
     )
   )
 }

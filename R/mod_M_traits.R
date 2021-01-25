@@ -777,24 +777,42 @@ mod_M_traits_server <- function(input, output, session, data){
       ),
       fluidRow(
         col_4(
-          sliderTextInput(
-            inputId = ns("num_k"), label = "Clusters:", 
-            choices = c(2,3,4,5), 
-            grid = TRUE, selected = 2, width = "100%"
+          # sliderTextInput(
+          #   inputId = ns("num_k"), label = "Clusters:", 
+          #   choices = c(2,3,4,5), 
+          #   grid = TRUE, selected = 2, width = "100%"
+          # )
+          sliderInput(
+            inputId	= ns("num_k"),
+            label = "Clusters:",
+            min = 2, max =  5, value =  2, step = 1 ,
+            width = "100%" 
           )
         ),
         col_4(
-          sliderTextInput(
-            inputId = ns("size_dendo"), label = "Letter size:", 
-            choices = c(0.2,0.4,0.6,0.8,1,1.5,2,2.5), 
-            grid = TRUE, selected = 1, width = "100%"
+          # sliderTextInput(
+          #   inputId = ns("size_dendo"), label = "Letter size:", 
+          #   choices = c(0.2,0.4,0.6,0.8,1,1.5,2,2.5), 
+          #   grid = TRUE, selected = 1, width = "100%"
+          # )
+          sliderInput(
+            inputId	= ns("size_dendo"),
+            label = "Letter size:",
+            min = 0.2, max =  3, value =  1, step = 0.2 ,
+            width = "100%" 
           )
         ),
         col_4(
-          sliderTextInput(
-            inputId = ns("size_line"), label = "Line size:", 
-            choices = c(0.2,0.4,0.6,0.8,1,1.5,2,2.5), 
-            grid = TRUE, selected = 0.8, width = "100%"
+          # sliderTextInput(
+          #   inputId = ns("size_line"), label = "Line size:", 
+          #   choices = c(0.2,0.4,0.6,0.8,1,1.5,2,2.5), 
+          #   grid = TRUE, selected = 0.8, width = "100%"
+          # )
+          sliderInput(
+            inputId	= ns("size_line"),
+            label = "Line size:",
+            min = 0.2, max =  3, value =  0.8, step = 0.2 ,
+            width = "100%" 
           )
         )
       )
