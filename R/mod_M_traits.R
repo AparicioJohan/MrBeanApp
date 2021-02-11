@@ -56,6 +56,7 @@ mod_M_traits_ui <- function(id){
                                      selectInput(inputId=ns("row"),label = "Row",choices="", width = "100%")
                               )
                             ),
+                            selectInput(inputId=ns("replicate"),label="Replicate",  choices="", width = "100%"),
                             fluidRow(
                               column(6,
                                      selectizeInput(ns("show_fixed"), width = "100%",
@@ -281,6 +282,7 @@ mod_M_traits_server <- function(input, output, session, data){
     updateSelectInput(session, "genotype", choices=names(dt),selected = "line")
     updateSelectInput(session, "column", choices=names(dt),selected = "col")
     updateSelectInput(session, "row", choices=names(dt),selected = "row")
+    updateSelectInput(session, "replicate", choices=names(dt),selected = "rep") 
     updateSelectInput(session, "show_fixed", choices = names(dt), selected = "NNNN")
     updateSelectInput(session, "show_random", choices = names(dt), selected = "NNNN")
     updateSelectInput(session, "covariate", choices = names(dt), selected = "NNNN")
@@ -355,7 +357,7 @@ mod_M_traits_server <- function(input, output, session, data){
           }
           
           Models[[var]] = SpATS_mrbean(dt, var, input$genotype,
-                                       input$column, input$row, FALSE , NULL, NULL,
+                                       input$column, input$row, FALSE , NULL, NULL, input$replicate,
                                        fixed , random , input$res_ran, input$covariate,
                                        input$outliers, input$times, input$selected_checks )
           

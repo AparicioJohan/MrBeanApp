@@ -122,7 +122,7 @@ check_gen_SpATS <- function(gen , data, check_gen = c("ci", "st", "wa")){
 
 
 SpATS_mrbean <- function(data, response ,genotype, 
-                         col, row, segm ,ncols, nrows, 
+                         col, row, segm ,ncols, nrows, rep,
                          fix_fact, ran_fact, gen_ran, covariate,
                          clean_out= FALSE, iterations=1, checks = NULL){
   dt <- data
@@ -144,13 +144,33 @@ SpATS_mrbean <- function(data, response ,genotype,
   else if(!is.null(fix_fact)&!is.null(covariate)) Fijo <- as.formula(paste("", paste(c(fix_fact,covariate), collapse=" + "), sep=" ~ "))
   else if(is.null(fix_fact)&!is.null(covariate)) Fijo <- as.formula(paste("",paste(covariate, collapse = " + "),sep = " ~ "))
   
-  if(is.null(ran_fact)) Random <- as.formula(~ col_f+row_f)
-  else Random <-  as.formula(paste("" ,paste(c(ran_fact,"col_f","row_f"), collapse=" + "), sep=" ~ "))   
+  #--
+  if(rep!=""){
+    dt$rep <- as.factor(dt[, rep])
+    if(nlevels(dt$rep)>1){
+      if(is.null(ran_fact)) Random <- as.formula(~ rep:col_f + rep:row_f)
+      else Random <-  as.formula(paste("" ,paste(c(ran_fact,"rep:col_f","rep:row_f"), collapse=" + "), sep=" ~ "))   
+      if(is.null(fix_fact)&is.null(covariate)){
+        Fijo <- as.formula(~ rep)
+      } else {
+        Fijo <-  paste(paste0(as.character(Fijo), collapse = ""), "+ rep" )
+      }
+    } else {
+      if(is.null(ran_fact)) Random <- as.formula(~ col_f+row_f)
+      else Random <-  as.formula(paste("" ,paste(c(ran_fact,"col_f","row_f"), collapse=" + "), sep=" ~ "))  
+    }
+  } else {
+    if(is.null(ran_fact)) Random <- as.formula(~ col_f+row_f)
+    else Random <-  as.formula(paste("" ,paste(c(ran_fact,"col_f","row_f"), collapse=" + "), sep=" ~ "))  
+  }
+  
+  # if(is.null(ran_fact)) Random <- as.formula(~ col_f+row_f)
+  # else Random <-  as.formula(paste("" ,paste(c(ran_fact,"col_f","row_f"), collapse=" + "), sep=" ~ "))   
   
   if(!is.null(checks)& gen_ran == T){
     dt <- check_gen_SpATS(gen = genotype, data = dt, check_gen = checks )
     if("checks" %in% names(dt) ){
-      if(is.null(fix_fact)&is.null(covariate)){
+      if(is.null(fix_fact) & is.null(covariate) & rep==""){
         Fijo <- as.formula(~ checks)
       } else {
         Fijo <-  paste(paste0(as.character(Fijo), collapse = ""), "+ checks" )
@@ -376,15 +396,15 @@ msa_effects <- function(model){
   
   ind <-  sum(grepl("checks", model$model$fixed, fixed = TRUE))!=0
   if(ind){
-    PP <- predict(model, which = gen) %>% dplyr::select(.data[[gen]], predicted.values, standard.errors )
+    PP <- predict(model, which = gen, predFixed = "marginal") %>% dplyr::select(.data[[gen]], predicted.values, standard.errors )
     PP$type <- "test"
-    PC <- predict(model, which = "checks") %>% dplyr::select(checks, predicted.values, standard.errors )
+    PC <- predict(model, which = "checks", predFixed = "marginal") %>% dplyr::select(checks, predicted.values, standard.errors )
     PC <- PC[PC$checks!="_NoCheck", ]
     PC$type <- "check"
     names(PC)[1] <- gen
     effects <- rbind(PP,PC) %>% dplyr::mutate_if(is.numeric, round, 3) %>% data.frame()
   } else {
-    effects <- predict(model, which = gen)[,c(gen, "predicted.values", "standard.errors")] %>%
+    effects <- predict(model, which = gen, predFixed = "marginal")[,c(gen, "predicted.values", "standard.errors")] %>%
                  dplyr::mutate_if(is.numeric, round, 3) %>% data.frame()
   }
   
@@ -422,7 +442,7 @@ weight_SpATS <- function(model){
   gen_mat <- colnames(model$vcov$C11_inv)
   
   genotype <- model$model$geno$genotype
-  dt <- predict(model, which = genotype) %>% droplevels() %>% dplyr::mutate_if(is.numeric, round, 3)
+  dt <- predict(model, which = genotype, predFixed = "marginal") %>% droplevels() %>% dplyr::mutate_if(is.numeric, round, 3)
   gen_lvls <- as.factor(unique(as.character(dt[,genotype])))
   
   intc <- intersect(gen_mat, gen_lvls)

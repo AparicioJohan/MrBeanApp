@@ -61,6 +61,7 @@ mod_MSA_ui <- function(id){
                                selectInput(inputId=ns("row"),label = "Row",choices="", width = "100%")
                         )
                       ),
+                      selectInput(inputId=ns("replicate"),label="Replicate",  choices="", width = "100%"),
                       actionBttn(inputId = ns("check"),label = "Check!",style = "jelly",color = "success",block = T, icon = icon("check") )
          )
         ) 
@@ -180,6 +181,7 @@ mod_MSA_server <- function(input, output, session, data){
     updateSelectInput(session, "experiment", choices=names(dt),selected = "dataset")
     updateSelectInput(session, "column", choices=names(dt),selected = "col")
     updateSelectInput(session, "row", choices=names(dt),selected = "row")
+    updateSelectInput(session, "replicate", choices=names(dt),selected = "rep") 
   })
   
   # fix and random factors for specific locations
@@ -342,7 +344,7 @@ mod_MSA_server <- function(input, output, session, data){
       
       dt_tmp <- dt %>% dplyr::filter(.data[[input$experiment]]%in%exp) %>% droplevels()
       models_list[[exp]] <- SpATS_mrbean(dt_tmp, input$variable, input$genotype, 
-                                         input$column, input$row, FALSE , NULL, NULL,
+                                         input$column, input$row, FALSE , NULL, NULL, input$replicate,
                                          fixed , random, input$res_ran, input$covariate,
                                          input$outliers, input$times, input$selected_checks)
       prg$update(html= HTML("<center>",

@@ -58,7 +58,9 @@ mod_spats_single_ui <- function(id){
                      selectInput(inputId=ns("column"),label=with_red_star("Column"),  choices=""),
                      selectInput(inputId=ns("fila"),
                                  label=with_red_star("Row"),
-                                 choices=""),data.step = 3,data.intro = "Select the columns in your dataset that contain the Row and Column coordinates for the plots in your trial.",data.position = "right" ) ),
+                                 choices=""),
+                     selectInput(inputId=ns("replicate"),label="Replicate",  choices=""),
+                     data.step = 3,data.intro = "Select the columns in your dataset that contain the Row and Column coordinates for the plots in your trial.",data.position = "right" ) ),
       
       
       bs4Dash::box(width = 2, title =tagList(icon=icon("tractor"), 'Factors')  ,status = "success", solidHeader = FALSE,collapsible = TRUE ,
@@ -125,6 +127,7 @@ mod_spats_single_server <- function(input, output, session, data){
     updateSelectInput(session, "variable", choices=names(dt), selected = "YdHa_clean")
     updateSelectInput(session, "column", choices=names(dt),selected = "col")
     updateSelectInput(session, "fila", choices=names(dt),selected = "row")
+    updateSelectInput(session, "replicate", choices=names(dt),selected = "rep")
     updateSelectInput(session, "factor", choices=names(dt),selected = "rep")
     updateSelectInput(session, "genotipo", choices=names(dt),selected = "line")
     updateSelectInput(session, "show_fixed", choices=names(dt),selected = NULL)
@@ -245,7 +248,7 @@ mod_spats_single_server <- function(input, output, session, data){
       return()
     } else {
       Modelo <- SpATS_mrbean(data$data(), input$variable, input$genotipo, 
-                   input$column, input$fila, input$able , input$segcol, input$segrow,
+                   input$column, input$fila, input$able , input$segcol, input$segrow, input$replicate,
                    input$show_fixed, input$show_random, input$res_ran, input$covariate,
                    input$outliers, input$times, input$selected  )
       Modelo
