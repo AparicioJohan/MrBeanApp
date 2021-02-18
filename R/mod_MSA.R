@@ -61,7 +61,6 @@ mod_MSA_ui <- function(id){
                                selectInput(inputId=ns("row"),label = "Row",choices="", width = "100%")
                         )
                       ),
-                      selectInput(inputId=ns("replicate"),label="Replicate",  choices="", width = "100%"),
                       actionBttn(inputId = ns("check"),label = "Check!",style = "jelly",color = "success",block = T, icon = icon("check") )
          )
         ) 
@@ -73,6 +72,7 @@ mod_MSA_ui <- function(id){
                bs4Dash::box(width = 12, title =  tagList(icon=icon("wrench"), "Additional Components"),status = "success", solidHeader = FALSE,collapsible = TRUE ,
                             actionBttn(inputId = ns("tabBut"), icon = icon("sliders"), size = "xs",
                                        label = "Info About the Experiments",style = "unite",color = "warning",block = T ),
+                    selectInput(inputId=ns("replicate"),label="Replicate",  choices="", width = "100%"),
                     selectizeInput(ns("show_fixed"), width = "100%",
                                    label=tagList( "Fixed",
                                                   icon=tooltip(icon("question-circle"),

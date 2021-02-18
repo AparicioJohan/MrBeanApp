@@ -23,6 +23,7 @@ mod_MSA_results_ui <- function(id){
                     bs4Dash::box(width = 12,
                                  status = "success",
                                  solidHeader = FALSE,
+                                 maximizable = T,
                                  title = tagList(icon=icon("info-circle"), "Variance Component Estimates"),
                                  echarts4r::echarts4rOutput(ns("comparison"))
                       )
@@ -108,6 +109,7 @@ mod_MSA_results_ui <- function(id){
                      bs4Dash::box(width = 12,
                                   status = "success",
                                   solidHeader = FALSE,
+                                  maximizable = T,
                                   title = tagList(icon=icon("braille"), "Spatial Trend"),
                                   dropdown(
                                     prettyRadioButtons(inputId = ns("typefile"),label = "Download Plot File Type", outline = TRUE,fill = FALSE,shape = "square",inline = TRUE,
