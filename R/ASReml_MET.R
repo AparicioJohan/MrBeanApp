@@ -31,9 +31,9 @@
 #' 
 
 stageMET <- function(data=NULL, gen=NULL, trial=NULL, resp=NULL, weight=NULL,
-                     type.gen='random', type.trial='fixed', vc.model='corh'){
+                     type.gen='random', type.trial='fixed', vc.model='corh', workspace = "128mb"){
   
-  asreml::asreml.options(trace=FALSE)
+  asreml::asreml.options(trace=FALSE, workspace = workspace)
   n<-nrow(data)
   if (n==0) { stop('No information in data.frame provided.')}
   # Defining factors
@@ -59,14 +59,14 @@ stageMET <- function(data=NULL, gen=NULL, trial=NULL, resp=NULL, weight=NULL,
     message('No weight column provided, all weights = 1.')
     df$weight <- NA
     df$weight[!is.na(df$resp)] <- 1
-    if (length(is.na(df$weight))>0) { 
+    if (sum(is.na(df$weight))>0) {  # length(is.na(df$weight))>0
       message('Weight column has some missing values, respective records were eliminated.')
       # Eliminating NA on weights
       df <- df[!is.na(df$weight),]
     }
   } else {
     df$weight <- data[,weight]
-    if (length(is.na(df$weight))>0) { 
+    if (sum(is.na(df$weight))>0) {  # length(is.na(df$weight))>0
       message('Weight column has some missing values, respective records were eliminated.')
       # Eliminating NA on weights
       df <- df[!is.na(df$weight),]
@@ -80,7 +80,7 @@ stageMET <- function(data=NULL, gen=NULL, trial=NULL, resp=NULL, weight=NULL,
   code.asr[2] <- 'random=~'
   code.asr[3] <- 'weights=weight'
   code.asr[4] <- 'family=asreml::asr_gaussian(dispersion=1)'
-  code.asr[5] <- 'na.action=list(x="include",y="include"),workspace=128e06,data=df)'
+  code.asr[5] <- 'na.action=list(x="include",y="include"),data=df)' # workspace=128e06
   nrand <- 0  # Number of random terms
   
   # Adding gen (fixed or random)
@@ -142,7 +142,8 @@ stageMET <- function(data=NULL, gen=NULL, trial=NULL, resp=NULL, weight=NULL,
   if (!mod.ref$converge) { eval(parse(text='mod.ref<-asreml::update.asreml(mod.ref)')) }
   
   # Obtaining predictions for models
-  pvals <- predict(mod.ref,classify='trial:gen',pworkspace=1e08, sed=FALSE, vcov=FALSE)$pvals
+  pvals <- predict(mod.ref,classify='trial:gen', sed=FALSE, vcov=FALSE)$pvals  # pworkspace=1e08
+  pvals2 <- predict(mod.ref,classify='gen', sed=FALSE, vcov=FALSE)$pvals 
   # Obtaining some statistics
   gfit <- matrix(NA, ncol=4, nrow=1)
   gfit[1] <- nrow(summary(mod.ref)$varcomp)
@@ -237,7 +238,7 @@ stageMET <- function(data=NULL, gen=NULL, trial=NULL, resp=NULL, weight=NULL,
   }
   
   return(list(call=str.mod, mod=mod.ref, predictions=pvals, 
-              gfit=gfit, vcovM=VCOV, corrM=CORR))
+              gfit=gfit, vcovM=VCOV, corrM=CORR, overall = pvals2))
   
 }
 

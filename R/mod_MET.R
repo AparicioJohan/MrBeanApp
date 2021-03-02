@@ -84,7 +84,7 @@ mod_MET_ui <- function(id){
                                          choices="", width = "100%"),
                              awesomeCheckbox(inputId = ns('exp_ran') ,
                                              label='Random Experiment',  
-                                             value = TRUE ,status = "danger"  ),
+                                             value = FALSE ,status = "danger"  ),
                              shinyjs::hidden(
                                pickerInput(
                                  inputId = ns("selected"),
@@ -113,6 +113,12 @@ mod_MET_ui <- function(id){
                                          choices=list(diag='diag', corv='corv',
                                                       corh='corh', fa1 = 'fa1', fa2 = 'fa2', fa3 = 'fa3', fa4 = 'fa4', corgh = 'corgh'),
                                          width = "100%"),
+                             textInput( ns("workspace"),
+                                        label=tagList( "Workspace",
+                                                       icon=tooltip(icon("question-circle"),
+                                                                    title = "128mb / 1gb / 2gb ",
+                                                                    placement = "top")), 
+                                        value =  "128mb"),
                              actionBttn(inputId = ns("check"),label = "Check!",style = "jelly",color = "success",block = T, icon = icon("check") )
                 )
               ) 
@@ -146,7 +152,8 @@ mod_MET_ui <- function(id){
                                         label = "Run Models",
                                         style = "unite", size = "sm",block = T,
                                         color = "warning",icon = icon("spinner")
-                                      )),
+                                      )
+                                      ),
                                     col_4()
                                   ),
                                   shinyjs::hidden(
@@ -262,7 +269,8 @@ mod_MET_server <- function(input, output, session){
                  weight     = input$weight , 
                  type.gen   = input$res_ran , 
                  type.trial = input$exp_ran , 
-                 vc.model   = input$VC
+                 vc.model   = input$VC,
+                 workspace  = input$workspace
                  )
     return(data)
   })
@@ -436,7 +444,8 @@ mod_MET_server <- function(input, output, session){
                                   type.gen    =  ifelse(comp$type.gen, "random", 'fixed'),
                                   type.trial  =  ifelse(comp$type.trial, "random", 'fixed'), 
                                   weight      = conv_null(comp$weight),
-                                  vc.model    =  comp$vc.model)
+                                  vc.model    =  comp$vc.model,
+                                  workspace   = comp$workspace)
         },
         error = function(e) {
           shinytoastr::toastr_error(title = "Error:", conditionMessage(e),position =  "bottom-full-width",

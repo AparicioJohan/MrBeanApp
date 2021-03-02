@@ -64,6 +64,9 @@ mod_MET_results_ui <- function(id){
                                               col_3()
                                             ),
                                             shinycssloaders::withSpinner(plotOutput(ns("corr_MAT")),type = 5,color = "#28a745"),icon = icon("th"),
+                                            downloadButton(ns("downloadCorr"),label = "Download Matrix",
+                                                        class="btn-success",
+                                                        style= " color: white ; background-color: #28a745"),
                                             fluidRow(
                                               col_3(),
                                               col_6(
@@ -114,7 +117,10 @@ mod_MET_results_ui <- function(id){
                                                 ),
                                               col_3()
                                             ),
-                                            shinycssloaders::withSpinner(plotOutput(ns("g_MAT")),type = 5,color = "#28a745")
+                                            shinycssloaders::withSpinner(plotOutput(ns("g_MAT")),type = 5,color = "#28a745"),
+                                            downloadButton(ns("downloadCov"),label = "Download Matrix",
+                                                        class="btn-success",
+                                                        style= " color: white ; background-color: #28a745")
                                 )
                      )
                    ),
@@ -270,6 +276,19 @@ mod_MET_results_server <- function(input, output, session, model){
     }
   )
   
+  # Download CorrMat
+  output$downloadCorr <- downloadHandler(
+    filename = function() {
+      paste("CORR", ".csv", sep = "")
+    },
+    content = function(file) {
+      req(model$model())
+      m <- model$model()
+      write.csv(m$corrM, file, row.names = TRUE)
+    }
+  )
+  
+  
   output$g_MAT <- renderPlot({
     model$run()
     input$size_gmat
@@ -299,6 +318,18 @@ mod_MET_results_server <- function(input, output, session, model){
         print(covariance_asreml(round(m$vcovM,2), corr = F, size = input$size_gmat))
         dev.off()
       }
+    }
+  )
+  
+  # Download COVmat
+  output$downloadCov <- downloadHandler(
+    filename = function() {
+      paste("COV", ".csv", sep = "")
+    },
+    content = function(file) {
+      req(model$model())
+      m <- model$model()
+      write.csv(m$vcovM, file, row.names = TRUE)
     }
   )
   
@@ -365,7 +396,8 @@ mod_MET_results_server <- function(input, output, session, model){
     },
     content = function(file) {
       req(model$model())
-      bl <- model$model()$predictions %>% dplyr::select(-status) %>% group_by(gen) %>% dplyr::summarise(Overall = mean(predicted.value, na.rm = T))
+      # bl <- model$model()$predictions %>% dplyr::select(-status) %>% group_by(gen) %>% dplyr::summarise(Overall = mean(predicted.value, na.rm = T))
+      bl <- model$model()$overall %>% dplyr::select(-status)
       write.csv(bl, file, row.names = FALSE)
     }
   )
