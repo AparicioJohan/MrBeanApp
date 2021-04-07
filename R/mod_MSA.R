@@ -259,7 +259,7 @@ mod_MSA_server <- function(input, output, session, data){
     req(info_check())
     exp <- names(info_check())[1]
     w$show()
-    inf <- info_check() %>% dplyr::filter(percentage<=0.3&length(ncol)>=2&length(nrow)>=2) %>% dplyr::pull(.data[[exp]])
+    inf <- info_check() %>% dplyr::filter(percentage<=0.6&length(ncol)>=2&length(nrow)>=2) %>% dplyr::pull(.data[[exp]])
     w$hide()
     return(inf)
   }, ignoreNULL = T)
