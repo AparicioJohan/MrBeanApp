@@ -18,19 +18,11 @@ Mr. Bean is an easy to use R-Shiny web-app that simplifies the analysis of large
 You can install the package:
 
 ``` r
-devtools::install_bitbucket("johanaparicio/mrbean",
-                            auth_user = "AparicioJohan", 
-                            password = rstudioapi::askForPassword() )
-
 devtools::install_github("AparicioJohan/MrBeanApp")                            
 ```
 or
 
 ```r
-remotes::install_bitbucket("johanaparicio/mrbean", 
-                           auth_user = "AparicioJohan", 
-                           password = rstudioapi::askForPassword() )
-                           
 remotes::install_github("AparicioJohan/MrBeanApp")                           
 ```
 
