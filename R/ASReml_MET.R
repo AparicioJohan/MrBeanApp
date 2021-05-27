@@ -284,6 +284,9 @@ covariance_asreml <- function(matrix, corr = TRUE, size = 4){
     col_letter <- "white"
   } 
   
+  melted_cormat$Var1 <- as.factor(melted_cormat$Var1)
+  melted_cormat$Var2 <- as.factor(melted_cormat$Var2)
+  
   ggheatmap <- ggplot(melted_cormat, aes(Var2, Var1, fill = value))+
     geom_tile(color = "white")+
     scale_fill_gradient2(low = col_pallete[1], high = col_pallete[3], mid = col_pallete[2],  # color= c("#440154","#21908C","#FDE725")

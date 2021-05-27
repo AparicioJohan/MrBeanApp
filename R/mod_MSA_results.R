@@ -91,7 +91,11 @@ mod_MSA_results_ui <- function(id){
                                          ),
                                          tabPanel(title = "Potential Outliers", 
                                                   icon = icon("exclamation-triangle"),
-                                                     DT::dataTableOutput(ns("extrem"))
+                                                     DT::dataTableOutput(ns("extrem")),
+                                                  downloadButton(ns("downloadDTclean"), 
+                                                                 "Download Data-Cleaned",
+                                                                 class="btn-success",
+                                                                 style= " color: white ; background-color: #28a745; float:left")
                                                      # icon = icon("arrow-circle-right")
                                          )
                               )
@@ -533,6 +537,27 @@ mod_MSA_results_server <- function(input, output, session, msa){
         }
         dev.off()
       }
+    }
+  )
+  
+  
+  # Download data Clean
+  
+  output$downloadDTclean <- downloadHandler(
+    filename = function() {
+      paste("DT_cleaned_mrbean",".csv", sep = "")
+    },
+    content = function(file) {
+      req(models())
+      
+      clean_data_SpATS <- function(models){
+        data <- lapply(models, res_raw_data)
+        data <- data.table::data.table(plyr::ldply(data[], data.frame)) 
+        return(data)
+      }
+      datos <- clean_data_SpATS(models = models())
+      
+      write.csv(datos, file, row.names = FALSE)
     }
   )
 
