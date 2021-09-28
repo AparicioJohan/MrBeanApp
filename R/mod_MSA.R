@@ -139,6 +139,7 @@ mod_MSA_ui <- function(id){
                                     value = F
                                   ),
                                   echarts4r::echarts4rOutput(ns("nGen")),
+                                  actionLink(inputId = ns("conectivity"), label = "See Conectivity", icon = icon("arrow-right"), style = "color: #28a745"),
                                   fluidRow(
                                     col_4(),
                                     col_4(
@@ -291,6 +292,47 @@ mod_MSA_server <- function(input, output, session, data){
       plot_shared(shared())
     }
   })
+  
+  # check conectivity
+  
+  output$tbconection <- DT::renderDataTable(
+    if (is.null(info_check())) {return()}
+    else {
+      DT::datatable({
+        checkConection(data = data$data(), genotype = input$genotype, trial = input$experiment, response = input$variable, all = T)
+      },
+      option=list(pageLength=10, scrollX = TRUE,columnDefs = list(list(className = 'dt-center', targets = 0:ncol(info_check())))),
+      filter="top",
+      selection="multiple"
+      )} )
+  
+  observeEvent(input$conectivity,{
+    showModal(modalDialog(
+      title = "Conectivity", size = "l", easyClose = T,
+      DT::dataTableOutput(ns("tbconection")), 
+      footer = tagList(
+        downloadButton(ns("downloadData"), 
+                       "Download", class="btn-success",
+                       style= " color: white ; background-color: #28a745; float:left"),
+        modalButton("Cancel")
+      )
+    )
+    )
+  })
+  
+  output$downloadData <- downloadHandler(
+    filename = function() {
+      paste("Conectivity", ".csv", sep = "")
+    },
+    content = function(file) {
+      write.csv(checkConection(data = data$data(), 
+                               genotype = input$genotype, 
+                               trial = input$experiment, 
+                               response = input$variable, all = T), 
+                file, row.names = FALSE)
+      
+    }
+  )
   
   
   # modelo 
