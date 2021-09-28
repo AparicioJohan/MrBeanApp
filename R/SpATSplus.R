@@ -768,3 +768,70 @@ checkConection <- function(data, genotype = "line", trial = "Experiment", respon
   }
   
 }
+
+
+summ_complete <- function(data, grp = "", var){
+  
+  if( is.numeric(data[, var]) ){
+    if(grp == ""){
+      data %>% 
+        dplyr::summarise(
+          N.Valid     =  rapportools::nvalid(.data[[var]], na.rm = TRUE), 
+          Pct.Valid   =  N.Valid * 100/dplyr::n(),
+          Mean        =  mean(.data[[var]], na.rm = TRUE), 
+          Std.Dev     =  sd(.data[[var]], na.rm = TRUE),
+          Min         =  min(.data[[var]], na.rm = TRUE), 
+          Q1          =  quantile(.data[[var]], probs = 0.25, type = 2, names = FALSE, na.rm = TRUE), 
+          Median      =  median(.data[[var]], na.rm = TRUE),
+          Q3          =  quantile(.data[[var]], probs = 0.75,  type = 2, names = FALSE, na.rm = TRUE),
+          Max         =  max(.data[[var]],  na.rm = TRUE),
+          MAD         =  mad(.data[[var]], na.rm = TRUE), 
+          IQR         =  IQR(.data[[var]], na.rm = TRUE), 
+          CV          =  Std.Dev/Mean,
+          Skewness    =  rapportools::skewness(.data[[var]], na.rm = TRUE),
+          SE.Skewness =   sqrt((6 * N.Valid * (N.Valid - 1))/((N.Valid - 2) * (N.Valid + 1) * (N.Valid + 3))),
+          Kurtosis    =  rapportools::kurtosis(.data[[var]],  na.rm = TRUE) 
+        ) 
+    } else {
+      data %>% 
+        dplyr::group_by(.data[[grp]]) %>% 
+        dplyr::summarise(
+          N.Valid     =  rapportools::nvalid(.data[[var]], na.rm = TRUE), 
+          Pct.Valid   =  N.Valid * 100/dplyr::n(),
+          Mean        =  mean(.data[[var]], na.rm = TRUE), 
+          Std.Dev     =  sd(.data[[var]], na.rm = TRUE),
+          Min         =  min(.data[[var]], na.rm = TRUE), 
+          Q1          =  quantile(.data[[var]], probs = 0.25, type = 2, names = FALSE, na.rm = TRUE), 
+          Median      =  median(.data[[var]], na.rm = TRUE),
+          Q3          =  quantile(.data[[var]], probs = 0.75,  type = 2, names = FALSE, na.rm = TRUE),
+          Max         =  max(.data[[var]],  na.rm = TRUE),
+          MAD         =  mad(.data[[var]], na.rm = TRUE), 
+          IQR         =  IQR(.data[[var]], na.rm = TRUE), 
+          CV          =  Std.Dev/Mean,
+          Skewness    =  rapportools::skewness(.data[[var]], na.rm = TRUE),
+          SE.Skewness =   sqrt((6 * N.Valid * (N.Valid - 1))/((N.Valid - 2) * (N.Valid + 1) * (N.Valid + 3))),
+          Kurtosis    =  rapportools::kurtosis(.data[[var]],  na.rm = TRUE) 
+        ) 
+    }
+  } else {
+    if(grp == ""){
+      data %>% 
+        dplyr::summarise(
+          Variable = var,
+          N.Valid     =  rapportools::nvalid(.data[[var]], na.rm = TRUE), 
+          Pct.Valid   =  N.Valid * 100/dplyr::n()
+        )
+    } else {
+      data %>% 
+        dplyr::group_by(.data[[grp]]) %>%
+        dplyr::summarise(
+          Variable = var,
+          N.Valid     =  rapportools::nvalid(.data[[var]], na.rm = TRUE), 
+          Pct.Valid   =  N.Valid * 100/dplyr::n()
+        )
+    }
+    
+  }
+  
+  
+}

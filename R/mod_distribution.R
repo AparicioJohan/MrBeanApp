@@ -81,9 +81,7 @@ mod_distribution_ui <- function(id){
                    title = "Summary Statistics", 
                    active = F,
                    icon = icon("sort-numeric-up"),
-                   div(style = 'text-align: center', 
-                       verbatimTextOutput(ns("statisticSumm")) 
-                       )
+                   DT::dataTableOutput(ns("statisticSumm2"))
                    )
                   )
                 )
@@ -201,9 +199,8 @@ mod_distribution_server <- function(input, output, session, data){
   
   # statistic summary
   
-  output$statisticSumm <- renderPrint({
-    
-    
+  statistics <- reactive({
+
     validate(
       need(input$Id088 != "", "Select a variable")
     )
@@ -212,18 +209,25 @@ mod_distribution_server <- function(input, output, session, data){
     
     if(is.numeric(dt[ , input$Id088])){
       if((input$Id088f)==""|!isTRUE(input$factor_hist)){
-        p <-  dfSummary(data.frame(dt[ , input$Id088]))
+        p <-  summ_complete(dt, grp = "", var = input$Id088)
       } else{ 
-        dt[,input$Id088f] <- as.factor(dt[,input$Id088f])
-        names(dt)[names(dt)%in%input$Id088f] <- "Grp"
-        p <- dt[,c("Grp",input$Id088)] %>% dplyr::group_by(Grp) %>%  summarytools::descr()
+        p <- summ_complete(dt, grp = input$Id088f, var = input$Id088)
       } 
     } else {
-      p <- dfSummary(dt[ , input$Id088])
+      p <- summ_complete(dt, grp = input$Id088f, var = input$Id088)
     }
     
     p
-    
+  })
+  
+  output$statisticSumm2 <- DT::renderDataTable({
+    DT::datatable({
+      statistics() %>% dplyr::mutate_if(is.numeric, round, 2)
+    },
+    option=list(pageLength=10, scrollX = TRUE,columnDefs = list(list(className = 'dt-center'))),
+    filter="top",
+    selection="multiple"
+    )
   })
   
   
