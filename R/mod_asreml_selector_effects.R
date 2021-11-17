@@ -31,7 +31,7 @@ mod_asreml_selector_effects_ui <- function(id){
               enter = shinyWidgets::animations$fading_entrances$fadeInLeftBig,
               exit  = shinyWidgets::animations$fading_exits$fadeOutLeftBig
             ),
-            style = "unite", icon = icon("gear"),
+            style = "unite", icon = icon("gear",verify_fa = FALSE),
             status = "warning", width = "300px", label = "Model",
             tooltip = tooltipOptions(title = "Click to select model!")
           ),
@@ -47,7 +47,7 @@ mod_asreml_selector_effects_ui <- function(id){
                          plotly::plotlyOutput(ns("plotblup2")),
                          type = 5,color = "#28a745"
                        ),
-                       title = tagList(icon = icon("sort-numeric-up"), "Predictions Plot"),
+                       title = tagList(icon = icon("sort-numeric-up", verify_fa = FALSE), "Predictions Plot"),
                        solidHeader = FALSE,status = "success",width = 12,collapsed = F)
                    )
             )
@@ -93,7 +93,7 @@ mod_asreml_selector_effects_ui <- function(id){
                                                     enter = shinyWidgets::animations$fading_entrances$fadeInLeftBig,
                                                     exit  = shinyWidgets::animations$fading_exits$fadeOutLeftBig
                                                   ),
-                                                  style = "unite", icon = icon("gear"),
+                                                  style = "unite", icon = icon("gear",verify_fa = FALSE),
                                                   status = "warning", width = "300px"
                                                 ),
                                                 shinycssloaders::withSpinner(plotOutput(ns("plot_spats")),type = 5,color = "#28a745"),icon = icon("th")

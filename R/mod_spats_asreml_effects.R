@@ -25,7 +25,7 @@ mod_spats_asreml_effects_ui <- function(id){
                    plotly::plotlyOutput(ns("plotblup2")),
                    type = 5,color = "#28a745"
                  ),
-                 title = tagList(icon = icon("sort-numeric-up"), "Predictions Plot"),
+                 title = tagList(icon = icon("sort-numeric-up", verify_fa = FALSE), "Predictions Plot"),
                  solidHeader =  FALSE,status = "success",width = 12,collapsed = F)
              )
       )

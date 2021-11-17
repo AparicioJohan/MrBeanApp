@@ -70,7 +70,7 @@ mod_MSA_ui <- function(id){
            div(id=ns("only"),
                fluidRow(
                bs4Dash::box(width = 12, title =  tagList(icon=icon("wrench"), "Additional Components"),status = "success", solidHeader = FALSE,collapsible = TRUE ,
-                            actionBttn(inputId = ns("tabBut"), icon = icon("sliders"), size = "xs",
+                            actionBttn(inputId = ns("tabBut"), icon = icon("sliders-h"), size = "xs",
                                        label = "Info About the Experiments",style = "unite",color = "warning",block = T ),
                     selectInput(inputId=ns("replicate"),label="Replicate",  choices="", width = "100%"),
                     selectizeInput(ns("show_fixed"), width = "100%",

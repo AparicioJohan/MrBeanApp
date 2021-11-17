@@ -160,7 +160,7 @@ mod_asreml_selector_ui <- function(id){
                             fluidRow(
                               col_4(),
                               col_4(
-                                actionBttn(inputId = ns("tabBut"), icon = icon("sliders"), size = "md",
+                                actionBttn(inputId = ns("tabBut"), icon = icon("sliders-h"), size = "md",
                                            label = "Comparison",style = "jelly",color = "success",block = T ),
                                 br()
                               ),

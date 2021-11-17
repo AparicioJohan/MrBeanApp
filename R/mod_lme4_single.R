@@ -113,7 +113,7 @@ mod_lme4_single_ui <- function(id){
                       title=tagList(icon=icon("leaf"), "Summary Model"),
                       shinycssloaders::withSpinner(verbatimTextOutput(ns("summaryalpha")),type = 6,color = "#28a745")),
               bs4Card(width = 6,status = "success", solidHeader = FALSE, style = "overflow-x: scroll;",
-                      title=tagList(icon=icon("sort-numeric-up "), "Effects"),
+                      title=tagList(icon=icon("sort-numeric-up", verify_fa = FALSE), "Effects"),
                       shinycssloaders::withSpinner(DT::dataTableOutput(ns("blups_mixed")),type = 6,color = "#28a745"),
                       downloadButton(ns("desc_mixed"), "Download Table", class="btn-success",
                                      style="display:rigth ;color: white  ; background-color: #00a65a")))

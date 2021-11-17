@@ -40,7 +40,7 @@ mod_MET_ui <- function(id){
                                          choices = list(Tab='\t', Comma=',',
                                                         Semicolon=';', 'Space'=' '),
                                          selected = ',', width = "100%"),
-                             actionBttn(inputId = ns("tabBut"), icon = icon("sliders"), size = "sm",
+                             actionBttn(inputId = ns("tabBut"), icon = icon("sliders-h"), size = "sm",
                                         label = "View",style = "unite",color = "warning",block = T )
                          ) 
                        )

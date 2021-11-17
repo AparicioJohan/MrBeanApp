@@ -60,7 +60,7 @@ mod_distribution_ui <- function(id){
                        enter = shinyWidgets::animations$fading_entrances$fadeInLeftBig,
                         exit = shinyWidgets::animations$fading_exits$fadeOutLeftBig
                      ),
-                     style = "unite", icon = icon("gear"),
+                     style = "unite", icon = icon("gear", verify_fa = FALSE),
                      status = "warning", width = "300px"
                    ),
                    plotOutput(ns("plothistogram"),
@@ -80,7 +80,7 @@ mod_distribution_ui <- function(id){
                  tabPanel(
                    title = "Summary Statistics", 
                    active = F,
-                   icon = icon("sort-numeric-up"),
+                   icon = icon("sort-numeric-up", verify_fa = FALSE),
                    DT::dataTableOutput(ns("statisticSumm2"))
                    )
                   )

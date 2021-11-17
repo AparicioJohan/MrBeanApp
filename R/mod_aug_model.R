@@ -112,7 +112,7 @@ mod_aug_model_ui <- function(id){
                                   fluidRow(
                                     col_4(),
                                     col_4(
-                                      actionBttn(inputId = ns("run"), icon = icon("sliders"), size = "md",
+                                      actionBttn(inputId = ns("run"), icon = icon("sliders-h"), size = "md",
                                                  label = "Run Selected Model!",style = "unite",color = "warning",block = T )
                                       ),
                                     col_4()
@@ -146,7 +146,7 @@ mod_aug_model_ui <- function(id){
                                                 enter = shinyWidgets::animations$fading_entrances$fadeInLeftBig,
                                                 exit  = shinyWidgets::animations$fading_exits$fadeOutLeftBig
                                               ),
-                                              style = "unite", icon = icon("gear"),
+                                              style = "unite", icon = icon("gear", verify_fa = FALSE),
                                               status = "warning", width = "300px"
                                             ),
                                             shinycssloaders::withSpinner(plotOutput(ns("plot_spats")),type = 5,color = "#28a745"),icon = icon("th")

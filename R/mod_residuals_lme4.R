@@ -15,14 +15,14 @@ mod_residuals_lme4_ui <- function(id){
         shinycssloaders::withSpinner(
           plotly::plotlyOutput(ns("plot_effects")),type = 6,color = "#28a745"
           ),
-        width = 12,title = tagList(shiny::icon("sort-numeric-up"), "Genotype Effects"),status = "success",solidHeader = FALSE
+        width = 12,title = tagList(shiny::icon("sort-numeric-up",verify_fa = FALSE), "Genotype Effects"),status = "success",solidHeader = FALSE
         ) 
       ),
     
     fluidRow(
       column(width=6,
              fluidRow(
-               bs4TabCard(width = 12,id = "Res_lme4", title = tagList(shiny::icon("bar-chart-o"), "Residuals") ,
+               bs4TabCard(width = 12,id = "Res_lme4", title = tagList(shiny::icon("bar-chart-o", verify_fa = FALSE), "Residuals") ,
                           status = "success", collapsible = T , maximizable = T,solidHeader = FALSE, side = "left", type = "tabs",
                           tabPanel(title = "Residual",active = T, helpText("First run the Mixed Model"),
                                       prettySwitch(

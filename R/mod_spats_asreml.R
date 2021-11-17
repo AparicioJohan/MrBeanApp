@@ -161,7 +161,7 @@ mod_spats_asreml_ui <- function(id){
                                                      enter = shinyWidgets::animations$fading_entrances$fadeInLeftBig,
                                                      exit  = shinyWidgets::animations$fading_exits$fadeOutLeftBig
                                                    ),
-                                                   style = "unite", icon = icon("gear"),
+                                                   style = "unite", icon = icon("gear", verify_fa = FALSE),
                                                    status = "warning", width = "300px"
                                                  ),
                                                  shinycssloaders::withSpinner(plotOutput(ns("plot_spats")),type = 5,color = "#28a745"),icon = icon("th")

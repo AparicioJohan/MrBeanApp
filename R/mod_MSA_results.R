@@ -59,7 +59,7 @@ mod_MSA_results_ui <- function(id){
                                                          enter = shinyWidgets::animations$fading_entrances$fadeInLeftBig,
                                                          exit  = shinyWidgets::animations$fading_exits$fadeOutLeftBig
                                                        ),
-                                                       style = "unite", icon = icon("gear"),
+                                                       style = "unite", icon = icon("gear", verify_fa = FALSE),
                                                        status = "warning", width = "300px"
                                                      ),
                                                      shinycssloaders::withSpinner(plotOutput(ns("corr")),type = 5,color = "#28a745")
@@ -133,7 +133,7 @@ mod_MSA_results_ui <- function(id){
                                       enter = shinyWidgets::animations$fading_entrances$fadeInLeftBig,
                                       exit  = shinyWidgets::animations$fading_exits$fadeOutLeftBig
                                     ),
-                                    style = "unite", icon = icon("gear"),
+                                    style = "unite", icon = icon("gear", verify_fa = FALSE),
                                     status = "warning", width = "300px"
                                   ),
                                   shinycssloaders::withSpinner(plotOutput(ns("plot_spats")),type = 5,color = "#28a745"),
@@ -156,7 +156,7 @@ mod_MSA_results_ui <- function(id){
                                   )
                      ),
                      bs4Dash::box(width = 12, status = "success", solidHeader = FALSE,
-                                  title = tagList(icon=icon("sort-numeric-up"), "Predictions Plot"),
+                                  title = tagList(icon=icon("sort-numeric-up", verify_fa = FALSE), "Predictions Plot"),
                                   collapsible = T, maximizable = T,
                                   echarts4r::echarts4rOutput(ns("ranking"))
                                   )

@@ -35,7 +35,7 @@ mod_descrip_raw_ui <- function(id, title=c("Scatterplot", "Boxplot"), In , Out, 
           enter = shinyWidgets::animations$fading_entrances[[In]],
           exit =  shinyWidgets::animations$fading_exits[[Out]]
         ),
-        style = "unite", icon = icon("gear"),
+        style = "unite", icon = icon("gear", verify_fa = FALSE),
         status = "warning", width = "300px"
       ),
       shinycssloaders::withSpinner( 

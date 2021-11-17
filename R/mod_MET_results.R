@@ -43,7 +43,7 @@ mod_MET_results_ui <- function(id){
                                                     enter = shinyWidgets::animations$fading_entrances$fadeInLeftBig,
                                                     exit  = shinyWidgets::animations$fading_exits$fadeOutLeftBig
                                                   ),
-                                                  style = "unite", icon = icon("gear"),
+                                                  style = "unite", icon = icon("gear", verify_fa = FALSE),
                                                   tooltip = tooltipOptions(title = "Click to Download!"),
                                                   status = "warning", width = "300px"
                                                 )
@@ -97,7 +97,7 @@ mod_MET_results_ui <- function(id){
                                                     enter = shinyWidgets::animations$fading_entrances$fadeInLeftBig,
                                                     exit  = shinyWidgets::animations$fading_exits$fadeOutLeftBig
                                                   ),
-                                                  style = "unite", icon = icon("gear"),
+                                                  style = "unite", icon = icon("gear", verify_fa = FALSE),
                                                   tooltip = tooltipOptions(title = "Click to Download!"),
                                                   status = "warning", width = "300px"
                                                 )
@@ -532,7 +532,7 @@ mod_MET_results_server <- function(input, output, session, model){
           enter = shinyWidgets::animations$fading_entrances$fadeInLeftBig,
           exit  = shinyWidgets::animations$fading_exits$fadeOutLeftBig
         ),
-        style = "unite", icon = icon("gear"),
+        style = "unite", icon = icon("gear", verify_fa = FALSE),
         tooltip = tooltipOptions(title = "Click to Download!"),
         status = "warning", width = "300px"
       ),

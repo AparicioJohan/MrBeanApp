@@ -83,13 +83,13 @@ app_ui <- function(request) {
                        bs4SidebarMenuItem(
                          text = "Single-Site", icon = shiny::icon("braille"), startExpanded = F,
                          bs4SidebarMenuSubItem(
-                           text = "Model Specs", tabName = "modelo", icon = shiny::icon("circle-thin")
+                           text = "Model Specs", tabName = "modelo", icon = shiny::icon("circle-thin",verify_fa = FALSE)
                          ),
                          bs4SidebarMenuSubItem(
-                           text = "BLUPs/BLUEs", tabName = "blupspat", icon = shiny::icon("circle-thin")
+                           text = "BLUPs/BLUEs", tabName = "blupspat", icon = shiny::icon("circle-thin",verify_fa = FALSE)
                          ),
                          bs4SidebarMenuSubItem(
-                           text = "Residuals", tabName = "resispat", icon = shiny::icon("circle-thin")
+                           text = "Residuals", tabName = "resispat", icon = shiny::icon("circle-thin",verify_fa = FALSE)
                          )
                        ),
                        # Multiple-single analysis
@@ -97,11 +97,11 @@ app_ui <- function(request) {
                          "Site-by-Site", icon = shiny::icon("sitemap"), startExpanded = F,
                          bs4SidebarMenuSubItem(
                            HTML(paste("Model Specs", bs4Badge("new", position = "right", color = "danger"))) ,
-                           tabName = "msa", icon = shiny::icon("circle-thin")
+                           tabName = "msa", icon = shiny::icon("circle-thin",verify_fa = FALSE)
                          ),
                          bs4SidebarMenuSubItem(
                            HTML(paste("Results", bs4Badge("new", position = "right", color = "danger"))) ,
-                           tabName = "msa_result", icon = shiny::icon("circle-thin")
+                           tabName = "msa_result", icon = shiny::icon("circle-thin",verify_fa = FALSE)
                          )
                        ),
                        # Multiple trait 
@@ -109,7 +109,7 @@ app_ui <- function(request) {
                          "Trait-by-Trait", icon = shiny::icon("ruler"), startExpanded = F,
                          bs4SidebarMenuSubItem(
                            HTML(paste("Model Specs", bs4Badge("new", position = "right", color = "danger"))) ,
-                           tabName = "multi_trait", icon = shiny::icon("circle-thin")
+                           tabName = "multi_trait", icon = shiny::icon("circle-thin",verify_fa = FALSE)
                          )
                        ),
                        bs4SidebarHeader("ASReml"),
@@ -118,11 +118,11 @@ app_ui <- function(request) {
                          text = "Single-Site", icon = shiny::icon("braille"), startExpanded = F,
                          bs4SidebarMenuSubItem(
                            HTML(paste("Model Specs", bs4Badge("new", position = "right", color = "success"))) ,
-                           tabName = "spats_asreml", icon = shiny::icon("circle-thin")
+                           tabName = "spats_asreml", icon = shiny::icon("circle-thin",verify_fa = FALSE)
                          ),
                          bs4SidebarMenuSubItem(
                            HTML(paste("BLUPs/BLUEs", bs4Badge("new", position = "right", color = "success"))) ,
-                           tabName = "spats_asreml_effects", icon = shiny::icon("circle-thin")
+                           tabName = "spats_asreml_effects", icon = shiny::icon("circle-thin",verify_fa = FALSE)
                          )
                        ),
                        # Un-replicated analysis
@@ -130,11 +130,11 @@ app_ui <- function(request) {
                          "Unreplicated", icon = shiny::icon("crosshairs"), startExpanded = F,
                          bs4SidebarMenuSubItem(
                            HTML(paste("Model Specs", bs4Badge("new", position = "right", color = "danger"))) ,
-                           tabName = "aug_model", icon = shiny::icon("circle-thin")
+                           tabName = "aug_model", icon = shiny::icon("circle-thin",verify_fa = FALSE)
                          ),
                          bs4SidebarMenuSubItem(
                            HTML(paste("BLUPs/BLUEs", bs4Badge("new", position = "right", color = "danger"))) ,
-                           tabName = "aug_result", icon = shiny::icon("circle-thin")
+                           tabName = "aug_result", icon = shiny::icon("circle-thin",verify_fa = FALSE)
                          )
                        ),
                        # Model selector
@@ -142,11 +142,11 @@ app_ui <- function(request) {
                          text = "Model Selector", icon = shiny::icon("hand-pointer"), startExpanded = F,
                          bs4SidebarMenuSubItem(
                            HTML(paste("Model Specs", bs4Badge("new", position = "right", color = "success"))) ,
-                           tabName = "asreml_selector", icon = shiny::icon("circle-thin")
+                           tabName = "asreml_selector", icon = shiny::icon("circle-thin",verify_fa = FALSE)
                          ),
                          bs4SidebarMenuSubItem(
                            HTML(paste("BLUPs/BLUEs", bs4Badge("new", position = "right", color = "success"))) ,
-                           tabName = "asr_sel_selected", icon = shiny::icon("circle-thin")
+                           tabName = "asr_sel_selected", icon = shiny::icon("circle-thin",verify_fa = FALSE)
                          )
                        ),
                        bs4SidebarHeader("Two-Stage Analysis"),
@@ -155,15 +155,15 @@ app_ui <- function(request) {
                          "MET Analysis", icon = shiny::icon("chart-pie"), startExpanded = F,
                          bs4SidebarMenuSubItem(
                            HTML(paste("Model Specs", bs4Badge("new", position = "right", color = "info"))) ,
-                           tabName = "met", icon = shiny::icon("circle-thin")
+                           tabName = "met", icon = shiny::icon("circle-thin",verify_fa = FALSE)
                          ),
                          bs4SidebarMenuSubItem(
                            HTML(paste("Results", bs4Badge("new", position = "right", color = "info"))) ,
-                           tabName = "met_result", icon = shiny::icon("circle-thin")
+                           tabName = "met_result", icon = shiny::icon("circle-thin",verify_fa = FALSE)
                          ),
                          bs4SidebarMenuSubItem(
                            HTML(paste("Factor Analytic", bs4Badge("new", position = "right", color = "info"))) ,
-                           tabName = "met_fa", icon = shiny::icon("circle-thin")
+                           tabName = "met_fa", icon = shiny::icon("circle-thin",verify_fa = FALSE)
                          )
                        ),
                        bs4SidebarHeader("Traditional Designs"),
@@ -171,10 +171,10 @@ app_ui <- function(request) {
                        bs4SidebarMenuItem(
                          text = "Analysis with lme4", icon = shiny::icon("chart-bar"), startExpanded = F,
                          bs4SidebarMenuSubItem(
-                           text = "Model Specs", tabName = "mixed", icon = shiny::icon("circle-thin")
+                           text = "Model Specs", tabName = "mixed", icon = shiny::icon("circle-thin",verify_fa = FALSE)
                          ),
                          bs4SidebarMenuSubItem(
-                           text = "BLUPs/BLUEs", tabName = "boxes", icon = shiny::icon("circle-thin")
+                           text = "BLUPs/BLUEs", tabName = "boxes", icon = shiny::icon("circle-thin",verify_fa = FALSE)
                          )
                        ),
                        bs4SidebarHeader("About"),
@@ -305,7 +305,7 @@ app_ui <- function(request) {
           actionLink(inputId = "toAwesome00", label = "Home", icon = icon("home")),br(),
           actionLink(inputId = "toAwesome11", label = "Data", icon = icon("database")),br(),
           actionLink(inputId = "toAwesome22", label = "Spatial", icon = icon("braille")),br(),
-          actionLink(inputId = "toAwesome33", label = "About", icon = icon("bar-chart-o")),br()
+          actionLink(inputId = "toAwesome33", label = "About", icon = icon("bar-chart-o",verify_fa = FALSE )),br()
           ),
         col_4()
         ),
@@ -352,7 +352,7 @@ golem_add_external_resources <- function(){
     rintrojs::introjsUI(),
     shinytoastr::useToastr(),
     waiter::use_waiter(),
-    sever::use_sever()
+    sever::useSever()
   )
 }
 
