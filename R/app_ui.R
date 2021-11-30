@@ -312,14 +312,14 @@ app_ui <- function(request) {
       footer = bs4DashFooter(
         fixed = F,
         left  = tagList(
-          "v.2.0.6",
+          "v.2.0.7",
           HTML("&nbsp; &nbsp; &nbsp; &nbsp;"),
           a(
             href = "https://www.linkedin.com/in/johan-steven-aparicio-arce-b68976193/", 
             target = "_blank", "J.Aparicio@cgiar.org"
           )
         ),
-        right = "2020"
+        right = "2021"
       )
     )
   )
