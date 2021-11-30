@@ -49,6 +49,8 @@ usethis::use_package( "sever" )
 usethis::use_package( "waiter" )
 usethis::use_package( "ggrepel" )
 usethis::use_package( "emmeans" )
+usethis::use_package( "QBMS" )
+usethis::use_dev_package("brapirv1", type = "Imports", remote = "mverouden/brapir-v1")
 
 ## Add modules ----
 ## Create a module infrastructure in R/
