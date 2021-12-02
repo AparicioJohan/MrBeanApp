@@ -231,10 +231,9 @@ mod_import_dt_server <- function(input, output, session){
     color = transparent(0.3)
   )
   
-  ## uncomment this 
-  # observe({
-  #   updateSelectInput(session, "brapi_crops", choices= brapirv1::brapi_db() %>% names(), selected = "YdHa_clean")
-  # })
+  observe({
+    updateSelectInput(session, "brapi_crops", choices= brapirv1::brapi_db() %>% names(), selected = "YdHa_clean")
+  })
 
   # brapi data
   
