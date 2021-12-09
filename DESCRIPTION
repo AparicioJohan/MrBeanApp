@@ -23,7 +23,6 @@ Imports:
     processx,
     shinyWidgets,
     pkgload,
-    brapi (>= 1.2.3),
     dplyr,
     shinycssloaders,
     plotly,
