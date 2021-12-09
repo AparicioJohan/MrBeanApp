@@ -1,0 +1,64 @@
+Package: MrBean
+Title: Web application for analyzing field experiments
+Version: 2.0.6
+Authors@R: person('Johan', 'Aparicio', email = 'j.aparicio@cgiar.org', role = c('cre', 'aut'))
+Description: Mr. Bean is an easy to use R-Shiny web-app that simplifies the analysis of large-scale plant breeding experimental analysis by using the power and versatility of Linear Mixed Models (LMM). This app combines the analytical robustness and speed of ASReml and SpATS with the visual power offered by R.  Mr. Bean provides a graphical workflow for importing data, identifying outliers, and fitting field data using LMM with or without spatial correction. The results are BLUPs/BLUEs predictions and heritabilities for single-environmental experiments or multiple-environmental trial (MET) analysis. In addition, Mr. Bean also provides a module for exploring results from METs using several graphical and multivariate techniques.
+License: MIT + file LICENSE
+Imports: 
+    config,
+    golem,
+    shiny,
+    htmltools,
+    ggplot2,
+    bs4Dash (>= 0.6.0.9000),
+    SpATS (>= 1.0.10),
+    shinyjs,
+    rintrojs,
+    shinytoastr,
+    shinyalert,
+    thinkr,
+    attempt,
+    DT,
+    glue,
+    processx,
+    shinyWidgets,
+    pkgload,
+    dplyr,
+    shinycssloaders,
+    plotly,
+    summarytools,
+    ggpubr,
+    lme4,
+    yaml,
+    magrittr,
+    waiter,
+    echarts4r,
+    data.table,
+    tidyr,
+    readxl,
+    kableExtra,
+    formattable,
+    tibble,
+    reshape,
+    factoextra,
+    sever,
+    psych,
+    lmerTest,
+    broom.mixed,
+    Matrix,
+    ggrepel,
+    emmeans,
+    brapirv1 (>= 1.3.0.2),
+    QBMS
+Encoding: UTF-8
+LazyData: true
+RoxygenNote: 7.1.2
+URL: https://github.com/AparicioJohan/MrBeanApp
+BugReports: https://github.com/AparicioJohan/MrBeanApp/issues
+Suggests: 
+    testthat
+Remotes:  
+    RinteRface/bs4Dash,
+    mverouden/brapir-v1
+Depends: 
+    R (>= 2.10)
