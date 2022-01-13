@@ -149,7 +149,7 @@ mod_import_dt_ui <- function(id){
                               fluidRow(
                                 bs4Dash::box(title =  tagList(shiny::icon("question-circle"), "Help"), 
                                              solidHeader = FALSE,width = 12,status = "success",
-                                             h3("How to use BRAPI within Mr.Bean?"),
+                                             h3("How to use BRAPI in Mr.Bean?"),
                                              hr(),
                                              includeHTML(
                                                system.file("app/www/icon2.html", package = "MrBean")
@@ -163,7 +163,7 @@ mod_import_dt_ui <- function(id){
                                              fluidRow(
                                                col_12(
                                                  selectInput(inputId=ns("brapi_crops"),
-                                                             label=  "Crops",
+                                                             label=  "Database",
                                                              choices= "",
                                                              # selected = "",
                                                              width = "100%")
