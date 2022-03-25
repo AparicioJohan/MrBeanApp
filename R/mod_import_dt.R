@@ -116,6 +116,9 @@ mod_import_dt_ui <- function(id){
                                                                  placement = "top")
                                                          ), 
                                                        value = "https://bms.ciat.cgiar.org/ibpworkbench/controller/auth/login", width = "100%"),
+                                             awesomeCheckbox(inputId = ns('no_auth') ,
+                                                             label='No authentication required?',  
+                                                             value = FALSE, status = "danger"  ),
                                              prettyRadioButtons(
                                                inputId = ns("engine"),
                                                label = "Engine:", 
@@ -126,7 +129,7 @@ mod_import_dt_ui <- function(id){
                                                status = "success",
                                                animation = "jelly"
                                              ),
-                                             conditionalPanel("input.engine=='bms'", ns = ns,
+                                             conditionalPanel("input.no_auth==false", ns = ns,
                                                               textInput(ns("user"),label = tagList(shiny::icon("user"), "User:"),placeholder = "username",width = "100%" ),
                                                               passwordInput(ns("password"), tagList(shiny::icon("key"), "Password:"),width = "100%",placeholder = "*****************")
                                                               ),
@@ -341,9 +344,11 @@ mod_import_dt_server <- function(input, output, session){
     isolate({
       tryCatch(
         {
-          # if(input$user==""|is.null(input$user)) return()
-          # if(input$password==""|is.null(input$password)) return()
-          tmpbms <- qbmsbrapi(url = input$urlbms, username = input$user, password = input$password, engine = input$engine)
+          tmpbms <- qbmsbrapi(url = input$urlbms, 
+                              username = input$user,
+                              password = input$password, 
+                              engine = input$engine, 
+                              no_auth = input$no_auth)
         },
         error = function(e) {
           shinytoastr::toastr_error(title = "Error:", conditionMessage(e),position =  "bottom-full-width",

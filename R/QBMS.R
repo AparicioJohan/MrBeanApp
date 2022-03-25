@@ -4,16 +4,16 @@ qbmsbrapi <- function(url = "https://bms.ciat.cgiar.org/ibpworkbench/controller/
                       engine = c("bms", "breadbase"),
                       path = ifelse(engine == "bms", "bmsapi", ""),
                       time_out = ifelse(engine == "bms", 120, 300),
-                      no_auth = ifelse(engine == "bms", FALSE, TRUE),
+                      no_auth = FALSE,
                       username = NULL,
                       password = NULL){
   if(is.null(url)|url=="") return()
-  if(engine == "bms"){
+  
+  bmsbase <- QBMS::set_qbms_config(url = url, path = path, time_out = time_out, no_auth = no_auth, engine = engine )
+  
+  if(!no_auth){
     if(is.null(username)|username=="") return()
     if(is.null(password)|password=="") return()
-  }
-  bmsbase <- QBMS::set_qbms_config(url = url, path = path, time_out = time_out, no_auth = no_auth, engine = engine )
-  if(!no_auth){
     bmslogin <- QBMS::login_bms(username = username , password = password)
   } else {
     bmslogin <- NULL
