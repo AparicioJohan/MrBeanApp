@@ -16,7 +16,7 @@ mod_import_dt_ui <- function(id){
                    width = 3,
                    radioGroupButtons(
                      inputId = ns("Id004"),
-                     choices = c("Example Data"=1, "Import Data"=2, "BMS"=3, "BRAPI" = 4),
+                     choices = c("Example Data"=1, "Import Data"=2, "BrAPI"=3), # , "BRAPI" = 4
                      status = "success",selected = 1
                     ),
                    conditionalPanel("input.Id004==1",h6('Use the example database to try the different modules of Mr. Bean'), ns = ns),
@@ -96,7 +96,7 @@ mod_import_dt_ui <- function(id){
                               fluidRow(
                                 bs4Dash::box(title =  tagList(shiny::icon("question-circle"), "Help"), 
                                              solidHeader = FALSE,width = 12,status = "success",
-                                             h3("How to connect BMS in MrBean?"),
+                                             h3("How to connect BrAPI in MrBean?"),
                                              hr(),
                                              includeHTML(
                                                system.file("app/www/icon.html", package = "MrBean")
@@ -107,9 +107,29 @@ mod_import_dt_ui <- function(id){
                        column(width = 4,
                               fluidRow(
                                 bs4Dash::box(title = tagList(shiny::icon("users"), "BMS"),solidHeader = FALSE,width = 12,status = "success",
-                                             textInput(inputId = ns("urlbms"), label = tagList(shiny::icon("server"), "Server"), value = "https://bms.ciat.cgiar.org/ibpworkbench/controller/auth/login", width = "100%"),
-                                             textInput(ns("user"),label = tagList(shiny::icon("user"), "User:"),placeholder = "username",width = "100%" ),
-                                             passwordInput(ns("password"), tagList(shiny::icon("key"), "Password:"),width = "100%",placeholder = "*****************"),
+                                             textInput(inputId = ns("urlbms"), 
+                                                       label = tagList(
+                                                         shiny::icon("server"), 
+                                                         "Server",
+                                                         tooltip(icon("question-circle"),
+                                                                 title = "For example: \n https://cassavabase.org \n https://sweetpotatobase.org \n https://bms.ciat.cgiar.org/", 
+                                                                 placement = "top")
+                                                         ), 
+                                                       value = "https://bms.ciat.cgiar.org/ibpworkbench/controller/auth/login", width = "100%"),
+                                             prettyRadioButtons(
+                                               inputId = ns("engine"),
+                                               label = "Engine:", 
+                                               choices = c("BMS" = "bms", "BreedBase" = "breedbase"),
+                                               icon = icon("check"), 
+                                               inline = TRUE,
+                                               bigger = TRUE,
+                                               status = "success",
+                                               animation = "jelly"
+                                             ),
+                                             conditionalPanel("input.engine=='bms'", ns = ns,
+                                                              textInput(ns("user"),label = tagList(shiny::icon("user"), "User:"),placeholder = "username",width = "100%" ),
+                                                              passwordInput(ns("password"), tagList(shiny::icon("key"), "Password:"),width = "100%",placeholder = "*****************")
+                                                              ),
                                              actionButton(ns("mysql"),label = "Conect",icon = icon("sync")),
                                              strong(a("Can't Log In?", href="http://bms.ciat.cgiar.org:48080/ibpworkbench/controller/auth/login"))
                                 )
@@ -127,6 +147,9 @@ mod_import_dt_ui <- function(id){
                                                          choices="",width = "100%"),
                                              selectInput(inputId=ns("trial"),
                                                          label= tagList( "Which trial?",tags$a(icon("exclamation-circle"))),
+                                                         choices="",width = "100%", multiple = T),
+                                             selectInput(inputId=ns("study"),
+                                                         label= tagList( "Which study?",tags$a(icon("exclamation-circle"))),
                                                          choices="",width = "100%", multiple = T),
                                              fluidRow(
                                                col_3(),
@@ -318,9 +341,9 @@ mod_import_dt_server <- function(input, output, session){
     isolate({
       tryCatch(
         {
-          if(input$user==""|is.null(input$user)) return()
-          if(input$password==""|is.null(input$password)) return()
-          tmpbms <- qbmsbrapi(url = input$urlbms, username = input$user, password = input$password)
+          # if(input$user==""|is.null(input$user)) return()
+          # if(input$password==""|is.null(input$password)) return()
+          tmpbms <- qbmsbrapi(url = input$urlbms, username = input$user, password = input$password, engine = input$engine)
         },
         error = function(e) {
           shinytoastr::toastr_error(title = "Error:", conditionMessage(e),position =  "bottom-full-width",
@@ -343,15 +366,14 @@ mod_import_dt_server <- function(input, output, session){
     if (is.null(bmscon())) {
       shinyalert::shinyalert(title = "Incorrect username or password", type = "error",confirmButtonCol = "#28a745")
     } else {    
-      shinyalert::shinyalert(title = "Welcome to BMS!", type = "success", text = input$user,confirmButtonCol = "#28a745",
-                           imageUrl="www/0.png",
+      shinyalert::shinyalert(title = paste0("Welcome to ", input$engine, "!"), type = "success", text = "",confirmButtonCol = "#28a745",
+                           imageUrl= ifelse(input$engine == "bms",  "www/0.png" , "www/brapi.png"),
                            animation ="slide-from-top" )
       updateSelectInput(session , inputId = "Id008", choices = crops(), selected = "NNNNN" )
       }
   })
   
   programs <- reactive({
-    # programBMS(conection = bmscon(), crop = input$Id008 )
     crop <- input$Id008
     tryCatch(
       {
@@ -363,7 +385,7 @@ mod_import_dt_server <- function(input, output, session){
       }
     )
     if(!exists("list_programs")) list_programs <- NULL
-    return(list_programs$name)
+    return(list_programs[[1]])
   })
 
   observeEvent(input$Id008,{
@@ -398,6 +420,32 @@ mod_import_dt_server <- function(input, output, session){
     suppressWarnings(updateSelectInput(session, inputId = "trial",choices = options , selected = "NNNNN"))
   }, ignoreInit = TRUE)
   
+  
+  studies <- reactive({
+    w$show()
+    tryCatch(
+      {
+        list_studies <-lapply(input$trial, qbmsstudies)
+        names(list_studies) <- input$trial
+        dt_std <- data.frame(plyr::ldply(list_studies[], data.frame, .id = "trial"))
+      },
+      error = function(e) {
+        shinytoastr::toastr_error(title = "Error:", conditionMessage(e),position =  "bottom-full-width",
+                                  showMethod ="slideDown", hideMethod="hide", hideEasing = "linear")
+        w$hide()
+      }
+    )
+    w$hide()
+    if(!exists("dt_std")) dt_std <- NULL
+    return(dt_std)
+  })
+  
+  observeEvent(input$trial,{
+    if(is.null(studies())){
+      options <- ""
+    } else {options = studies()[[2]]}
+    suppressWarnings(updateSelectInput(session, inputId = "study",choices = options , selected = "NNNNN"))
+  }, ignoreInit = TRUE)
 
   # data --------------------------------------------------------------------
 
@@ -407,7 +455,7 @@ mod_import_dt_server <- function(input, output, session){
       w$show()
       tryCatch(
         { 
-          datos <- mult_dataqbms(trials = input$trial)
+          datos <- dataqbms(studies = input$study, dt_studies = studies())
         },
         error = function(e) {
           shinytoastr::toastr_error(title = "Error:", conditionMessage(e),position =  "bottom-full-width",

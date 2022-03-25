@@ -1,11 +1,23 @@
 
 
-qbmsbrapi <- function(url = "https://bms.ciat.cgiar.org/ibpworkbench/controller/auth/login", username = NULL , password = NULL){
+qbmsbrapi <- function(url = "https://bms.ciat.cgiar.org/ibpworkbench/controller/auth/login", 
+                      engine = c("bms", "breadbase"),
+                      path = ifelse(engine == "bms", "bmsapi", ""),
+                      time_out = ifelse(engine == "bms", 120, 300),
+                      no_auth = ifelse(engine == "bms", FALSE, TRUE),
+                      username = NULL,
+                      password = NULL){
   if(is.null(url)|url=="") return()
-  if(is.null(username)|username=="") return()
-  if(is.null(password)|password=="") return()
-  bmsbase <- QBMS::set_qbms_config(url)
-  bmslogin <- QBMS::login_bms(username = username , password = password)
+  if(engine == "bms"){
+    if(is.null(username)|username=="") return()
+    if(is.null(password)|password=="") return()
+  }
+  bmsbase <- QBMS::set_qbms_config(url = url, path = path, time_out = time_out, no_auth = no_auth, engine = engine )
+  if(!no_auth){
+    bmslogin <- QBMS::login_bms(username = username , password = password)
+  } else {
+    bmslogin <- NULL
+  }
   crops <- QBMS::list_crops()
   return(list(bmsbase = bmsbase, bmslogin = bmslogin , crops = crops)) 
 }
@@ -29,30 +41,27 @@ qbmsstudies <- function(trial = NULL){
   if(is.null(trial)) return()
   QBMS::set_trial(trial)
   studies <- QBMS::list_studies()
-  studies <- studies[1,1] 
   return(studies)
 }
 
 
-dataqbms <- function(studies = NULL){
+dataqbms <- function(studies = NULL, dt_studies = NULL){
   if(is.null(studies)) return()
-  QBMS::set_study(studies)
-  data <- QBMS::get_study_data() %>% 
-            data.frame(check.names = TRUE, stringsAsFactors = T) %>%
-            type.convert()
-  return(data)
-}
-
-
-mult_dataqbms <- function(trials){
-  trials <- trials
-  data_all <- list()
-  for (variable in trials) {
-    a <- qbmsstudies(trial = variable)
-    data_all[[variable]] <- dataqbms(studies = a)
+  if(is.null(dt_studies)) return()
+  
+  trial_study <- function(study, dt_studies){
+    trial <- dt_studies[dt_studies$studyName == study, "trial"] %>% as.character
+    QBMS::set_trial(trial)
+    QBMS::set_study(study)
+    data <- QBMS::get_study_data() %>% 
+      data.frame(check.names = TRUE, stringsAsFactors = T) %>%
+      type.convert()
+    return(data)
   }
-  data_all <- dplyr::bind_rows(data_all)
-  return(data_all)
+  
+  mult_dt <- lapply(studies, trial_study, dt_studies = dt_studies)
+  mult_dt <- dplyr::bind_rows(mult_dt)
+  return(mult_dt)
 }
 
 
