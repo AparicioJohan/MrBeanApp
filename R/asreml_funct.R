@@ -24,8 +24,6 @@
 #' @examples
 #' # Example: Pending
 #' 
-
-
 stats.spatial <- function(object=NULL, checks=FALSE, solution=NULL, preds=NULL, k=1, ctable=NULL){
   
   if (is.null(object)) { stop('No fitted model provided.')}

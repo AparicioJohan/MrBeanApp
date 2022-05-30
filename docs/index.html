@@ -27,6 +27,8 @@
 <![endif]-->
 </head>
 <body data-spy="scroll" data-target="#toc">
+    
+
     <div class="container template-home">
       <header><div class="navbar navbar-default navbar-fixed-top" role="navigation">
   <div class="container">
@@ -39,18 +41,12 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="index.html">MrBean</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">2.0.6</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">2.0.6</span>
       </span>
     </div>
 
     <div id="navbar" class="navbar-collapse collapse">
       <ul class="nav navbar-nav">
-<li>
-  <a href="index.html">
-    <span class="fas fa-home fa-lg"></span>
-     
-  </a>
-</li>
 <li>
   <a href="reference/index.html">Reference</a>
 </li>
@@ -60,7 +56,7 @@
       </ul>
 <ul class="nav navbar-nav navbar-right">
 <li>
-  <a href="https://github.com/AparicioJohan/MrBeanApp/">
+  <a href="https://github.com/AparicioJohan/MrBeanApp/" class="external-link">
     <span class="fab fa-github fa-lg"></span>
      
   </a>
@@ -77,46 +73,41 @@
 
       </header><div class="row">
   <div class="contents col-md-9">
-<div id="mrbean-" class="section level1">
-<div class="page-header"><h1 class="hasAnchor">
-<a href="#mrbean-" class="anchor"></a>MrBean <img src="reference/figures/hex-MrBean.png" width="120px" align="right">
+<div class="section level1">
+<div class="page-header"><h1 id="mrbean-">MrBean <img src="reference/figures/hex-MrBean.png" width="120px" align="right"><a class="anchor" aria-label="anchor" href="#mrbean-"></a>
 </h1></div>
 
-<p><a href="https://www.tidyverse.org/lifecycle/#experimental"><img src="https://img.shields.io/badge/lifecycle-experimental-orange.svg" alt="Lifecycle: experimental"></a></p>
+<p><a href="https://www.tidyverse.org/lifecycle/#experimental" class="external-link"><img src="https://img.shields.io/badge/lifecycle-experimental-orange.svg" alt="Lifecycle: experimental"></a></p>
 <p>Mr. Bean is an easy to use R-Shiny web-app that simplifies the analysis of large-scale plant breeding experimental analysis by using the power and versatility of Linear Mixed Models (LMM). This app combines the analytical robustness and speed of ASReml and SpATS with the visual power offered by R. Mr. Bean provides a graphical workflow for importing data, identifying outliers, and fitting field data using LMM with or without spatial correction. The results are BLUPs/BLUEs predictions and heritabilities for single-environmental experiments or multiple-environmental trial (MET) analysis. In addition, Mr. Bean also provides a module for exploring results from METs using several graphical and multivariate techniques.</p>
-<p><a href="https://mrpackages.netlify.app/">https://mrpackages.netlify.app/</a> <br><a href="https://apariciojohan.github.io/MrBeanApp/">https://apariciojohan.github.io/MrBeanApp/</a></p>
-<div id="installation" class="section level2">
-<h2 class="hasAnchor">
-<a href="#installation" class="anchor"></a>Installation</h2>
+<p><a href="https://mrpackages.netlify.app/" class="external-link">https://mrpackages.netlify.app/</a> <br><a href="https://apariciojohan.github.io/MrBeanApp/" class="external-link">https://apariciojohan.github.io/MrBeanApp/</a></p>
+<div class="section level2">
+<h2 id="installation">Installation<a class="anchor" aria-label="anchor" href="#installation"></a>
+</h2>
 <p>You can install the package:</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu">devtools</span><span class="fu">::</span><span class="fu"><a href="https://devtools.r-lib.org//reference/remote-reexports.html">install_github</a></span><span class="op">(</span><span class="st">"AparicioJohan/MrBeanApp"</span><span class="op">)</span>                            </code></pre></div>
+<code class="sourceCode R"><span class="fu">devtools</span><span class="fu">::</span><span class="fu"><a href="https://devtools.r-lib.org/reference/remote-reexports.html" class="external-link">install_github</a></span><span class="op">(</span><span class="st">"AparicioJohan/MrBeanApp"</span><span class="op">)</span>                            </code></pre></div>
 <p>or</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu">remotes</span><span class="fu">::</span><span class="fu"><a href="https://remotes.r-lib.org/reference/install_github.html">install_github</a></span><span class="op">(</span><span class="st">"AparicioJohan/MrBeanApp"</span><span class="op">)</span>                           </code></pre></div>
+<code class="sourceCode R"><span class="fu">remotes</span><span class="fu">::</span><span class="fu"><a href="https://remotes.r-lib.org/reference/install_github.html" class="external-link">install_github</a></span><span class="op">(</span><span class="st">"AparicioJohan/MrBeanApp"</span><span class="op">)</span>                           </code></pre></div>
 </div>
-<div id="example" class="section level2">
-<h2 class="hasAnchor">
-<a href="#example" class="anchor"></a>Example</h2>
+<div class="section level2">
+<h2 id="example">Example<a class="anchor" aria-label="anchor" href="#example"></a>
+</h2>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/AparicioJohan/MrBeanApp">MrBean</a></span><span class="op">)</span>
+<code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/AparicioJohan/MrBeanApp" class="external-link">MrBean</a></span><span class="op">)</span>
 <span class="fu"><a href="reference/run_app.html">run_app</a></span><span class="op">(</span><span class="op">)</span></code></pre></div>
 </div>
-<div id="demo" class="section level2">
-<h2 class="hasAnchor">
-<a href="#demo" class="anchor"></a>Demo</h2>
-<p>A running demo is on <a href="https://beanteam.shinyapps.io/MrBean_BETA/">shinyapps.io</a>.</p>
+<div class="section level2">
+<h2 id="demo">Demo<a class="anchor" aria-label="anchor" href="#demo"></a>
+</h2>
+<p>A running demo is on <a href="https://beanteam.shinyapps.io/MrBean_BETA/" class="external-link">shinyapps.io</a>.</p>
 <div class="marvel-device macbook">
-<div class="top-bar" width>
-</div>
-<div class="camera">
-</div>
-<div class="screen">
-<iframe width="100%" src="https://beanteam.shinyapps.io/MrBean_BETA/" allowfullscreen scrolling="yes" height="100%">
-</iframe>
-</div>
-<div class="bottom-bar">
-</div>
+<div class="sourceCode" id="cb4"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="sc">&lt;</span>div class<span class="ot">=</span><span class="st">"top-bar"</span> width<span class="ot">=</span><span class="er">&gt;&lt;/</span>div<span class="sc">&gt;</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="er">&lt;</span>div class<span class="ot">=</span><span class="st">"camera"</span><span class="sc">&gt;</span><span class="er">&lt;/</span>div<span class="sc">&gt;</span></span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a><span class="er">&lt;</span>div class<span class="ot">=</span><span class="st">"screen"</span><span class="sc">&gt;</span></span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>         <span class="er">&lt;</span>iframe width<span class="ot">=</span><span class="st">"100%"</span> src<span class="ot">=</span><span class="st">"https://beanteam.shinyapps.io/MrBean_BETA/"</span> allowfullscreen<span class="ot">=</span><span class="st">""</span>  scrolling<span class="ot">=</span><span class="st">"yes"</span>  height<span class="ot">=</span><span class="st">"100%"</span><span class="sc">&gt;</span><span class="er">&lt;/</span>iframe<span class="sc">&gt;</span></span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a><span class="er">&lt;/</span>div<span class="sc">&gt;</span></span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a><span class="er">&lt;</span>div class<span class="ot">=</span><span class="st">"bottom-bar"</span><span class="sc">&gt;</span><span class="er">&lt;/</span>div<span class="sc">&gt;</span></span></code></pre></div>
 </div>
 <p><br></p>
 <p>Please note that the ‘MrBean’ project is released with a <a href="CODE_OF_CONDUCT.html">Contributor Code of Conduct</a>. By contributing to this project, you agree to abide by its terms.</p>
@@ -126,50 +117,61 @@
 
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <div class="links">
-<h2>Links</h2>
+<h2 data-toc-skip>Links</h2>
 <ul class="list-unstyled">
-<li>Browse source code at <br><a href="https://github.com/AparicioJohan/MrBeanApp/">https://​github.com/​AparicioJohan/​MrBeanApp/​</a>
-</li>
-<li>Report a bug at <br><a href="https://github.com/AparicioJohan/MrBeanApp/issues">https://​github.com/​AparicioJohan/​MrBeanApp/​issues</a>
-</li>
+<li><a href="https://github.com/AparicioJohan/MrBeanApp/" class="external-link">Browse source code</a></li>
+<li><a href="https://github.com/AparicioJohan/MrBeanApp/issues" class="external-link">Report a bug</a></li>
 </ul>
 </div>
+
 <div class="license">
-<h2>License</h2>
+<h2 data-toc-skip>License</h2>
 <ul class="list-unstyled">
 <li><a href="LICENSE.html">Full license</a></li>
-<li><small><a href="https://opensource.org/licenses/mit-license.php">MIT</a> + file <a href="LICENSE-text.html">LICENSE</a></small></li>
+<li><small><a href="https://opensource.org/licenses/mit-license.php" class="external-link">MIT</a> + file <a href="LICENSE-text.html">LICENSE</a></small></li>
 </ul>
 </div>
+
 <div class="community">
-<h2>Community</h2>
+<h2 data-toc-skip>Community</h2>
 <ul class="list-unstyled">
 <li><a href="CODE_OF_CONDUCT.html">Code of conduct</a></li>
 </ul>
 </div>
+
+<div class="citation">
+<h2 data-toc-skip>Citation</h2>
+<ul class="list-unstyled">
+<li><a href="authors.html#citation">Citing MrBean</a></li>
+</ul>
+</div>
+
 <div class="developers">
-<h2>Developers</h2>
+<h2 data-toc-skip>Developers</h2>
 <ul class="list-unstyled">
 <li>Johan Aparicio <br><small class="roles"> Maintainer, author </small>  </li>
 </ul>
 </div>
 
-  <div class="dev-status">
-<h2>Dev status</h2>
+<div class="dev-status">
+<h2 data-toc-skip>Dev status</h2>
 <ul class="list-unstyled">
-<li><a href="https://mybinder.org/v2/gh/AparicioJohan/MrBeanApp/main"><img src="https://mybinder.org/badge_logo.svg" alt="Binder"></a></li>
+<li><a href="https://mybinder.org/v2/gh/AparicioJohan/MrBeanApp/main" class="external-link"><img src="https://mybinder.org/badge_logo.svg" alt="Binder"></a></li>
 </ul>
 </div>
-</div>
+
+  </div>
 </div>
 
 
       <footer><div class="copyright">
-  <p>Developed by Johan Aparicio.</p>
+  <p></p>
+<p>Developed by Johan Aparicio.</p>
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.1.</p>
+  <p></p>
+<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.3.</p>
 </div>
 
       </footer>
@@ -177,6 +179,8 @@
 
   
 
+
+  
 
   </body>
 </html>

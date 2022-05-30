@@ -16,7 +16,7 @@
 #' @param type.trial model assumption for trial effects: 'random' or 'fixed' (default = 'fixed')
 #' @param vc.model variance-covariance model to fit: 'diag', 'corv', 'corh', 'fa1', 'fa2', 
 #'                 'fa3', 'fa4', 'corgh' (default = 'corh') (only for type.gen =' random')
-#'
+#'@param workspace asreml workspace
 #' @return Several objects with reports of the MET analysis. 
 #' call:        String with the ASReml-R call used to fit the requested model
 #' mod:         ASReml-R object with all information from the fitted model
@@ -29,7 +29,6 @@
 #' @examples
 #' # Example 1: 
 #' 
-
 stageMET <- function(data=NULL, gen=NULL, trial=NULL, resp=NULL, weight=NULL,
                      type.gen='random', type.trial='fixed', vc.model='corh', workspace = "128mb"){
   
@@ -287,31 +286,31 @@ covariance_asreml <- function(matrix, corr = TRUE, size = 4){
   melted_cormat$Var1 <- as.factor(melted_cormat$Var1)
   melted_cormat$Var2 <- as.factor(melted_cormat$Var2)
   
-  ggheatmap <- ggplot(melted_cormat, aes(Var2, Var1, fill = value))+
-    geom_tile(color = "white")+
-    scale_fill_gradient2(low = col_pallete[1], high = col_pallete[3], mid = col_pallete[2],  # color= c("#440154","#21908C","#FDE725")
+  ggheatmap <- ggplot2::ggplot(melted_cormat, ggplot2::aes(Var2, Var1, fill = value))+
+    ggplot2::geom_tile(color = "white")+
+    ggplot2::scale_fill_gradient2(low = col_pallete[1], high = col_pallete[3], mid = col_pallete[2],  # color= c("#440154","#21908C","#FDE725")
                          midpoint = m, limit = c(u,l), space = "Lab", 
                          name=main) +
-    theme_minimal()+ # minimal theme
-    theme(axis.text.x = element_text(angle = 45, vjust = 1, 
+    ggplot2::theme_minimal()+ # minimal theme
+    ggplot2::theme(axis.text.x = ggplot2::element_text(angle = 45, vjust = 1, 
                                      size = 12, hjust = 1),
-          axis.text.y = element_text(size = 12))
+          axis.text.y = ggplot2::element_text(size = 12))
     # coord_fixed()
   
   
   plot <- ggheatmap + 
-    geom_text(aes(Var2, Var1, label = value), color = col_letter, size = size) +
-    theme(
-      axis.title.x = element_blank(),
-      axis.title.y = element_blank(),
-      panel.grid.major = element_blank(),
-      panel.border = element_blank(),
-      panel.background = element_blank(),
-      axis.ticks = element_blank(),
+    ggplot2::geom_text(ggplot2::aes(Var2, Var1, label = value), color = col_letter, size = size) +
+    ggplot2::theme(
+      axis.title.x = ggplot2::element_blank(),
+      axis.title.y = ggplot2::element_blank(),
+      panel.grid.major = ggplot2::element_blank(),
+      panel.border = ggplot2::element_blank(),
+      panel.background = ggplot2::element_blank(),
+      axis.ticks = ggplot2::element_blank(),
       legend.justification = c(1, 0),
       legend.position = c(0.6, 0.7),
       legend.direction = "horizontal")+
-    guides(fill = guide_colorbar(barwidth = 7, barheight = 1,
+    ggplot2::guides(fill = ggplot2::guide_colorbar(barwidth = 7, barheight = 1,
                                  title.position = "top", title.hjust = 0.5))
   
   return(plot)

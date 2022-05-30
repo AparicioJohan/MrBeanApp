@@ -797,7 +797,7 @@ latent_regress <- function(model, genotype , scale = T, text_labs = T,  size_tex
         ggplot2::theme(legend.position="bottom")  + 
         ggplot2::labs(x = " ", color = "Genotype")
     
-  if(text_labs) p <- p  + geom_label_repel(aes(label = site),
+  if(text_labs) p <- p  + geom_label_repel(ggplot2::aes(label = site),
                                            nudge_y= 0.05, 
                                            nudge_x=-0.03,
                                            force=1, 
