@@ -39,13 +39,10 @@ run_app()
 
 A running demo is on [shinyapps.io](https://beanteam.shinyapps.io/MrBean_BETA/).
 
-<div class="marvel-device macbook">
-    <div class="top-bar" width=></div>
-    <div class="camera"></div>
-    <div class="screen">
-             <iframe width="100%" src="https://beanteam.shinyapps.io/MrBean_BETA/" allowfullscreen=""  scrolling="yes"  height="100%"></iframe>
-    </div>
-    <div class="bottom-bar"></div>
+<div class="row">
+<div class="card">
+<a href="https://beanteam.shinyapps.io/MrBean_BETA/" target="_blank"><img src="man/figures/desktop_update.png"></a>
+</div>
 </div>
 
 <br>
