@@ -12,7 +12,8 @@ stageMET(
   weight = NULL,
   type.gen = "random",
   type.trial = "fixed",
-  vc.model = "corh"
+  vc.model = "corh",
+  workspace = "128mb"
 )
 }
 \arguments{

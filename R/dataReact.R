@@ -1,4 +1,4 @@
-dataReact <- function(file, choice , header , sep, miss, string = "" , sheet   ,dataBMS, dataBRAPI  ){ 
+dataReact <- function(file, choice , header , sep, miss, string = "" , sheet   ,dataBMS  ){ 
   
   
   inFile <- file
@@ -46,8 +46,6 @@ dataReact <- function(file, choice , header , sep, miss, string = "" , sheet   ,
     
     dt <- dataBMS
     
-  } else if (choice==4){
-    dt = dataBRAPI
   }
   
   return(dt)

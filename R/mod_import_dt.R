@@ -169,56 +169,6 @@ mod_import_dt_ui <- function(id){
                        )
                      )
                      ),
-    conditionalPanel("input.Id004==4", ns = ns,
-                     fluidRow(
-                       column(width = 4,
-                              fluidRow(
-                                bs4Dash::box(title =  tagList(shiny::icon("question-circle"), "Help"), 
-                                             solidHeader = FALSE,width = 12,status = "success",
-                                             h3("How to use BRAPI in Mr.Bean?"),
-                                             hr(),
-                                             includeHTML(
-                                               system.file("app/www/icon2.html", package = "MrBean")
-                                             )
-                                )
-                              )
-                       ),
-                       column(width = 4,
-                              fluidRow(
-                                bs4Dash::box(title= tagList(shiny::icon("cogs"), "Information"),status = "success",width = 12,solidHeader = FALSE,
-                                             fluidRow(
-                                               col_12(
-                                                 selectInput(inputId=ns("brapi_crops"),
-                                                             label=  "Database",
-                                                             choices= "",
-                                                             # selected = "",
-                                                             width = "100%")
-                                               )
-                                             ),
-                                             selectInput(inputId=ns("brapi_program"),
-                                                         label= tagList( "Which program?",tags$a(icon("exclamation-circle"))),
-                                                         choices="",width = "100%"),
-                                             selectInput(inputId=ns("brapi_trial"),
-                                                         label= tagList( "Which trial?",tags$a(icon("exclamation-circle"))),
-                                                         choices="",width = "100%", multiple = T),
-                                             fluidRow(
-                                               col_3(),
-                                               col_6(
-                                                 actionBttn(inputId = ns("ok"),
-                                                            label = "Search!",
-                                                            style = "jelly",color = "success",block = T, icon = icon("check") )
-                                               ),
-                                               col_3()
-                                             )
-                                )
-                              )
-                       )
-                     )
-                     
-                     ),
-    
-    
-    
     fluidRow(bs4Dash::box(collapsed = F,maximizable = T,closable = F,
                           shinycssloaders::withSpinner( 
                             DT::dataTableOutput(ns("data")),type = 5,color = "#28a745" 
@@ -250,93 +200,14 @@ mod_import_dt_server <- function(input, output, session){
                shinyjs::show("when_file2",animType = "fade",anim = TRUE))
   
 
-# BRAPI interface ---------------------------------------------------------
+
+
+# BMS interface -----------------------------------------------------------
   
   w <- Waiter$new(
     html = HTML("<center> <div class='ball-loader'></div> </center>"), 
     color = transparent(0.3)
   )
-  
-  observe({
-    updateSelectInput(session, "brapi_crops", choices= brapirv1::brapi_db() %>% names(), selected = "YdHa_clean")
-  })
-
-  # brapi data
-  
-  programs_brapi <- reactive({
-    crop <- input$brapi_crops
-    tryCatch(
-      { 
-        list_programs <- cropbrapi(brapi_crop = crop)
-      },
-      error = function(e) {
-        shinytoastr::toastr_error(title = "Error:", conditionMessage(e),position =  "bottom-full-width",
-                                  showMethod ="slideDown", hideMethod="hide", hideEasing = "linear")
-        w$hide()
-      }
-    )
-    if(!exists("list_programs")) list_programs <- NULL
-    return(list_programs)
-  })
-  
-  observeEvent(input$brapi_crops,{
-    if(is.null(programs_brapi())){
-      options <- ""
-    } else {options = programs_brapi()$list_programs}
-    updateSelectInput(session, inputId = "brapi_program",choices = options , selected = "NNNNN")
-  })
-  
-  brapi_trials <- reactive({
-    w$show()
-    program <- input$brapi_program
-    tmp <- programs_brapi()
-    tryCatch(
-      { 
-        list_trials <- trialbrapi(brapi_program = program, cropbrapi = tmp)
-      },
-      error = function(e) {
-        shinytoastr::toastr_error(title = "Error:", conditionMessage(e),position =  "bottom-full-width",
-                                  showMethod ="slideDown", hideMethod="hide", hideEasing = "linear")
-        w$hide()
-      }
-    )
-    w$hide()
-    if(!exists("list_trials")) list_trials <- NULL
-    return(list_trials)
-  })
-  
-  observeEvent(input$brapi_program,{
-    if(is.null(brapi_trials())){
-      options <- ""
-    } else {options = brapi_trials()$list_trials}
-    suppressWarnings(updateSelectInput(session, inputId = "brapi_trial",choices = options , selected = "NNNNN"))
-  })
-  
-
-  Dtbrapi <- reactive({
-    input$ok
-    isolate({
-      w$show()
-      trials <- input$brapi_trial
-      tmp <- brapi_trials()
-      tryCatch(
-        { 
-          datos <- databrapi(brapi_trials = trials, trialbrapi = tmp)
-        },
-        error = function(e) {
-          shinytoastr::toastr_error(title = "Error:", conditionMessage(e),position =  "bottom-full-width",
-                                    showMethod ="slideDown", hideMethod="hide", hideEasing = "linear")
-          w$hide()
-        }
-      )
-      w$hide()
-      if(!exists("datos")) datos <- NULL
-      return(datos)
-    })
-  })
-  
-
-# BMS interface -----------------------------------------------------------
   
 
   bmscon <- reactive({
@@ -486,8 +357,7 @@ mod_import_dt_server <- function(input, output, session){
                    miss = input$miss, 
                    string = input$datamiss , 
                    sheet = input$sheet,
-                   dataBMS = DtReact(),
-                   dataBRAPI = Dtbrapi())
+                   dataBMS = DtReact())
       },
       error = function(e) {
         shinytoastr::toastr_error(title = "Error:", conditionMessage(e),position =  "bottom-full-width",
