@@ -29,7 +29,6 @@ mod_import_dt_ui <- function(id){
                                     h6('Import external data preferably csv/txt files.'), 
                                     ns = ns)
       ),
-      
       column(width = 3,
              conditionalPanel("input.Id004==2",
                               ns = ns,
@@ -86,7 +85,8 @@ mod_import_dt_ui <- function(id){
                                                              label = "Cell separation character:", 
                                                              choices = list(Tab='\t', Comma=',',
                                                                             Semicolon=';', 'Space'=' '),
-                                                             selected = ';', width = "100%"),
+                                                             selected = ';', 
+                                                             width = "100%"),
                                                  uiOutput(ns("oshet")),
                                                  width = 12, 
                                                  status = "success"
@@ -133,7 +133,6 @@ mod_import_dt_ui <- function(id){
                                 )
                               )  
       )
-      
     ),
     conditionalPanel("input.Id004==3",
                      ns = ns,
@@ -164,18 +163,23 @@ mod_import_dt_ui <- function(id){
                                                          shiny::icon("server"), 
                                                          "Server",
                                                          tooltip(icon("question-circle"),
-                                                                 title = "For example: \n https://cassavabase.org \n https://sweetpotatobase.org \n https://bms.ciat.cgiar.org/", 
+                                                                 title = "For example:  
+                                                                 https://cassavabase.org 
+                                                                 https://sweetpotatobase.org 
+                                                                 https://bms.ciat.cgiar.org/", 
                                                                  placement = "top")
                                                          ), 
                                                        value = "https://bms.ciat.cgiar.org/ibpworkbench/controller/auth/login",
                                                        width = "100%"),
                                              awesomeCheckbox(inputId = ns('no_auth') ,
                                                              label ='No authentication required?',  
-                                                             value = FALSE, status = "danger"  ),
+                                                             value = FALSE, 
+                                                             status = "danger"  ),
                                              prettyRadioButtons(
                                                inputId = ns("engine"),
                                                label = "Engine:", 
-                                               choices = c("BMS" = "bms", "BreedBase" = "breedbase"),
+                                               choices = c("BMS" = "bms", 
+                                                           "BreedBase" = "breedbase"),
                                                icon = icon("check"), 
                                                inline = TRUE,
                                                bigger = TRUE,
@@ -242,7 +246,6 @@ mod_import_dt_ui <- function(id){
                                                ),
                                                col_3()
                                              )
-                                             
                                 )
                               )
                        )
@@ -271,24 +274,28 @@ mod_import_dt_ui <- function(id){
 mod_import_dt_server <- function(input, output, session){
   ns <- session$ns
   
-  
   observeEvent(input$file1,
-               shinyjs::show("when_file1",animType = "fade",anim = TRUE))
+               shinyjs::show("when_file1",
+                             animType = "fade",
+                             anim = TRUE)
+               )
   
   output$oshet <- renderUI({
     inFile <- input$file1
     Ext <- tools::file_ext(inFile$datapath)
     req(input$file1,Ext=="xlsx"|Ext=="xls")
-    selectInput(inputId = ns("sheet"),label =  "Sheet Excel", choices=readxl::excel_sheets(inFile$datapath), width = "100%")
+    selectInput(inputId = ns("sheet"),
+                label =  "Sheet Excel",
+                choices=readxl::excel_sheets(inFile$datapath),
+                width = "100%")
   })
 
-  
   observeEvent(input$file1,
-               shinyjs::show("when_file2",animType = "fade",anim = TRUE))
+               shinyjs::show("when_file2",
+                             animType = "fade",
+                             anim = TRUE)
+               )
   
-
-
-
 # BMS interface -----------------------------------------------------------
   
   w <- Waiter$new(
@@ -296,7 +303,6 @@ mod_import_dt_server <- function(input, output, session){
     color = transparent(0.3)
   )
   
-
   bmscon <- reactive({
     input$mysql
     isolate({
@@ -309,8 +315,12 @@ mod_import_dt_server <- function(input, output, session){
                               no_auth = input$no_auth)
         },
         error = function(e) {
-          shinytoastr::toastr_error(title = "Error:", conditionMessage(e),position =  "bottom-full-width",
-                                    showMethod ="slideDown", hideMethod="hide", hideEasing = "linear")
+          shinytoastr::toastr_error(title = "Error:",
+                                    conditionMessage(e),
+                                    position =  "bottom-full-width",
+                                    showMethod ="slideDown",
+                                    hideMethod="hide",
+                                    hideEasing = "linear")
         }
       )
       if(!exists("tmpbms")) tmpbms <- NULL
@@ -319,20 +329,27 @@ mod_import_dt_server <- function(input, output, session){
   })
   
   crops <- reactive({
-    # input$mysql
-    # isolate({
     return(bmscon()$crops)
-    # })
   })
   
   observeEvent(input$mysql, {
     if (is.null(bmscon())) {
-      shinyalert::shinyalert(title = "Incorrect username or password", type = "error",confirmButtonCol = "#28a745")
+      shinyalert::shinyalert(title = "Incorrect username or password",
+                             type = "error",
+                             confirmButtonCol = "#28a745")
     } else {    
-      shinyalert::shinyalert(title = paste0("Welcome to ", input$engine, "!"), type = "success", text = "",confirmButtonCol = "#28a745",
-                           imageUrl= ifelse(input$engine == "bms",  "www/0.png" , "www/brapi.png"),
-                           animation ="slide-from-top" )
-      updateSelectInput(session , inputId = "Id008", choices = crops(), selected = "NNNNN" )
+      shinyalert::shinyalert(title = paste0("Welcome to ", input$engine, "!"),
+                             type = "success", 
+                             text = "",
+                             confirmButtonCol = "#28a745",
+                             imageUrl= ifelse(input$engine == "bms",
+                                            "www/0.png",
+                                            "www/brapi.png"),
+                             animation ="slide-from-top")
+      updateSelectInput(session,
+                        inputId = "Id008", 
+                        choices = crops(),
+                        selected = "NNNNN" )
       }
   })
   
@@ -343,8 +360,12 @@ mod_import_dt_server <- function(input, output, session){
         list_programs <- qbmsprograms(crop = crop)
       },
       error = function(e) {
-        shinytoastr::toastr_error(title = "Error:", conditionMessage(e),position =  "bottom-full-width",
-                                  showMethod ="slideDown", hideMethod="hide", hideEasing = "linear")
+        shinytoastr::toastr_error(title = "Error:", 
+                                  conditionMessage(e),
+                                  position =  "bottom-full-width",
+                                  showMethod ="slideDown",
+                                  hideMethod="hide", 
+                                  hideEasing = "linear")
       }
     )
     if(!exists("list_programs")) list_programs <- NULL
@@ -355,7 +376,10 @@ mod_import_dt_server <- function(input, output, session){
     if(is.null(programs())){
       return()
     } else {
-      updateSelectInput(session, inputId = "program",choices = programs(), selected = "NNNNN" )
+      updateSelectInput(session, 
+                        inputId = "program",
+                        choices = programs(),
+                        selected = "NNNNN" )
     }
   }, ignoreInit = TRUE)
   
@@ -366,8 +390,12 @@ mod_import_dt_server <- function(input, output, session){
         list_trials <- qbmstrials(program = input$program)
       },
       error = function(e) {
-        shinytoastr::toastr_error(title = "Error:", conditionMessage(e),position =  "bottom-full-width",
-                                  showMethod ="slideDown", hideMethod="hide", hideEasing = "linear")
+        shinytoastr::toastr_error(title = "Error:", 
+                                  conditionMessage(e),
+                                  position =  "bottom-full-width",
+                                  showMethod ="slideDown",
+                                  hideMethod="hide", 
+                                  hideEasing = "linear")
         w$hide()
       }
     )
@@ -380,7 +408,12 @@ mod_import_dt_server <- function(input, output, session){
     if(is.null(trials())){
       options <- ""
     } else {options = trials()}
-    suppressWarnings(updateSelectInput(session, inputId = "trial",choices = options , selected = "NNNNN"))
+    suppressWarnings(
+      updateSelectInput(session,
+                        inputId = "trial",
+                        choices = options,
+                        selected = "NNNNN")
+      )
   }, ignoreInit = TRUE)
   
   
@@ -388,13 +421,20 @@ mod_import_dt_server <- function(input, output, session){
     w$show()
     tryCatch(
       {
-        list_studies <-lapply(input$trial, qbmsstudies)
+        list_studies <- lapply(input$trial, qbmsstudies)
         names(list_studies) <- input$trial
-        dt_std <- data.frame(plyr::ldply(list_studies[], data.frame, .id = "trial"))
+        dt_std <- data.frame(plyr::ldply(list_studies[],
+                                         data.frame,
+                                         .id = "trial")
+                             )
       },
       error = function(e) {
-        shinytoastr::toastr_error(title = "Error:", conditionMessage(e),position =  "bottom-full-width",
-                                  showMethod ="slideDown", hideMethod="hide", hideEasing = "linear")
+        shinytoastr::toastr_error(title = "Error:", 
+                                  conditionMessage(e),
+                                  position =  "bottom-full-width",
+                                  showMethod ="slideDown",
+                                  hideMethod="hide", 
+                                  hideEasing = "linear")
         w$hide()
       }
     )
@@ -407,7 +447,12 @@ mod_import_dt_server <- function(input, output, session){
     if(is.null(studies())){
       options <- ""
     } else {options = studies()[[2]]}
-    suppressWarnings(updateSelectInput(session, inputId = "study",choices = options , selected = "NNNNN"))
+    suppressWarnings(
+      updateSelectInput(session,
+                        inputId = "study",
+                        choices = options,
+                        selected = "NNNNN")
+      )
   }, ignoreInit = TRUE)
 
   # data --------------------------------------------------------------------
@@ -421,8 +466,12 @@ mod_import_dt_server <- function(input, output, session){
           datos <- dataqbms(studies = input$study, dt_studies = studies())
         },
         error = function(e) {
-          shinytoastr::toastr_error(title = "Error:", conditionMessage(e),position =  "bottom-full-width",
-                                    showMethod ="slideDown", hideMethod="hide", hideEasing = "linear")
+          shinytoastr::toastr_error(title = "Error:",
+                                    conditionMessage(e),
+                                    position =  "bottom-full-width",
+                                    showMethod ="slideDown", 
+                                    hideMethod="hide", 
+                                    hideEasing = "linear")
           w$hide()
         }
       )
@@ -447,8 +496,12 @@ mod_import_dt_server <- function(input, output, session){
                    dataBMS = DtReact())
       },
       error = function(e) {
-        shinytoastr::toastr_error(title = "Error:", conditionMessage(e),position =  "bottom-full-width",
-                                  showMethod ="slideDown", hideMethod="hide", hideEasing = "linear")
+        shinytoastr::toastr_error(title = "Error:", 
+                                  conditionMessage(e),
+                                  position =  "bottom-full-width",
+                                  showMethod ="slideDown",
+                                  hideMethod="hide",
+                                  hideEasing = "linear")
       }
     )
   })
@@ -461,7 +514,10 @@ mod_import_dt_server <- function(input, output, session){
   })
   
   observe({
-    updateSelectInput(session, "varsubset", choices=names(dataset()),selected = "NNNNN")
+    updateSelectInput(session,
+                      "varsubset", 
+                      choices = names(dataset()),
+                      selected = "NNNNN")
   })
   
   observeEvent(input$subset==F,{
@@ -469,10 +525,14 @@ mod_import_dt_server <- function(input, output, session){
   })
   
   observeEvent(input$varsubset,{
-    toggle("levelessub",anim = TRUE,time = 1,animType = "fade",condition = input$varsubset!="")
+    toggle("levelessub",
+           anim = TRUE,
+           time = 1,
+           animType = "fade",
+           condition = input$varsubset!="")
     req(input$varsubset)
     lvl <- dataset()[,input$varsubset]
-    updateSelectInput(session, "levelessub", choices=lvl,selected = "NNNNN")
+    updateSelectInput(session, "levelessub", choices = lvl,selected = "NNNNN")
   })
   
   
@@ -482,15 +542,19 @@ mod_import_dt_server <- function(input, output, session){
   
   output$data <- DT::renderDataTable({
     req(dataset_sub())
-    # DT::datatable(dataset_sub(),filter = 'top', selection="multiple",
-    #               options = list(scrollX = TRUE, pageLength = 5,
-    #                              columnnDefs=list(list(className = 'dt-center', targets = 0:ncol(dataset_sub()))) ))
     DT::datatable({
       dataset_sub() 
     },
-    option=list(pageLength=3, scrollX = TRUE,columnDefs = list(list(className = 'dt-center', targets = 0:ncol(dataset_sub())))),
-    filter="top",
-    selection="multiple"
+    option = list(pageLength=3, 
+                  scrollX = TRUE,
+                  columnDefs = list(
+                    list(
+                      className = 'dt-center',
+                      targets = 0:ncol(dataset_sub()))
+                    )
+                  ),
+    filter = "top",
+    selection = "multiple"
     )
     
   })

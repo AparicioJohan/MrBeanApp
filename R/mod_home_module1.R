@@ -14,8 +14,8 @@ mod_home_module1_ui <- function(id){
       
       column( 9 ,
               bs4Card(
-                HTML(" <img src='www/beans3.png' width='52' vspace='10' hspace='10' height='48' align='left'> <font size='7'>Mr.Bean</font>
-                                                "),
+                HTML(" <img src='www/beans3.png' width='52' vspace='10' hspace='10' height='48' align='left'> 
+                        <font size='7'>Mr.Bean</font> "),
                 br(),
                 includeHTML(
                   system.file("app/www/encabezado.html", package = "MrBean")
@@ -89,7 +89,6 @@ mod_home_module1_server <- function(input, output, session){
   observeEvent(input$toAwesome2, {
     updatebs4TabItems(session = session, inputId = "tabs", selected = "modelo")
   })
-  
   
   observeEvent(input$toAwesome3, {
     updatebs4TabItems(session = session, inputId = "tabs", selected = "mixed")
