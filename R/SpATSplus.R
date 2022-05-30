@@ -91,7 +91,7 @@ res_hist <- function(data_out){
 res_compare <- function(Model, variable, factor){
   data <- Model$data
   data$Residuals <- residuals(Model)
-  data <- type.convert(data)
+  data <- type.convert(data, as.is = FALSE)
   req(variable)
   label <- class(data[,variable])
   if(factor){
@@ -282,7 +282,7 @@ gen_share <- function(data=NULL, genotype="line", exp="Exp", response=NA){
     message("columns not found in the data")
     return()
   }
-  data=type.convert(data)
+  data <- type.convert(data, as.is = FALSE)
   data[,genotype] <- as.factor(data[,genotype])
   data[,exp] <- as.factor(data[,exp])
   if(!is.na(response)) data <- data[ !is.na(data[,response]) , ]
@@ -566,7 +566,11 @@ varComp <- function(object, which = "variances"){
   class(object) <- "summary.SpATS"
   
   v_name <- as.character(na.omit(row.names(vc)))
-  vc <- vc %>% as.data.frame() %>% type.convert() %>%  dplyr::mutate_if(is.numeric, round, 3)
+  vc <- vc %>% 
+        as.data.frame() %>% 
+        type.convert(as.is = FALSE) %>% 
+        dplyr::mutate_if(is.numeric, round, 3)
+  
   vc <- vc[-c(nrow(vc)-1),]
   vc$Component <- v_name
   vc <- vc[,c(4,1:3)]

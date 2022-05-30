@@ -286,13 +286,17 @@ fa.asreml <- function (object, uniplot = F, uniplot.tol = 0.85, uniplot.cex = 0.
                                                   unique(Variety.fac)))
       score.inmet.df <- subset(score.df, is.element(score.df[[inner.name]], 
                                                     unique(Variety.fac)))
-      blup.inmet.df <- blup.inmet.df[order(type.convert(blup.inmet.df[[outer.name]]), 
-                                           type.convert(blup.inmet.df[[inner.name]])), 
+      blup.inmet.df <- blup.inmet.df[order(type.convert(blup.inmet.df[[outer.name]],
+                                                        as.is = FALSE), 
+                                           type.convert(blup.inmet.df[[inner.name]],
+                                                        as.is = FALSE)), 
                                      ]
       pres <- tapply(y, list(Variety, Site), function(x) length(x[!is.na(x)]))
       blup.inmet.df$pres <- as.vector(pres)
-      score.inmet.df <- score.inmet.df[order(type.convert(score.inmet.df[[outer.name]]), 
-                                             type.convert(score.inmet.df[[inner.name]])), 
+      score.inmet.df <- score.inmet.df[order(type.convert(score.inmet.df[[outer.name]],
+                                                          as.is = FALSE), 
+                                             type.convert(score.inmet.df[[inner.name]],
+                                                          as.is = FALSE)), 
                                        ]
       blup.lst[[nt]] <- list(blups = blup.df, scores = score.df, 
                              blups.inmet = blup.inmet.df, scores.inmet = score.inmet.df)
@@ -583,7 +587,7 @@ loadChart <- function(model, x = "fac_1" , y = "fac_2", plot = TRUE ,trial_selec
   lstar <- ASM$gammas[[1]]$`rotated loads` %>% data.frame %>% tibble::rownames_to_column("site")
   Env.stats <- merge(Env.stats,lstar, by="site")
   
-  clean.data <- model$mf %>% type.convert() %>% data.frame()
+  clean.data <- model$mf %>% type.convert(as.is = FALSE) %>% data.frame()
   Env.means <- data.frame(site=levels(clean.data[,env]))
   
   env_effect <- try(coef(model)$fixed[paste0(env,"_",levels(clean.data[,env])),], silent = T)

@@ -55,7 +55,7 @@ dataqbms <- function(studies = NULL, dt_studies = NULL){
     QBMS::set_study(study)
     data <- QBMS::get_study_data() %>% 
       data.frame(check.names = TRUE, stringsAsFactors = T) %>%
-      type.convert()
+      type.convert(as.is = FALSE)
     return(data)
   }
   
