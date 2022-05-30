@@ -148,7 +148,7 @@ mod_distribution_server <- function(input, output, session, data){
     }
   })
   
-  # Download PLOT SPATIAL
+  # Download PLOT 
   output$descargar.d <- downloadHandler(
     filename = function() {
       paste("Descriptive", input$typefileDes, sep = ".")
@@ -224,7 +224,8 @@ mod_distribution_server <- function(input, output, session, data){
     DT::datatable({
       statistics() %>% dplyr::mutate_if(is.numeric, round, 2)
     },
-    option=list(pageLength=10, scrollX = TRUE,columnDefs = list(list(className = 'dt-center'))),
+    option=list(pageLength=10, scrollX = TRUE,
+                columnDefs = list(list(className = 'dt-center', targets = 0:ncol(statistics())))),
     filter="top",
     selection="multiple"
     )

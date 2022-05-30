@@ -33,6 +33,8 @@ stageMET(
 
 \item{vc.model}{variance-covariance model to fit: 'diag', 'corv', 'corh', 'fa1', 'fa2', 
 'fa3', 'fa4', 'corgh' (default = 'corh') (only for type.gen =' random')}
+
+\item{workspace}{asreml workspace}
 }
 \value{
 Several objects with reports of the MET analysis. 

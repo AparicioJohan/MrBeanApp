@@ -12,22 +12,35 @@ mod_import_dt_ui <- function(id){
   tagList(
     fluidRow(
       bs4Dash::box(title = tagList(shiny::icon("upload"), "Source"),
-                   solidHeader = FALSE,status = "success",maximizable = F,closable = F,
+                   solidHeader = FALSE,
+                   status = "success",
+                   maximizable = F,
+                   closable = F,
                    width = 3,
                    radioGroupButtons(
                      inputId = ns("Id004"),
-                     choices = c("Example Data"=1, "Import Data"=2, "BrAPI"=3), # , "BRAPI" = 4
+                     choices = c("Example Data"=1, "Import Data"=2, "BrAPI"=3),
                      status = "success",selected = 1
                     ),
-                   conditionalPanel("input.Id004==1",h6('Use the example database to try the different modules of Mr. Bean'), ns = ns),
-                   conditionalPanel("input.Id004==2",h6('Import external data preferably csv/txt files.'), ns = ns)
+                   conditionalPanel("input.Id004==1",
+                                    h6('Use the example database to try the different modules of Mr. Bean'), 
+                                    ns = ns),
+                   conditionalPanel("input.Id004==2",
+                                    h6('Import external data preferably csv/txt files.'), 
+                                    ns = ns)
       ),
       
       column(width = 3,
-             conditionalPanel("input.Id004==2", ns = ns,
-                              bs4Dash::box(title =  tagList(shiny::icon("file-upload"), "Import Data"),solidHeader = FALSE,width = 12, status = "success",
-                                           maximizable = T,closable = F,
-                                           fileInput(inputId=ns('file1'),width = "100%",
+             conditionalPanel("input.Id004==2",
+                              ns = ns,
+                              bs4Dash::box(title =  tagList(shiny::icon("file-upload"), "Import Data"),
+                                           solidHeader = FALSE,
+                                           width = 12,
+                                           status = "success",
+                                           maximizable = T,
+                                           closable = F,
+                                           fileInput(inputId = ns('file1'),
+                                                     width = "100%",
                                                      label='Load your database',
                                                      accept = c(
                                                        'text/csv',
@@ -39,50 +52,82 @@ mod_import_dt_ui <- function(id){
                                                      )),
                                            helpText("Default max. file size is 100MB"),
                                            prettyCheckbox(
-                                             inputId = ns("header"), label = "Include Header?", icon = icon("check"),outline = TRUE,fill = FALSE,shape="square",
-                                             animation = "tada", value=TRUE,status = "success"
+                                             inputId = ns("header"), 
+                                             label = "Include Header?", 
+                                             icon = icon("check"),
+                                             outline = TRUE,
+                                             fill = FALSE,
+                                             shape="square",
+                                             animation = "tada", 
+                                             value=TRUE,
+                                             status = "success"
                                            )
                               ))
        ),
       column(width = 3,
-             conditionalPanel("input.Id004==2", ns=ns,
+             conditionalPanel("input.Id004==2",
+                              ns=ns,
                               shinyjs::hidden(
                                 div(id = ns("when_file1"),
-                                    bs4Dash::box(title =  tagList(shiny::icon("wrench"), "Attributes"),solidHeader = FALSE,
-                                                 maximizable = T,closable = F,
-                                                 radioButtons(inputId=ns("miss"),label="Missing value character: ",
-                                                              choices = list("NA",'Empty', "Other"),inline = T),
-                                                 conditionalPanel("input.miss=='Other'", ns=ns, 
-                                                                  textInput(ns("datamiss"), label = "String", width = "100%")),
-                                                 selectInput(inputId=ns("sep"),
+                                    bs4Dash::box(title = tagList(shiny::icon("wrench"), "Attributes"),
+                                                 solidHeader = FALSE,
+                                                 maximizable = T,
+                                                 closable = F,
+                                                 radioButtons(inputId=ns("miss"),
+                                                              label="Missing value character: ",
+                                                              choices = list("NA",'Empty', "Other"),
+                                                              inline = T),
+                                                 conditionalPanel("input.miss=='Other'",
+                                                                  ns=ns, 
+                                                                  textInput(ns("datamiss"), 
+                                                                            label = "String",
+                                                                            width = "100%")),
+                                                 selectInput(inputId = ns("sep"),
                                                              label = "Cell separation character:", 
                                                              choices = list(Tab='\t', Comma=',',
                                                                             Semicolon=';', 'Space'=' '),
                                                              selected = ';', width = "100%"),
-                                                 uiOutput(ns("oshet")), # sheet
-                                                 width = 12, status = "success"
+                                                 uiOutput(ns("oshet")),
+                                                 width = 12, 
+                                                 status = "success"
                                                  )
                                 )
                               )
                               )
        ),
       column(width = 3,
-             conditionalPanel("input.Id004==2", ns=ns,
+             conditionalPanel("input.Id004==2", 
+                              ns=ns,
                               shinyjs::hidden(
                                 div(id = ns("when_file2"),
-                                    bs4Dash::box(title =  tagList(shiny::icon("filter"), "Subset"),solidHeader = FALSE,
-                                                 maximizable = T,closable = F,
+                                    bs4Dash::box(title =  tagList(shiny::icon("filter"), "Subset"),
+                                                 solidHeader = FALSE,
+                                                 maximizable = T,
+                                                 closable = F,
                                                  prettyCheckbox(
-                                                   inputId = ns("subset"), label = "Select a data subset", icon = icon("check"),outline = TRUE,fill = FALSE,shape="square",
-                                                   animation = "tada", value=FALSE,status = "success"
+                                                   inputId = ns("subset"), 
+                                                   label = "Select a data subset", 
+                                                   icon = icon("check"),
+                                                   outline = TRUE,
+                                                   fill = FALSE,
+                                                   shape="square",
+                                                   animation = "tada", 
+                                                   value=FALSE,
+                                                   status = "success"
                                                  ),
-                                                 selectInput(inputId=ns("varsubset"),width = "100%",
-                                                             label= tagList( "Subset variable",tags$a(icon("exclamation-circle"))),
+                                                 selectInput(inputId = ns("varsubset"),
+                                                             width = "100%",
+                                                             label= tagList("Subset variable",
+                                                                             tags$a(icon("exclamation-circle"))),
                                                              choices=""),
-                                                 selectInput(inputId=ns("levelessub"),multiple = T,width = "100%",
-                                                             label= tagList( "Which level?",tags$a(icon("exclamation-circle"))),
-                                                             choices=""),
-                                                 width = 12, status = "success"
+                                                 selectInput(inputId = ns("levelessub"),
+                                                             multiple = T,
+                                                             width = "100%",
+                                                             label = tagList("Which level?",
+                                                                            tags$a(icon("exclamation-circle"))),
+                                                             choices = ""),
+                                                 width = 12,
+                                                 status = "success"
                                                  )
                                     )
                                 )
@@ -90,23 +135,30 @@ mod_import_dt_ui <- function(id){
       )
       
     ),
-    conditionalPanel("input.Id004==3", ns = ns,
+    conditionalPanel("input.Id004==3",
+                     ns = ns,
                      fluidRow(
                        column(width = 4,
                               fluidRow(
                                 bs4Dash::box(title =  tagList(shiny::icon("question-circle"), "Help"), 
-                                             solidHeader = FALSE,width = 12,status = "success",
+                                             solidHeader = FALSE,
+                                             width = 12,
+                                             status = "success",
                                              h3("How to connect BrAPI in MrBean?"),
                                              hr(),
                                              includeHTML(
-                                               system.file("app/www/icon.html", package = "MrBean")
+                                               system.file("app/www/icon.html",
+                                                           package = "MrBean")
                                              )
                                 )
                               )
                        ),
                        column(width = 4,
                               fluidRow(
-                                bs4Dash::box(title = tagList(shiny::icon("users"), "BMS"),solidHeader = FALSE,width = 12,status = "success",
+                                bs4Dash::box(title = tagList(shiny::icon("users"), "BMS"),
+                                             solidHeader = FALSE,
+                                             width = 12,
+                                             status = "success",
                                              textInput(inputId = ns("urlbms"), 
                                                        label = tagList(
                                                          shiny::icon("server"), 
@@ -115,9 +167,10 @@ mod_import_dt_ui <- function(id){
                                                                  title = "For example: \n https://cassavabase.org \n https://sweetpotatobase.org \n https://bms.ciat.cgiar.org/", 
                                                                  placement = "top")
                                                          ), 
-                                                       value = "https://bms.ciat.cgiar.org/ibpworkbench/controller/auth/login", width = "100%"),
+                                                       value = "https://bms.ciat.cgiar.org/ibpworkbench/controller/auth/login",
+                                                       width = "100%"),
                                              awesomeCheckbox(inputId = ns('no_auth') ,
-                                                             label='No authentication required?',  
+                                                             label ='No authentication required?',  
                                                              value = FALSE, status = "danger"  ),
                                              prettyRadioButtons(
                                                inputId = ns("engine"),
@@ -129,37 +182,63 @@ mod_import_dt_ui <- function(id){
                                                status = "success",
                                                animation = "jelly"
                                              ),
-                                             conditionalPanel("input.no_auth==false", ns = ns,
-                                                              textInput(ns("user"),label = tagList(shiny::icon("user"), "User:"),placeholder = "username",width = "100%" ),
-                                                              passwordInput(ns("password"), tagList(shiny::icon("key"), "Password:"),width = "100%",placeholder = "*****************")
+                                             conditionalPanel("input.no_auth==false",
+                                                              ns = ns,
+                                                              textInput(ns("user"),
+                                                                        label = tagList(shiny::icon("user"),
+                                                                                        "User:"),
+                                                                        placeholder = "username",
+                                                                        width = "100%" ),
+                                                              passwordInput(ns("password"), 
+                                                                            tagList(shiny::icon("key"),
+                                                                                    "Password:"),
+                                                                            width = "100%",
+                                                                            placeholder = "*****************")
                                                               ),
-                                             actionButton(ns("mysql"),label = "Conect",icon = icon("sync")),
-                                             strong(a("Can't Log In?", href="http://bms.ciat.cgiar.org:48080/ibpworkbench/controller/auth/login"))
+                                             actionButton(ns("mysql"),
+                                                          label = "Conect",
+                                                          icon = icon("sync")),
+                                             strong(a("Can't Log In?", 
+                                                      href="http://bms.ciat.cgiar.org:48080/ibpworkbench/controller/auth/login"))
                                 )
                               )
                        ),
                        column(width = 4,
                               fluidRow(
-                                bs4Dash::box(title= tagList(shiny::icon("cogs"), "Information"),status = "success",width = 12,solidHeader = FALSE,
+                                bs4Dash::box(title= tagList(shiny::icon("cogs"), "Information"),
+                                             status = "success",
+                                             width = 12,
+                                             solidHeader = FALSE,
                                              selectInput(inputId=ns("Id008"),
                                                          label=  "Crops",
                                                          choices="",width = "100%"),
                                              
-                                             selectInput(inputId=ns("program"),
-                                                         label= tagList( "Which program?",tags$a(icon("exclamation-circle"))),
-                                                         choices="",width = "100%"),
-                                             selectInput(inputId=ns("trial"),
-                                                         label= tagList( "Which trial?",tags$a(icon("exclamation-circle"))),
-                                                         choices="",width = "100%", multiple = T),
-                                             selectInput(inputId=ns("study"),
-                                                         label= tagList( "Which study?",tags$a(icon("exclamation-circle"))),
-                                                         choices="",width = "100%", multiple = T),
+                                             selectInput(inputId = ns("program"),
+                                                         label = tagList( "Which program?",
+                                                                         tags$a(icon("exclamation-circle"))),
+                                                         choices = "",
+                                                         width = "100%"),
+                                             selectInput(inputId = ns("trial"),
+                                                         label= tagList("Which trial?",
+                                                                        tags$a(icon("exclamation-circle"))),
+                                                         choices="",
+                                                         width = "100%",
+                                                         multiple = T),
+                                             selectInput(inputId = ns("study"),
+                                                         label = tagList("Which study?",
+                                                                         tags$a(icon("exclamation-circle"))),
+                                                         choices="",
+                                                         width = "100%",
+                                                         multiple = T),
                                              fluidRow(
                                                col_3(),
                                                col_6(
                                                  actionBttn(inputId = ns("ok2"),
                                                             label = "Search!",
-                                                            style = "jelly",color = "success",block = T, icon = icon("check") )
+                                                            style = "jelly",
+                                                            color = "success",
+                                                            block = T, 
+                                                            icon = icon("check") )
                                                ),
                                                col_3()
                                              )
@@ -169,11 +248,19 @@ mod_import_dt_ui <- function(id){
                        )
                      )
                      ),
-    fluidRow(bs4Dash::box(collapsed = F,maximizable = T,closable = F,
+    fluidRow(bs4Dash::box(collapsed = F,
+                          maximizable = T,
+                          closable = F,
                           shinycssloaders::withSpinner( 
-                            DT::dataTableOutput(ns("data")),type = 5,color = "#28a745" 
-                            ),#style = "overflow-x: scroll;",  # overflow-y: scroll;
-                          width = 12,title =  tagList(shiny::icon("file-import"), "Data"),status = "success",solidHeader = FALSE,collapsible = TRUE) 
+                            DT::dataTableOutput(ns("data")),
+                            type = 5,
+                            color = "#28a745" 
+                            ),
+                          width = 12,
+                          title =  tagList(shiny::icon("file-import"), "Data"),
+                          status = "success",
+                          solidHeader = FALSE,
+                          collapsible = TRUE) 
              ),br() 
   )
 }
