@@ -40,257 +40,258 @@ app_ui <- function(request) {
             message  = "If you want to contribute...", 
             time = "today", image = "www/beans3.png", 
             href = "http://buymeacoffee.com/mrbean"
+            )
           )
-        )
-      ),
+        ),
       sidebar = bs4DashSidebar(
         skin = "light",
         status = "success",
         elevation = 3,
         fixed = F,
-        bs4SidebarMenu(id = "tabs",
-                       bs4SidebarHeader("Menu"),
-                       bs4SidebarMenuItem(
-                         "Home", tabName = "home", icon = shiny::icon("home")
-                       ),
-                       # Import data
-                       bs4SidebarMenuItem(
-                         "Data",
-                         icon = shiny::icon("database"),
-                         startExpanded = F,
-                         bs4SidebarMenuItem( 
-                           text = "Upload",
-                           tabName = "Data",
-                           icon = shiny::icon("file-upload") 
-                         ),
-                         bs4SidebarMenuItem(
-                           text = "Descriptives", 
-                           tabName = "descriptives",
-                           icon = shiny::icon("chart-line") 
-                         ),
-                         bs4SidebarMenuItem(
-                           text = "Distribution",
-                           tabName = "distrib",
-                           icon = shiny::icon("chart-area") 
-                         )
-                       ),
-                       bs4SidebarHeader("SpATS"),
-                       # Single spatial analysis SpATS
-                       bs4SidebarMenuItem(
-                         text = "Single-Site",
-                         icon = shiny::icon("braille"),
-                         startExpanded = F,
-                         bs4SidebarMenuSubItem(
-                           text = "Model Specs", 
-                           tabName = "modelo", 
-                           icon = shiny::icon("circle-thin",verify_fa = FALSE)
-                         ),
-                         bs4SidebarMenuSubItem(
-                           text = "BLUPs/BLUEs", 
-                           tabName = "blupspat", 
-                           icon = shiny::icon("circle-thin",verify_fa = FALSE)
-                         ),
-                         bs4SidebarMenuSubItem(
-                           text = "Residuals", 
-                           tabName = "resispat",
-                           icon = shiny::icon("circle-thin",verify_fa = FALSE)
-                         )
-                       ),
-                       # Multiple-single analysis
-                       bs4SidebarMenuItem(
-                         "Site-by-Site",
-                         icon = shiny::icon("sitemap"), 
-                         startExpanded = F,
-                         bs4SidebarMenuSubItem(
-                           HTML(
-                             paste("Model Specs", 
-                                   bs4Badge("new", 
-                                            position = "right", 
-                                            color = "danger")
-                                   )
-                             ),
-                           tabName = "msa", 
-                           icon = shiny::icon("circle-thin",verify_fa = FALSE)
-                         ),
-                         bs4SidebarMenuSubItem(
-                           HTML(
-                             paste("Results", 
-                                   bs4Badge("new", 
-                                            position = "right", 
-                                            color = "danger")
-                                   )
-                             ),
-                           tabName = "msa_result", 
-                           icon = shiny::icon("circle-thin",verify_fa = FALSE)
-                         )
-                       ),
-                       # Multiple trait 
-                       bs4SidebarMenuItem(
-                         "Trait-by-Trait", 
-                         icon = shiny::icon("ruler"), 
-                         startExpanded = F,
-                         bs4SidebarMenuSubItem(
-                           HTML(
-                             paste("Model Specs", 
-                                   bs4Badge("new",
-                                            position = "right", 
-                                            color = "danger")
-                                   )
-                             ),
-                           tabName = "multi_trait",
-                           icon = shiny::icon("circle-thin",verify_fa = FALSE)
-                         )
-                       ),
-                       bs4SidebarHeader("ASReml"),
-                       # Single spatial analysis ASReml
-                       bs4SidebarMenuItem(
-                         text = "Single-Site",
-                         icon = shiny::icon("braille"), 
-                         startExpanded = F,
-                         bs4SidebarMenuSubItem(
-                           HTML(
-                             paste("Model Specs", 
-                                   bs4Badge("new", 
-                                            position = "right",
-                                            color = "success")
-                                   )
-                             ),
-                           tabName = "spats_asreml", 
-                           icon = shiny::icon("circle-thin",verify_fa = FALSE)
-                         ),
-                         bs4SidebarMenuSubItem(
-                           HTML(
-                             paste("BLUPs/BLUEs", 
-                                   bs4Badge("new",
-                                            position = "right",
-                                            color = "success")
-                                   )
-                             ),
-                           tabName = "spats_asreml_effects", 
-                           icon = shiny::icon("circle-thin",verify_fa = FALSE)
-                         )
-                       ),
-                       # Un-replicated analysis
-                       bs4SidebarMenuItem(
-                         "Unreplicated", 
-                         icon = shiny::icon("crosshairs"), 
-                         startExpanded = F,
-                         bs4SidebarMenuSubItem(
-                           HTML(
-                             paste("Model Specs",
-                                   bs4Badge("new",
-                                            position = "right",
-                                            color = "danger")
-                                   )
-                             ),
-                           tabName = "aug_model",
-                           icon = shiny::icon("circle-thin",verify_fa = FALSE)
-                         ),
-                         bs4SidebarMenuSubItem(
-                           HTML(
-                             paste("BLUPs/BLUEs",
-                                   bs4Badge("new", 
-                                            position = "right",
-                                            color = "danger")
-                                   )
-                             ),
-                           tabName = "aug_result",
-                           icon = shiny::icon("circle-thin",verify_fa = FALSE)
-                         )
-                       ),
-                       # Model selector
-                       bs4SidebarMenuItem(
-                         text = "Model Selector",
-                         icon = shiny::icon("hand-pointer"),
-                         startExpanded = F,
-                         bs4SidebarMenuSubItem(
-                           HTML(
-                             paste("Model Specs", 
-                                   bs4Badge("new",
-                                            position = "right",
-                                            color = "success")
-                                   )
-                             ),
-                           tabName = "asreml_selector",
-                           icon = shiny::icon("circle-thin",verify_fa = FALSE)
-                         ),
-                         bs4SidebarMenuSubItem(
-                           HTML(
-                             paste("BLUPs/BLUEs", 
-                                   bs4Badge("new",
-                                            position = "right",
-                                            color = "success")
-                                   )
-                             ),
-                           tabName = "asr_sel_selected", 
-                           icon = shiny::icon("circle-thin",verify_fa = FALSE)
-                         )
-                       ),
-                       bs4SidebarHeader("Two-Stage Analysis"),
-                       # Two-Stage MET
-                       bs4SidebarMenuItem(
-                         "MET Analysis", 
-                         icon = shiny::icon("chart-pie"), 
-                         startExpanded = F,
-                         bs4SidebarMenuSubItem(
-                           HTML(
-                             paste("Model Specs",
-                                   bs4Badge("new", 
-                                            position = "right", 
-                                            color = "info")
-                                   )
-                             ),
-                           tabName = "met", 
-                           icon = shiny::icon("circle-thin",verify_fa = FALSE)
-                         ),
-                         bs4SidebarMenuSubItem(
-                           HTML(
-                             paste("Results", 
-                                   bs4Badge("new",
-                                            position = "right", 
-                                            color = "info")
-                                   )
-                             ) ,
-                           tabName = "met_result", 
-                           icon = shiny::icon("circle-thin",verify_fa = FALSE)
-                         ),
-                         bs4SidebarMenuSubItem(
-                           HTML(
-                             paste("Factor Analytic", 
-                                   bs4Badge("new", 
-                                            position = "right",
-                                            color = "info")
-                                   )
-                             ),
-                           tabName = "met_fa",
-                           icon = shiny::icon("circle-thin",verify_fa = FALSE)
-                         )
-                       ),
-                       bs4SidebarHeader("Traditional Designs"),
-                       # lme4 basic models
-                       bs4SidebarMenuItem(
-                         text = "Analysis with lme4", 
-                         icon = shiny::icon("chart-bar"),
-                         startExpanded = F,
-                         bs4SidebarMenuSubItem(
-                           text = "Model Specs",
-                           tabName = "mixed",
-                           icon = shiny::icon("circle-thin",verify_fa = FALSE)
-                         ),
-                         bs4SidebarMenuSubItem(
-                           text = "BLUPs/BLUEs", 
-                           tabName = "boxes", 
-                           icon = shiny::icon("circle-thin",verify_fa = FALSE)
-                         )
-                       ),
-                       bs4SidebarHeader("About"),
-                       bs4SidebarMenuItem(
-                         text = "info", 
-                         tabName = "valueboxes",
-                         icon = shiny::icon("leaf")
-                       )
-        )
-      ),
+        bs4SidebarMenu(
+          id = "tabs",
+          bs4SidebarHeader("Menu"),
+          bs4SidebarMenuItem(
+            "Home", tabName = "home", icon = shiny::icon("home")
+            ),
+          # Import data
+          bs4SidebarMenuItem(
+            "Data",
+            icon = shiny::icon("database"),
+            startExpanded = F,
+            bs4SidebarMenuItem( 
+              text = "Upload",
+              tabName = "Data",
+              icon = shiny::icon("file-upload") 
+              ),
+            bs4SidebarMenuItem(
+              text = "Descriptives", 
+              tabName = "descriptives",
+              icon = shiny::icon("chart-line") 
+              ),
+            bs4SidebarMenuItem(
+              text = "Distribution",
+              tabName = "distrib",
+              icon = shiny::icon("chart-area") 
+              )
+            ),
+          bs4SidebarHeader("SpATS"),
+          # Single spatial analysis SpATS
+          bs4SidebarMenuItem(
+            text = "Single-Site",
+            icon = shiny::icon("braille"),
+            startExpanded = F,
+            bs4SidebarMenuSubItem(
+              text = "Model Specs", 
+              tabName = "modelo", 
+              icon = shiny::icon("circle-thin",verify_fa = FALSE)
+              ),
+            bs4SidebarMenuSubItem(
+              text = "BLUPs/BLUEs", 
+              tabName = "blupspat", 
+              icon = shiny::icon("circle-thin",verify_fa = FALSE)
+              ),
+            bs4SidebarMenuSubItem(
+              text = "Residuals", 
+              tabName = "resispat",
+              icon = shiny::icon("circle-thin",verify_fa = FALSE)
+              )
+            ),
+          # Multiple-single analysis
+          bs4SidebarMenuItem(
+            "Site-by-Site",
+            icon = shiny::icon("sitemap"), 
+            startExpanded = F,
+            bs4SidebarMenuSubItem(
+              HTML(
+                paste("Model Specs", 
+                      bs4Badge("new", 
+                               position = "right", 
+                               color = "danger")
+                      )
+                ),
+              tabName = "msa", 
+              icon = shiny::icon("circle-thin",verify_fa = FALSE)
+              ),
+            bs4SidebarMenuSubItem(
+              HTML(
+                paste("Results", 
+                      bs4Badge("new", 
+                               position = "right", 
+                               color = "danger")
+                      )
+                ),
+              tabName = "msa_result", 
+              icon = shiny::icon("circle-thin",verify_fa = FALSE)
+              )
+            ),
+          # Multiple trait 
+          bs4SidebarMenuItem(
+            "Trait-by-Trait", 
+            icon = shiny::icon("ruler"), 
+            startExpanded = F,
+            bs4SidebarMenuSubItem(
+              HTML(
+                paste("Model Specs", 
+                      bs4Badge("new",
+                               position = "right", 
+                               color = "danger")
+                      )
+                ),
+              tabName = "multi_trait",
+              icon = shiny::icon("circle-thin",verify_fa = FALSE)
+              )
+            ),
+          bs4SidebarHeader("ASReml"),
+          # Single spatial analysis ASReml
+          bs4SidebarMenuItem(
+            text = "Single-Site",
+            icon = shiny::icon("braille"), 
+            startExpanded = F,
+            bs4SidebarMenuSubItem(
+              HTML(
+                paste("Model Specs", 
+                      bs4Badge("new", 
+                               position = "right",
+                               color = "success")
+                      )
+                ),
+              tabName = "spats_asreml", 
+              icon = shiny::icon("circle-thin",verify_fa = FALSE)
+              ),
+            bs4SidebarMenuSubItem(
+              HTML(
+                paste("BLUPs/BLUEs", 
+                      bs4Badge("new",
+                               position = "right",
+                               color = "success")
+                      )
+                ),
+              tabName = "spats_asreml_effects", 
+              icon = shiny::icon("circle-thin",verify_fa = FALSE)
+              )
+            ),
+          # Un-replicated analysis
+          bs4SidebarMenuItem(
+            "Unreplicated", 
+            icon = shiny::icon("crosshairs"), 
+            startExpanded = F,
+            bs4SidebarMenuSubItem(
+              HTML(
+                paste("Model Specs",
+                      bs4Badge("new",
+                               position = "right",
+                               color = "danger")
+                      )
+                ),
+              tabName = "aug_model",
+              icon = shiny::icon("circle-thin",verify_fa = FALSE)
+              ),
+            bs4SidebarMenuSubItem(
+              HTML(
+                paste("BLUPs/BLUEs",
+                      bs4Badge("new", 
+                               position = "right",
+                               color = "danger")
+                      )
+                ),
+              tabName = "aug_result",
+              icon = shiny::icon("circle-thin",verify_fa = FALSE)
+              )
+            ),
+          # Model selector
+          bs4SidebarMenuItem(
+            text = "Model Selector",
+            icon = shiny::icon("hand-pointer"),
+            startExpanded = F,
+            bs4SidebarMenuSubItem(
+              HTML(
+                paste("Model Specs", 
+                      bs4Badge("new",
+                               position = "right",
+                               color = "success")
+                      )
+                ),
+              tabName = "asreml_selector",
+              icon = shiny::icon("circle-thin",verify_fa = FALSE)
+              ),
+            bs4SidebarMenuSubItem(
+              HTML(
+                paste("BLUPs/BLUEs", 
+                      bs4Badge("new",
+                               position = "right",
+                               color = "success")
+                      )
+                ),
+              tabName = "asr_sel_selected", 
+              icon = shiny::icon("circle-thin",verify_fa = FALSE)
+              )
+            ),
+          bs4SidebarHeader("Two-Stage Analysis"),
+          # Two-Stage MET
+          bs4SidebarMenuItem(
+            "MET Analysis", 
+            icon = shiny::icon("chart-pie"), 
+            startExpanded = F,
+            bs4SidebarMenuSubItem(
+              HTML(
+                paste("Model Specs",
+                      bs4Badge("new", 
+                               position = "right", 
+                               color = "info")
+                      )
+                ),
+              tabName = "met", 
+              icon = shiny::icon("circle-thin",verify_fa = FALSE)
+              ),
+            bs4SidebarMenuSubItem(
+              HTML(
+                paste("Results", 
+                      bs4Badge("new",
+                               position = "right", 
+                               color = "info")
+                      )
+                ) ,
+              tabName = "met_result", 
+              icon = shiny::icon("circle-thin",verify_fa = FALSE)
+              ),
+            bs4SidebarMenuSubItem(
+              HTML(
+                paste("Factor Analytic", 
+                      bs4Badge("new", 
+                               position = "right",
+                               color = "info")
+                      )
+                ),
+              tabName = "met_fa",
+              icon = shiny::icon("circle-thin",verify_fa = FALSE)
+              )
+            ),
+          bs4SidebarHeader("Traditional Designs"),
+          # lme4 basic models
+          bs4SidebarMenuItem(
+            text = "Analysis with lme4", 
+            icon = shiny::icon("chart-bar"),
+            startExpanded = F,
+            bs4SidebarMenuSubItem(
+              text = "Model Specs",
+              tabName = "mixed",
+              icon = shiny::icon("circle-thin",verify_fa = FALSE)
+              ),
+            bs4SidebarMenuSubItem(
+              text = "BLUPs/BLUEs", 
+              tabName = "boxes", 
+              icon = shiny::icon("circle-thin",verify_fa = FALSE)
+              )
+            ),
+          bs4SidebarHeader("About"),
+          bs4SidebarMenuItem(
+            text = "info", 
+            tabName = "valueboxes",
+            icon = shiny::icon("leaf")
+            )
+          )
+        ),
       body = bs4DashBody(
         bs4TabItems( 
           # chooseSliderSkin("Modern"),
@@ -305,23 +306,29 @@ app_ui <- function(request) {
             ),
           bs4TabItem(
             tabName = "descriptives",
-                     HTML('<h1 style="font-weight: bold; color: #00a65a;">Descriptive Plots</h1>'),
+            HTML('<h1 style="font-weight: bold; color: #00a65a;">Descriptive Plots</h1>'),
             fluidRow(
-              column(width=6,
-                     mod_descrip_raw_ui("descrip_raw_ui_1", 
-                                        "Scatterplot", 
-                                        "fadeInLeftBig",
-                                        "fadeOutLeftBig",
-                                        TRUE)
-                     ),
-              column(width=6,
-                     mod_descrip_raw_ui("descrip_raw_ui_2", 
-                                        "Boxplot", 
-                                        "fadeInRightBig", 
-                                        "fadeOutRightBig", 
-                                        FALSE )
-                     )
+              column(
+                width = 6,
+                mod_descrip_raw_ui(
+                  "descrip_raw_ui_1", 
+                  "Scatterplot", 
+                  "fadeInLeftBig",
+                  "fadeOutLeftBig",
+                  TRUE
                   )
+                ),
+              column(
+                width = 6,
+                     mod_descrip_raw_ui(
+                       "descrip_raw_ui_2", 
+                       "Boxplot", 
+                       "fadeInRightBig", 
+                       "fadeOutRightBig", 
+                       FALSE 
+                       )
+                )
+              )
             ),
           bs4TabItem(
             tabName = "distrib",
