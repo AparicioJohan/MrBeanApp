@@ -1,5 +1,15 @@
-
-
+#' QBMS conexion
+#'
+#' @param url go to QBMS documentation
+#' @param engine "bms" or "breadbase"
+#' @param path go to QBMS documentation
+#' @param time_out go to QBMS documentation
+#' @param no_auth go to QBMS documentation
+#' @param username username
+#' @param password password
+#'
+#' @return a list
+#' @noRd
 qbmsbrapi <- function(url = "https://bms.ciat.cgiar.org/ibpworkbench/controller/auth/login", 
                       engine = c("bms", "breadbase"),
                       path = ifelse(engine == "bms", "bmsapi", ""),
@@ -22,6 +32,12 @@ qbmsbrapi <- function(url = "https://bms.ciat.cgiar.org/ibpworkbench/controller/
   return(list(bmsbase = bmsbase, bmslogin = bmslogin , crops = crops)) 
 }
 
+#' Get Programs
+#'
+#' @param crop crop
+#'
+#' @return a list with programs
+#' @noRd 
 qbmsprograms <- function(crop = NULL){
   if(is.null(crop)) return()
   QBMS::set_crop(crop)
@@ -29,6 +45,12 @@ qbmsprograms <- function(crop = NULL){
   return(programs)
 }
 
+#' Get trials
+#'
+#' @param program program
+#'
+#' @return a list with trials
+#' @noRd
 qbmstrials <- function(program = NULL){
   if(is.null(program)) return()
   QBMS::set_program(program)
@@ -36,7 +58,13 @@ qbmstrials <- function(program = NULL){
   return(trials)
 }
 
-
+#' Get studies
+#'
+#' @param trial trial
+#'
+#' @return a list with studies
+#' @noRd
+#'
 qbmsstudies <- function(trial = NULL){
   if(is.null(trial)) return()
   QBMS::set_trial(trial)
@@ -44,7 +72,13 @@ qbmsstudies <- function(trial = NULL){
   return(studies)
 }
 
-
+#' Get dataset
+#'
+#' @param studies string studies
+#' @param dt_studies data.frame studies
+#'
+#' @return data.frame
+#' @noRd
 dataqbms <- function(studies = NULL, dt_studies = NULL){
   if(is.null(studies)) return()
   if(is.null(dt_studies)) return()
@@ -63,7 +97,4 @@ dataqbms <- function(studies = NULL, dt_studies = NULL){
   mult_dt <- dplyr::bind_rows(mult_dt)
   return(mult_dt)
 }
-
-
-
 

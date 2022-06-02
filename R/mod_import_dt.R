@@ -404,8 +404,7 @@ mod_import_dt_server <- function(input, output, session){
       return(tmpbms)
     })
   })
-  
-  
+
   observe({
     if (is.null(bmscon())) {
       shinyalert::shinyalert(
@@ -461,13 +460,15 @@ mod_import_dt_server <- function(input, output, session){
     if(is.null(programs())){
       return()
     } else {
-      updateSelectInput(session, 
-                        inputId = "program",
-                        choices = programs(),
-                        selected = "NNNNN" )
+      updateSelectInput(
+        session, 
+        inputId = "program",
+        choices = programs(),
+        selected = "NNNNN"
+        )
     }
   }) %>% 
-    bindEvent(input$Id008, ignoreInit = TRUE) # ignoreInit = TRUE
+    bindEvent(input$Id008, ignoreInit = TRUE)
   
   trials <- reactive({
     w$show()
@@ -476,12 +477,14 @@ mod_import_dt_server <- function(input, output, session){
         list_trials <- qbmstrials(program = input$program)
       },
       error = function(e) {
-        shinytoastr::toastr_error(title = "Error:", 
-                                  conditionMessage(e),
-                                  position =  "bottom-full-width",
-                                  showMethod ="slideDown",
-                                  hideMethod="hide", 
-                                  hideEasing = "linear")
+        shinytoastr::toastr_error(
+          title = "Error:", 
+          conditionMessage(e),
+          position =  "bottom-full-width",
+          showMethod ="slideDown",
+          hideMethod="hide", 
+          hideEasing = "linear"
+          )
         w$hide()
       }
     )
@@ -490,18 +493,22 @@ mod_import_dt_server <- function(input, output, session){
     return(list_trials$trialName)
   })
 
-  observeEvent(input$program,{
-    if(is.null(trials())){
+  observe({
+    if(is.null(trials())) {
       options <- ""
-    } else {options = trials()}
+    } else {
+      options = trials()
+      }
     suppressWarnings(
-      updateSelectInput(session,
-                        inputId = "trial",
-                        choices = options,
-                        selected = "NNNNN")
+      updateSelectInput(
+        session,
+        inputId = "trial",
+        choices = options,
+        selected = "NNNNN"
       )
-  }, ignoreInit = TRUE)
-  
+    )
+  }) %>% 
+    bindEvent(input$program, ignoreInit = TRUE)
   
   studies <- reactive({
     w$show()
@@ -529,7 +536,7 @@ mod_import_dt_server <- function(input, output, session){
     return(dt_std)
   })
   
-  observeEvent(input$trial,{
+  observe({
     if(is.null(studies())){
       options <- ""
     } else {options = studies()[[2]]}
@@ -538,8 +545,9 @@ mod_import_dt_server <- function(input, output, session){
                         inputId = "study",
                         choices = options,
                         selected = "NNNNN")
-      )
-  }, ignoreInit = TRUE)
+    )
+  }) %>% 
+    bindEvent(input$trial, ignoreInit = TRUE)
 
   # data --------------------------------------------------------------------
 
@@ -552,12 +560,14 @@ mod_import_dt_server <- function(input, output, session){
           datos <- dataqbms(studies = input$study, dt_studies = studies())
         },
         error = function(e) {
-          shinytoastr::toastr_error(title = "Error:",
-                                    conditionMessage(e),
-                                    position =  "bottom-full-width",
-                                    showMethod ="slideDown", 
-                                    hideMethod="hide", 
-                                    hideEasing = "linear")
+          shinytoastr::toastr_error(
+            title = "Error:",
+            conditionMessage(e),
+            position =  "bottom-full-width",
+            showMethod ="slideDown", 
+            hideMethod="hide", 
+            hideEasing = "linear"
+            )
           w$hide()
         }
       )
@@ -572,42 +582,56 @@ mod_import_dt_server <- function(input, output, session){
   dataset <- reactive({
     tryCatch(
       {
-        dataReact( file =  input$file1,
-                   choice = input$Id004,
-                   header = input$header,
-                   sep = input$sep,
-                   miss = input$miss, 
-                   string = input$datamiss , 
-                   sheet = input$sheet,
-                   dataBMS = DtReact())
+        dataReact(
+          file =  input$file1,
+          choice = input$Id004,
+          header = input$header,
+          sep = input$sep,
+          miss = input$miss, 
+          string = input$datamiss , 
+          sheet = input$sheet,
+          dataBMS = DtReact()
+          )
       },
       error = function(e) {
-        shinytoastr::toastr_error(title = "Error:", 
-                                  conditionMessage(e),
-                                  position =  "bottom-full-width",
-                                  showMethod ="slideDown",
-                                  hideMethod="hide",
-                                  hideEasing = "linear")
+        shinytoastr::toastr_error(
+          title = "Error:", 
+          conditionMessage(e),
+          position =  "bottom-full-width",
+          showMethod ="slideDown",
+          hideMethod="hide",
+          hideEasing = "linear"
+          )
       }
     )
   })
   
-  
   # Subset data
-  
-  observeEvent(input$file1,{
-    updatePrettyCheckbox(session = session, inputId = "subset", value = F)
-  })
+  observe({
+    updatePrettyCheckbox(
+      session = session,
+      inputId = "subset",
+      value = F
+      )
+  }) %>% 
+    bindEvent(input$file1)
   
   observe({
-    updateSelectInput(session,
-                      "varsubset", 
-                      choices = names(dataset()),
-                      selected = "NNNNN")
+    updateSelectInput(
+      session,
+      "varsubset", 
+      choices = names(dataset()),
+      selected = "NNNNN"
+      )
   })
   
   observeEvent(input$subset==F,{
-    toggle("varsubset",anim = TRUE,time = 1,animType = "fade")
+    toggle(
+      "varsubset",
+       anim = TRUE,
+       time = 1,
+       animType = "fade"
+      )
   })
   
   observeEvent(input$varsubset,{
@@ -621,9 +645,13 @@ mod_import_dt_server <- function(input, output, session){
     updateSelectInput(session, "levelessub", choices = lvl,selected = "NNNNN")
   })
   
-  
   dataset_sub <- reactive({
-    dts(input$subset,input$varsubset,input$levelessub,data=dataset())
+    dts(
+      input$subset,
+      input$varsubset,
+      input$levelessub,
+      data = dataset()
+      )
   })
   
   output$data <- DT::renderDataTable({
@@ -631,23 +659,21 @@ mod_import_dt_server <- function(input, output, session){
     DT::datatable({
       dataset_sub() 
     },
-    option = list(pageLength=3, 
-                  scrollX = TRUE,
-                  columnDefs = list(
-                    list(
-                      className = 'dt-center',
-                      targets = 0:ncol(dataset_sub()))
-                    )
-                  ),
+    option = list(
+      pageLength=3,
+      scrollX = TRUE,
+      columnDefs = list(
+        list(
+          className = 'dt-center',
+          targets = 0:ncol(dataset_sub()))
+        )
+      ),
     filter = "top",
     selection = "multiple"
     )
-    
   })
   
-  
   return(list(data = dataset_sub))
-  
   
 }
     
