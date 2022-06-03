@@ -625,32 +625,33 @@ mod_import_dt_server <- function(input, output, session){
       )
   })
   
-  observeEvent(input$subset==F,{
+  observe({
     toggle(
       "varsubset",
-       anim = TRUE,
-       time = 1,
-       animType = "fade"
-      )
-  })
-  
-  observeEvent(input$varsubset,{
+      anim = TRUE,
+      time = 1,
+      animType = "fade"
+    )
     toggle("levelessub",
            anim = TRUE,
            time = 1,
-           animType = "fade",
-           condition = input$varsubset!="")
+           animType = "fade")
+  }) %>% 
+    bindEvent(input$subset)
+  
+  observe({
     req(input$varsubset)
     lvl <- dataset()[,input$varsubset]
-    updateSelectInput(session, "levelessub", choices = lvl,selected = "NNNNN")
-  })
+    updateSelectInput(session, "levelessub", choices = lvl, selected = "NNNNN")
+  }) %>% 
+    bindEvent(input$varsubset, input$subset)
   
   dataset_sub <- reactive({
-    dts(
-      input$subset,
-      input$varsubset,
-      input$levelessub,
-      data = dataset()
+    data_subset(
+      data = dataset(),
+      subset = input$subset,
+      variable = input$varsubset,
+      level = input$levelessub
       )
   })
   

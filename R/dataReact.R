@@ -71,5 +71,27 @@ dataReact <- function(file = NULL,
   }
 
 
-  
+#' Subset dataset
+#'
+#' @param data data.frame
+#' @param subset whether subset or not the dataset
+#' @param variable variable to subset
+#' @param level level to subset
+#'
+#' @return data.frame
+#' @noRd
+data_subset <- function(data = NULL, subset = TRUE, variable = "", level = ""){   
+  if (subset == TRUE) {
+    if (variable == "" | paste0(level, collapse = "_") == "" ) {
+      data <- data    
+      } 
+    if( variable != "" & paste0(level, collapse = "_") != "") {
+      req( variable %in% names(data))
+      data <- data %>% dplyr::filter(.data[[variable]] %in% level)  
+      }
+    return(data)
+  } else {
+      return(data)
+    }
+}
 
