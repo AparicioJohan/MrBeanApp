@@ -522,12 +522,14 @@ mod_import_dt_server <- function(input, output, session){
                              )
       },
       error = function(e) {
-        shinytoastr::toastr_error(title = "Error:", 
-                                  conditionMessage(e),
-                                  position =  "bottom-full-width",
-                                  showMethod ="slideDown",
-                                  hideMethod="hide", 
-                                  hideEasing = "linear")
+        shinytoastr::toastr_error(
+          title = "Error:", 
+          conditionMessage(e),
+          position =  "bottom-full-width",
+          showMethod ="slideDown",
+          hideMethod="hide", 
+          hideEasing = "linear"
+          )
         w$hide()
       }
     )
@@ -642,7 +644,12 @@ mod_import_dt_server <- function(input, output, session){
   observe({
     req(input$varsubset)
     lvl <- dataset()[,input$varsubset]
-    updateSelectInput(session, "levelessub", choices = lvl, selected = "NNNNN")
+    updateSelectInput(
+      session,
+      "levelessub",
+      choices = lvl, 
+      selected = "NNNNN"
+      )
   }) %>% 
     bindEvent(input$varsubset, input$subset)
   
