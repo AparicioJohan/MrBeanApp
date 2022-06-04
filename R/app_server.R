@@ -32,8 +32,8 @@ app_server <- function( input, output, session ) {
   data
   
   # Descriptives
-  callModule(mod_descrip_raw_server, "descrip_raw_ui_1", data = data, plot = 1)
-  callModule(mod_descrip_raw_server, "descrip_raw_ui_2", data = data, plot = 2)
+  mod_descrip_scatter_server("descrip_scatter_1", data = data, plot = 1)
+  mod_descrip_boxplot_server("descrip_boxplot_1", data = data, plot = 2)
   
   # Distribution
   callModule(mod_distribution_server, "distribution_ui_1", data = data)

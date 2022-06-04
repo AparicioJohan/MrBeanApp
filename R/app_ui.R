@@ -310,23 +310,11 @@ app_ui <- function(request) {
             fluidRow(
               column(
                 width = 6,
-                mod_descrip_raw_ui(
-                  "descrip_raw_ui_1", 
-                  "Scatterplot", 
-                  "fadeInLeftBig",
-                  "fadeOutLeftBig",
-                  TRUE
-                  )
+                mod_descrip_scatter_ui("descrip_scatter_1")
                 ),
               column(
                 width = 6,
-                     mod_descrip_raw_ui(
-                       "descrip_raw_ui_2", 
-                       "Boxplot", 
-                       "fadeInRightBig", 
-                       "fadeOutRightBig", 
-                       FALSE 
-                       )
+                mod_descrip_boxplot_ui("descrip_boxplot_1")
                 )
               )
             ),

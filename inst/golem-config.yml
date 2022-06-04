@@ -1,8 +1,8 @@
 default:
   golem_name: MrBean
-  golem_version: 0.0.0.9000
+  golem_version: 2.0.6
   app_prod: no
 production:
   app_prod: yes
 dev:
-  golem_wd: D:/OneDrive - CGIAR/2020/GOLEM/MrBean.v.0.2
+  golem_wd: !expr here::here()

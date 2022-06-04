@@ -56,6 +56,8 @@ usethis::use_dev_package("brapirv1", type = "Imports", remote = "mverouden/brapi
 golem::add_module( name = "home_module1" ) # Name of the module
 golem::add_module( name = "import_dt" ) # Name of the module
 golem::add_module( name = "dataBMS" ) # Name of the module
+golem::add_module( name = "descrip_scatter" ) # Name of the module
+golem::add_module( name = "descrip_boxplot" ) # Name of the module
 golem::add_module( name = "descrip_raw" ) # Name of the module
 golem::add_module( name = "distribution" ) # Name of the module
 golem::add_module( name = "spats_single" ) # Name of the module
