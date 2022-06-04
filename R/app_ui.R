@@ -454,7 +454,7 @@ app_ui <- function(request) {
             target = "_blank", "J.Aparicio@cgiar.org"
           )
         ),
-        right = "2021"
+        right = "2022"
       )
     )
   )

@@ -577,14 +577,13 @@ mod_import_dt_server <- function(input, output, session){
       if(!exists("datos")) datos <- NULL
       return(datos)
     })
-      
-    
   })
+  
   
   dataset <- reactive({
     tryCatch(
       {
-        dataReact(
+        data_react(
           file =  input$file1,
           choice = input$Id004,
           header = input$header,
@@ -642,8 +641,11 @@ mod_import_dt_server <- function(input, output, session){
     bindEvent(input$subset)
   
   observe({
-    req(input$varsubset)
-    lvl <- dataset()[,input$varsubset]
+    if(input$varsubset != ""){
+      lvl = dataset()[,input$varsubset]
+      } else {
+        lvl <- ""
+        }
     updateSelectInput(
       session,
       "levelessub",
@@ -651,7 +653,7 @@ mod_import_dt_server <- function(input, output, session){
       selected = "NNNNN"
       )
   }) %>% 
-    bindEvent(input$varsubset, input$subset)
+    bindEvent(input$varsubset, input$subset, ignoreInit = TRUE)
   
   dataset_sub <- reactive({
     data_subset(
@@ -663,7 +665,6 @@ mod_import_dt_server <- function(input, output, session){
   })
   
   output$data <- DT::renderDataTable({
-    req(dataset_sub())
     DT::datatable({
       dataset_sub() 
     },
@@ -679,7 +680,8 @@ mod_import_dt_server <- function(input, output, session){
     filter = "top",
     selection = "multiple"
     )
-  })
+  }) %>% 
+    bindEvent(dataset_sub())
   
   return(list(data = dataset_sub))
   
