@@ -12,107 +12,226 @@ mod_spats_single_ui <- function(id){
   tagList(
     HTML('<h1 style="font-weight: bold; color: #00a65a;">Single-Site Spatial Analysis</h1>'),
     fluidRow(
-      bs4Dash::box( width = 3,status = "success", solidHeader = FALSE,
-                    title = tagList(icon=icon("braille"), "SpATS",
-                                    actionButton(ns("btn"),
-                                                 tagList(icon=icon("question-circle"), "Guide"),
-                                                 style= "color: white ; background-color: #dd4b39", class="btn-danger")),   # background = "light-blue"  
-                    # actionButton(ns("btn"),
-                    #              tagList(icon=icon("question-circle"), "Guide"),
-                    #              style= "color: white ; background-color: #dd4b39", class="btn-danger"),
-                    # hr(),
-                    rintrojs::introBox(
-                      
-                      selectInput(inputId=ns("variable"),
-                                  label= with_red_star("Response Variable"),
-                                  choices="", width = "100%"),
-                      data.step = 1,data.intro = "Select the column that contains the phenotypic response variable.",data.position = "right",color="red") ,
-                    rintrojs::introBox(
-                      selectInput(inputId=ns("genotipo"),
-                                  label=with_red_star("Genotype"),
-                                  choices="", width = "100%"),
-                      awesomeCheckbox(inputId = ns('res_ran') ,
-                                     label='Random Genotype',  
-                                     value = TRUE ,status = "danger"  ),
-                      shinyjs::hidden(
-                        pickerInput(
-                          inputId = ns("selected"),
-                          label = tagList( "Checks",
-                                           icon=tooltip(icon("question-circle"),
-                                                             title = "Select Checks",
-                                                             placement = "top")
-                          ), 
-                          choices = NULL,
-                          options = list(
-                            `actions-box` = TRUE, size = 5, `live-search` = TRUE), 
-                          multiple = TRUE, width = "100%"
-                        )
-                      ), data.step = 2,data.intro = "Select the column that contains the genotype IDs.
-                                                                                         Check/Uncheck the box if you want to treat this as a random/fixed
-                                                                                              effect factor in the MLM.",data.position = "right",color="red"   ) ),
-      
-      
-      bs4Dash::box(width = 2, status = "success", solidHeader = FALSE,collapsible = TRUE ,
-                   title=tagList(icon=icon("th"), "Coordinates"),
-                   rintrojs::introBox(
-                     selectInput(inputId=ns("column"),label=with_red_star("Column"),  choices=""),
-                     selectInput(inputId=ns("fila"),
-                                 label=with_red_star("Row"),
-                                 choices=""),
-                     selectInput(inputId=ns("replicate"),label="Replicate",  choices=""),
-                     data.step = 3,data.intro = "Select the columns in your dataset that contain the Row and Column coordinates for the plots in your trial.",data.position = "right" ) ),
-      
-      
-      bs4Dash::box(width = 2, title =tagList(icon=icon("tractor"), 'Factors')  ,status = "success", solidHeader = FALSE,collapsible = TRUE ,
-                   rintrojs::introBox(
-                     selectizeInput(ns("show_fixed"), "Fixed ",
-                                    choices = "", multiple = TRUE),
-                     
-                     selectizeInput(ns("show_random"), "Random",
-                                    choices = "", multiple = TRUE),
-                     data.step = 4,data.intro = "In case you want to include additional qualitative variables in the MLM, select them here as either fixed or random effect factors.",data.position = "bottom",color="red"),
-                   rintrojs::introBox(
-                     selectizeInput(ns("covariate"), "Covariate",
-                                    choices = "", multiple = TRUE,selected=NULL),
-                     data.step = 5,data.intro = "In case you want to include additional quantitative variables in the MLM.",data.position = "bottom",color="red")),
-      bs4Dash::box(width = 2, status = "success",solidHeader = FALSE, title=tagList(icon=icon("tasks"), "Model"),collapsible = TRUE ,
-                   rintrojs::introBox(
-                     actionButton(ns("action"), label = "Run Model", class="btn-success",
-                                  style="display:rigth; color: white ; background-color: #28a745"),
-                     disabled(actionButton(ns("inf"),label = "Info-Box",style="display:rigth")),
-                     br(),br(),
-                     disabled(actionButton(ns("spatial"),label = "Spatial Trend",style="display:rigth")),
-                     br(),hr(),
-                     disabled(actionButton(ns("tabBut"), "View BLUPs/BLUEs")),br(),br(),
-                     disabled(actionButton(ns("coeff"), "Coefficients")),br(),br(),
-                     disabled(actionLink(inputId = ns("Rlink"), label = "Residuals", icon = icon("arrow-right"), style = "color: #28a745")),
-                     data.step=6,data.intro = "Use this control panel to run the model and display the 3D spatial trend.",data.hint = "Good",data.position = "bottom-middle-aligned")
+      bs4Dash::box( 
+        width = 3,
+        status = "success",
+        solidHeader = FALSE,
+        title = tagList(
+          icon = icon("braille"), 
+          "SpATS",
+          actionButton(
+            inputId = ns("btn"),
+            label = tagList(icon = icon("question-circle"), "Guide"),
+            style = "color: white ; background-color: #dd4b39",
+            class ="btn-danger"
+            )
+          ),  
+        rintrojs::introBox(
+          selectInput(
+            inputId = ns("variable"),
+            label = with_red_star("Response Variable"),
+            choices = "", 
+            width = "100%"
+            ),
+          data.step = 1,
+          data.intro = "Select the column that contains
+          the phenotypic response variable.",
+          data.position = "right",
+          color = "red"
+          ),
+        rintrojs::introBox(
+          selectInput(
+            inputId = ns("genotipo"),
+            label = with_red_star("Genotype"),
+            choices = "", 
+            width = "100%"
+            ),
+          awesomeCheckbox(
+            inputId = ns('res_ran'),
+            label = 'Random Genotype',  
+            value = TRUE,
+            status = "danger"
+            ),
+          shinyjs::hidden(
+            pickerInput(
+              inputId = ns("selected"),
+              label = tagList( 
+                "Checks",
+                icon = tooltip(
+                  icon("question-circle"),
+                  title = "Select Checks",
+                  placement = "top"
+                  )
+                ), 
+              choices = NULL,
+              options = list(
+                `actions-box` = TRUE, size = 5, `live-search` = TRUE
+                ), 
+              multiple = TRUE, 
+              width = "100%"
+              )
+            ),
+          data.step = 2,
+          data.intro = "Select the column that contains the genotype IDs.
+          Check/Uncheck the box if you want to treat this as a random/fixed
+          effect factor in the MLM.",
+          data.position = "right",
+          color="red"  
+          ) 
+        ),
+      bs4Dash::box(
+        width = 2, 
+        status = "success", 
+        solidHeader = FALSE,
+        collapsible = TRUE ,
+        title = tagList(icon = icon("th"), "Coordinates"),
+        rintrojs::introBox(
+          selectInput(
+            inputId = ns("column"),
+            label = with_red_star("Column"),
+            choices = ""
+            ),
+          selectInput(
+            inputId = ns("fila"),
+            label = with_red_star("Row"),
+            choices = ""
+            ),
+          selectInput(
+            inputId = ns("replicate"),
+            label = "Replicate", 
+            choices = ""
+            ),
+          data.step = 3,
+          data.intro = "Select the columns in your dataset that contain 
+          the Row and Column coordinates for the plots in your trial.",
+          data.position = "right" 
+          )
+        ),
+      bs4Dash::box(
+        width = 2, 
+        title = tagList(icon=icon("tractor"), 'Factors'),
+        status = "success", 
+        solidHeader = FALSE,
+        collapsible = TRUE ,
+        rintrojs::introBox(
+          selectizeInput(ns("show_fixed"), "Fixed ",
+                         choices = "", multiple = TRUE
+                         ),
+          selectizeInput(ns("show_random"), "Random",
+                         choices = "", multiple = TRUE
+                         ),
+          data.step = 4,
+          data.intro = "In case you want to include additional qualitative
+          variables in the MLM, select them here as either fixed or 
+          random effect factors.",
+          data.position = "bottom",
+          color = "red"
+          ),
+        rintrojs::introBox(
+          selectizeInput(
+            ns("covariate"),
+            "Covariate",
+            choices = "", 
+            multiple = TRUE,
+            selected=NULL
+            ),
+         data.step = 5,
+         data.intro = "In case you want to include additional quantitative
+         variables in the MLM.",
+         data.position = "bottom",
+         color="red"
+         )
+        ),
+      bs4Dash::box(
+        width = 2, 
+        status = "success",
+        solidHeader = FALSE,
+        title = tagList(icon=icon("tasks"), "Model"),
+        collapsible = TRUE ,
+        rintrojs::introBox(
+          actionButton(
+            ns("action"), 
+            label = "Run Model", 
+            class = "btn-success",
+            style = "display:rigth; color: white ; background-color: #28a745"
+            ),
+          disabled(
+            actionButton(
+              ns("inf"), 
+              label = "Info-Box",
+              style="display:rigth"
+              )
+            ),
+          br(),br(),
+          disabled(
+            actionButton(
+              ns("spatial"),
+              label = "Spatial Trend",
+              style="display:rigth"
+              )
+            ),
+          br(),hr(),
+          disabled(
+            actionButton(ns("tabBut"), "View BLUPs/BLUEs")),
+          br(),br(),
+          disabled(
+            actionButton(ns("coeff"), "Coefficients")),
+          br(),br(),
+          disabled(
+            actionLink(
+              inputId = ns("Rlink"), 
+              label = "Residuals", 
+              icon = icon("arrow-right"),
+              style = "color: #28a745"
+              )
+            ),
+          data.step = 6,
+          data.intro = "Use this control panel to run the model and 
+          display the 3D spatial trend.",
+          data.hint = "Good",
+          data.position = "bottom-middle-aligned")
       ),
-      # bsModal("modalExample", "BLUPs/BLUEs", ns("tabBut"), size = "large",
-      #         shinycssloaders::withSpinner(DT::dataTableOutput(ns("distTable")),type = 6,color = "#28a745"),
-      #         br(), br(),
-      #         downloadButton(ns("downloadData"), 
-      #                        "Download BLUPs/BLUEs", class="btn-success",
-      #                        style= " color: white ; background-color: #28a745; float:left"),
-      #         br()
-      #         ),
-      
-      bs4Dash::box(width = 3, status = "success",solidHeader = FALSE,title =tagList(icon=icon("sliders-h"), "Segments and Report") ,collapsible = TRUE ,
-                   rintrojs::introBox(
-                     materialSwitch(ns("able"),label = "Segments",status = "success"),
-                     uiOutput(ns("segcol")),uiOutput(ns("segrow")),data.step=7,data.intro="Enable this box in case you have a large-scale trial (nColumns > 100 ; nRows > 100)
-                                                   to reduce the number of segments for smoothing the spatial components in the MLM.",data.position = "bottom" ),
-                   hr(),
-                   awesomeCheckbox(inputId = ns('outliers'),
-                                   label='Remove Outliers',  
-                                   value = FALSE ,status = "danger"),
-                   numericInput(ns("times"), "Number of Times to Check", value = 1, min=1, max=3, step=1, width = "100%" ),
-                   hr(),
-                   radioButtons('format', 'Report Format', c('PDF', 'HTML', 'Word'), inline = TRUE),
-                   disabled(downloadButton('downloadReport')))
-      
+      bs4Dash::box(
+        width = 3, 
+        status = "success",
+        solidHeader = FALSE,
+        title = tagList(icon = icon("sliders-h"), "Segments and Report"),
+        collapsible = TRUE ,
+        rintrojs::introBox(
+          materialSwitch(
+            ns("able"),label = "Segments",status = "success"
+            ),
+          uiOutput(ns("segcol")),
+          uiOutput(ns("segrow")),
+          data.step=7,
+          data.intro="Enable this box in case you have a large-scale trial
+          (nColumns > 100 ; nRows > 100) to reduce the number of segments for
+          the spatial components in the MLM.",
+          data.position = "bottom" 
+          ),
+       hr(),
+       awesomeCheckbox(
+         inputId = ns('outliers'), 
+         label='Remove Outliers',  
+         value = FALSE,
+         status = "danger"
+         ),
+       numericInput(
+         ns("times"),
+         "Number of Times to Check", 
+         value = 1, min = 1, max = 3, step = 1, 
+         width = "100%" 
+         ),
+       hr(),
+       radioButtons(
+         'format', 
+         'Report Format', 
+         c('PDF', 'HTML', 'Word'), 
+         inline = TRUE
+         ),
+       disabled(downloadButton('downloadReport')))
+      )
     )
-  )
 }
     
 #' spats_single Server Function
