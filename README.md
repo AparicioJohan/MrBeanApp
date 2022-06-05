@@ -1,7 +1,6 @@
 
 # MrBean <img src="man/figures/hex-MrBean.png" width="120px" align="right"/>
 
-[![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/AparicioJohan/MrBeanApp/main)
 
 [![Lifecycle:
 experimental](https://img.shields.io/badge/lifecycle-experimental-orange.svg)](https://www.tidyverse.org/lifecycle/#experimental)
@@ -34,17 +33,16 @@ library(MrBean)
 run_app()
 ```
 
+
 ## Demo
 
 A running demo is on [shinyapps.io](https://beanteam.shinyapps.io/MrBean_BETA/).
 
-
 <div class="row">
 <div class="card">
-<a href="#" target="_blank"><img src="man/figures/desktop_update.png"></a>
+<a href="https://beanteam.shinyapps.io/MrBean_BETA/" target="_blank"><img src="man/figures/desktop_update.png"></a>
 </div>
 </div>
-
 
 <br>
 

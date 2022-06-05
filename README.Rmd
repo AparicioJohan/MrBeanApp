@@ -16,7 +16,6 @@ knitr::opts_chunk$set(
 # MrBean <img src="man/figures/hex-MrBean.png" width="120px" align="right"/>
 
 <!-- badges: start -->
-[![Lifecycle: experimental](https://img.shields.io/badge/lifecycle-experimental-orange.svg)](https://www.tidyverse.org/lifecycle/#experimental)
 <!-- badges: end -->
 
 The goal of MrBean is to analyze field experiments with a user interface.
