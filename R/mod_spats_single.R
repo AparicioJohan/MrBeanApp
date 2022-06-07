@@ -400,38 +400,48 @@ mod_spats_single_server <- function(input, output, session, data){
     bindEvent(input$action)
   
   Modelo <- eventReactive(input$action, {
-    
-      validate(
-        need(input$variable != "", " "),
-        need(input$genotipo != "", " "),
-        need(input$column != "", " "),
-        need(input$fila != "", " ") )
+    validate(
+      need(input$variable != "", " "),
+      need(input$genotipo != "", " "),
+      need(input$column != "", " "),
+      need(input$fila != "", " ") 
+      )
     
     dt <- data$data()
-    dupl <- sum(duplicated(dt[,c(input$column,input$fila)]))
+    dupl <- sum( duplicated( dt[, c(input$column, input$fila) ] ) )
     dt$Response  <- dt[ ,input$variable] 
-    #------- check response ------
   
     tryCatch(
       { 
-        if(sum(is.na(dt$Response)) > 0.98*length(dt$Response ) ) stop("Missing data in the response")
+        if(sum(is.na(dt$Response)) > 0.98 * length(dt$Response ) ) {
+          stop("Missing data in the response")
+        } 
       },
       error = function(e) {
-        shinytoastr::toastr_error(title = "Warning:", conditionMessage(e),position =  "bottom-right",progressBar = TRUE)
+        shinytoastr::toastr_error(
+          title = "Warning:",
+          conditionMessage(e),
+          position =  "bottom-right",
+          progressBar = TRUE
+          )
       }
     )
-    if(sum(is.na(dt$Response)) > 0.98*length(dt$Response )) return()
     
-    #---------------------------
-    
-    if (dupl>=1) {    # Duplicated Row-Col
+    if (dupl >= 1) {    # Duplicated Row-Col
       Modelo <- try(silent = T)
       tryCatch(
         { 
-          if(class(Modelo)=="try-error") stop("Duplicated row & column coordinates")
+          if(inherits(Modelo, "try-error")){
+            stop("Duplicated row & column coordinates")
+          } 
         },
         error = function(e) {
-          shinytoastr::toastr_error(title = "Warning:", conditionMessage(e),position =  "bottom-right",progressBar = TRUE)
+          shinytoastr::toastr_error(
+            title = "Warning:", 
+            conditionMessage(e),
+            position =  "bottom-right",
+            progressBar = TRUE
+            )
         }
       )
       return()
