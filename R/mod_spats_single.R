@@ -10,7 +10,8 @@
 mod_spats_single_ui <- function(id){
   ns <- NS(id)
   tagList(
-    HTML('<h1 style="font-weight: bold; color: #00a65a;">Single-Site Spatial Analysis</h1>'),
+    HTML('<h1 style="font-weight: bold; color: #00a65a;">Single-Site Spatial
+         Analysis</h1>'),
     fluidRow(
       bs4Dash::box( 
         width = 3,
@@ -243,20 +244,51 @@ mod_spats_single_server <- function(input, output, session, data){
   
   observeEvent(data$data(),{
     dt <- data$data()
-    updateSelectInput(session, "variable", choices=names(dt), selected = "YdHa_clean")
-    updateSelectInput(session, "column", choices=names(dt),selected = "col")
-    updateSelectInput(session, "fila", choices=names(dt),selected = "row")
-    updateSelectInput(session, "replicate", choices=names(dt),selected = "rep")
-    updateSelectInput(session, "factor", choices=names(dt),selected = "rep")
-    updateSelectInput(session, "genotipo", choices=names(dt),selected = "line")
-    updateSelectInput(session, "show_fixed", choices=names(dt),selected = NULL)
-    updateSelectInput(session, "show_random", choices=names(dt),selected = NULL)
-    updateSelectInput(session, "covariate", choices=names(dt),selected = NULL)
-    
+    updateSelectInput(session, "variable", 
+                      choices=names(dt),
+                      selected = "YdHa_clean")
+    updateSelectInput(session, 
+                      "column",
+                      choices = names(dt),
+                      selected = "col")
+    updateSelectInput(session, 
+                      "fila", 
+                      choices = names(dt), 
+                      selected = "row")
+    updateSelectInput(session,
+                      "replicate", 
+                      choices = names(dt),
+                      selected = "rep")
+    updateSelectInput(session,
+                      "factor",
+                      choices = names(dt), 
+                      selected = "rep")
+    updateSelectInput(session, 
+                      "genotipo",
+                      choices = names(dt), 
+                      selected = "line")
+    updateSelectInput(session, 
+                      "show_fixed",
+                      choices = names(dt),
+                      selected = NULL)
+    updateSelectInput(session,
+                      "show_random", 
+                      choices = names(dt), 
+                      selected = NULL)
+    updateSelectInput(session, 
+                      "covariate", 
+                      choices = names(dt), 
+                      selected = NULL)
   })
   
   observe({
-    shinyjs::toggle(id = "selected", anim = T, time = 1, animType = "fade", condition = input$genotipo != "" & input$res_ran == TRUE)
+    shinyjs::toggle(
+      id = "selected",
+      anim = T, 
+      time = 1, 
+      animType = "fade", 
+      condition = input$genotipo != "" & input$res_ran == TRUE
+      )
     req(input$genotipo)
     req(data$data())
     req(input$genotipo  %in% names(data$data()))
@@ -267,67 +299,105 @@ mod_spats_single_server <- function(input, output, session, data){
   output$segcol <- renderUI({
     validate(
       need(input$column != "", " Fill the area Column "),
-      need(input$fila != "", " Fill the area Row ") )
+      need(input$fila != "", " Fill the area Row ") 
+      )
     dt <- data$data()
     dt$col_f = factor( dt[,input$column])
-    sliderInput(ns("segcol"), label = "Num of col segments", min = 1, max =  nlevels(dt$col_f)+30, value =  nlevels(dt$col_f) ,width = "100%" )
+    sliderInput(
+      ns("segcol"),
+      label = "Num of col segments",
+      min = 1, 
+      max =  nlevels(dt$col_f) + 30, 
+      value =  nlevels(dt$col_f),
+      width = "100%" )
   })
   
   output$segrow <- renderUI({
     validate(
       need(input$column != "", " "),
-      need(input$fila != "", " ") )
+      need(input$fila != "", " ") 
+      )
     dt <- data$data()
     dt$row_f = factor( dt[,input$fila])
-    sliderInput(ns("segrow"), label = "Num of row segments", min = 1, max =  nlevels(dt$row_f)+30, value =  nlevels(dt$row_f), width = "100%" )
+    sliderInput(
+      ns("segrow"),
+      label = "Num of row segments", 
+      min = 1, 
+      max =  nlevels(dt$row_f) + 30, 
+      value =  nlevels(dt$row_f),
+      width = "100%" )
   })
   
-  observeEvent(input$action, {
-    
-    if (any(c(input$variable,input$genotipo,input$column,input$fila)=="") ) {
+  observe({
+    variables <- c(input$variable, input$genotipo, input$column, input$fila)
+    if (any(variables == "")) {
       sendSweetAlert(
         session = session,
         title = "Warning",
-        text = HTML("<center> It's necessary that you fill the fields </center>"),
+        text = HTML("<center> It's necessary that you fill the fields
+                    </center>"),
         type = "warning",
         html = T
       )
     }
-  })
+  }) %>% 
+    bindEvent(input$action)
   
-  observeEvent(input$action, {
+  observe({
     shinyjs::enable("inf")
     shinyjs::enable("spatial")
     shinyjs::enable("tabBut")
     shinyjs::enable("coeff")
     shinyjs::enable("downloadReport")
     shinyjs::enable("Rlink")
-  })
+  }) %>% 
+    bindEvent(input$action)
   
-  observeEvent(!input$able, toggle("segcol",anim = TRUE,time = 1,animType = "fade"))
-  observeEvent(!input$able, toggle("segrow",anim = TRUE,time = 1,animType = "fade"))
-  
-  observeEvent(!input$outliers, toggle("times",anim = TRUE,time = 1,animType = "fade"))
+  observe({
+    toggle("segcol", anim = TRUE, time = 1, animType = "fade")
+    toggle("segrow", anim = TRUE, time = 1, animType = "fade")
+  }) %>% 
+    bindEvent(input$able)
 
+  observe({
+    toggle("times",anim = TRUE,time = 1,animType = "fade")
+  }) %>% 
+    bindEvent(input$outliers)
   
   # GUIA
-  observeEvent(input$btn,
-               rintrojs::introjs(session,options = list("nextLabel"="Next",
-                                              "prevLabel"="Back",
-                                              "skipLabel"="Skip")))
+  observe({
+    rintrojs::introjs(
+      session,
+      options = list(
+        "nextLabel" = "Next", 
+        "prevLabel" = "Back",
+        "skipLabel" = "Skip")
+      )
+  }) %>%
+    bindEvent(input$btn)
   
   # Modelo SPATS
-  
-  observeEvent(input$action,{
-    if(any(c(input$variable,input$genotipo,input$column,input$fila)=="")){
+  observe({
+    variables <- c(input$variable, input$genotipo, input$column, input$fila)
+    if(any(variables == "")){
       return()
     } else {
       shinytoastr::toastr_info(
         title = "Fitting model...",
-        message = HTML("<div class='overlay'>  <h2><i class='fa fa-refresh fa-spin'></i></div> <h2> "),
-        position =  "bottom-right",progressBar = TRUE, closeButton = T, timeOut = 1000 )
+        message = HTML(
+          "<div class='overlay'> 
+          <h2><i class='fa fa-refresh fa-spin'></i>
+          </div> 
+          <h2>"
+          ),
+        position =  "bottom-right",
+        progressBar = TRUE, 
+        closeButton = T,
+        timeOut = 1000
+        )
     }
-  })
+  }) %>%
+    bindEvent(input$action)
   
   Modelo <- eventReactive(input$action, {
     
