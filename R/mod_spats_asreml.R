@@ -10,128 +10,175 @@
 mod_spats_asreml_ui <- function(id){
   ns <- NS(id)
   tagList(
-    HTML('<h1 style="font-weight: bold; color: #00a65a;">Single-Site Spatial Analysis</h1>'),
-    # HTML('<h4 style="font-weight: bold; color: #00a65a;">Using ASReml</h4>'),
+    HTML('<h1 style="font-weight: bold; color: #00a65a;">Single-Site Spatial
+         Analysis</h1>'),
     fluidRow(
-      column(width = 4,
+      column(
+        width = 4,
+        fluidRow(
+           bs4Dash::box(
+             width = 12,
+             status = "success",
+             solidHeader = FALSE,
+             title = tagList(icon=icon("cogs"), "ASReml"),   
+             selectInput(
+               inputId = ns("variable"),
+               label= tagList(
+                 "Response Variable",
+                 icon = tooltip(
+                   icon("question-circle"),
+                   title = "The column with the continous response variable.",
+                   placement = "top"
+                   )
+                 ),
+               choices="", 
+               width = "100%"),
+            selectInput(
+              inputId = ns("genotype"),
+               label = tagList(
+                 "Genotype",
+                 icon = tooltip(
+                   icon("question-circle"),
+                   title = "The column with genotypes.",
+                   placement = "top"
+                   )
+                 ),
+              choices = "",
+              width = "100%"),
+            awesomeCheckbox(inputId = ns('res_ran'),
+                            label = 'Random Genotype',  
+                            value = TRUE,
+                            status = "danger"),
+            hr(),
+            fluidRow(
+              column(6,
+                     selectInput(
+                       inputId=ns("column"),
+                       label = "Column",
+                       choices="", 
+                       width = "100%"
+                       )
+              ),
+              column(6,
+                     selectInput(
+                       inputId=ns("row"),
+                       label = "Row",
+                       choices="", 
+                       width = "100%")
+              )
+            ),
+            materialSwitch(
+              ns("ar1ar1"),
+              label = "Spatial Correlation",
+              status = "success",
+              right = T, 
+              width = "100%"
+              ),
+            div(id = ns("inclu_ar1"),
+                fluidRow(
+                  col_12(
+                    awesomeCheckbox(inputId = ns('nugget') ,
+                                    label='Include Nugget',  
+                                    value = FALSE ,status = "danger")
+                  )
+                 )
+                ),
+            fluidRow(
+              col_6(
+                awesomeCheckboxGroup(
+                  inputId = ns("splines"),
+                  label = "Include Splines", 
+                  inline = F,
+                  choices = c("Column", "Row"),
+                  status = "success", 
+                  selected = c("Column", "Row")
+                )
+              ),
+              col_6(
+                awesomeCheckboxGroup(
+                  inputId = ns("as_factors"),
+                  label = "Include Factors", 
+                  inline = F,
+                  choices = c("Column", "Row"),
+                  status = "success", 
+                  selected = c("Column", "Row")
+                )
+              )
+            ),
+            hr(),
+            materialSwitch(
+              ns("able"),
+              label = "Include Blocks",
+              status = "success", 
+              right = T, 
+              width = "100%"
+              ),
+            div(id=ns("first"),
              fluidRow(
-               bs4Dash::box(width = 12,status = "success", solidHeader = FALSE,title = tagList(icon=icon("cogs"), "ASReml"),   # background = "light-blue"  
-                            # fluidRow(
-                            #   col_3(),
-                            #   col_6(
-                            #     actionBttn(inputId = ns("guide"),label = "Guide",style = "stretch",color = "warning",block = T, icon = icon("question-circle") )
-                            #   ),
-                            #   col_3()
-                            # ),
-                            selectInput(inputId=ns("variable"),
-                                        label= tagList( "Response Variable",
-                                                        icon=tooltip(icon("question-circle"),
-                                                                          title = "The column with the continous response variable.",
-                                                                          placement = "top")),
-                                        choices="", width = "100%"),
-                            selectInput(inputId=ns("genotype"),
-                                        label=tagList( "Genotype",
-                                                       icon=tooltip(icon("question-circle"),
-                                                                         title = "The column with genotypes.",
-                                                                         placement = "top")),
-                                        choices="", width = "100%"),
-                            awesomeCheckbox(inputId = ns('res_ran') ,
-                                            label='Random Genotype',  
-                                            value = TRUE ,status = "danger"  ),
-                            hr(),
-                            fluidRow(
-                              column(6,
-                                     selectInput(inputId=ns("column"),label = "Column",choices="", width = "100%")
-                              ),
-                              column(6,
-                                     selectInput(inputId=ns("row"),label = "Row",choices="", width = "100%")
-                              )
-                            ),
-                            materialSwitch(ns("ar1ar1"),label = "Spatial Correlation",status = "success", right = T, width = "100%"),
-                            div(id=ns("inclu_ar1"),
-                                fluidRow(
-                                  col_12(
-                                    awesomeCheckbox(inputId = ns('nugget') ,
-                                                    label='Include Nugget',  
-                                                    value = FALSE ,status = "danger"  )
-                                  )
-                                 )
-                                ),
-                            fluidRow(
-                              col_6(
-                                awesomeCheckboxGroup(
-                                  inputId = ns("splines"),
-                                  label = "Include Splines", inline = T,
-                                  choices = c("Column", "Row"),
-                                  status = "success", 
-                                  selected = c("Column", "Row")
-                                )
-                              ),
-                              col_6(
-                                awesomeCheckboxGroup(
-                                  inputId = ns("as_factors"),
-                                  label = "Include Factors", inline = T,
-                                  choices = c("Column", "Row"),
-                                  status = "success", 
-                                  selected = c("Column", "Row")
-                                )
-                              )
-                            ),
-                            hr(),
-                            materialSwitch(ns("able"),label = "Include Blocks",status = "success", right = T, width = "100%"),
-                            div(id=ns("first"),
-                             fluidRow(
-                              column(6,
-                                     selectInput(inputId=ns("block"),
-                                                 label=tagList( "Block",
-                                                                icon=tooltip(icon("question-circle"),
-                                                                                  title = "Select the replicate or complete block",
-                                                                                  placement = "top")),
-                                                 choices="", width = "100%")
-                              ),
-                              column(6,
-                                     selectInput(inputId=ns("incomplete"),
-                                                 label=tagList( "InBlock",
-                                                                icon=tooltip(icon("question-circle"),
-                                                                                  title = "Select Incomplete Block",
-                                                                                  placement = "top")),
-                                                 choices="", width = "100%")
-                              ),
-                              awesomeCheckbox(inputId = ns('block_ran') ,
-                                              label='Block as Random Effect',  
-                                              value = FALSE ,status = "success"  )
-                             )
-                            ),
-                            materialSwitch(ns("able2"),label = "Include Covariate",status = "success", right = F, width = "100%"),
-                            div(id=ns("second"),
-                                fluidRow(
-                                  column(6,
-                                         selectInput(inputId=ns("cov1"),
-                                                     label=tagList( "Covariate 1",
-                                                                    icon=tooltip(icon("question-circle"),
-                                                                                      title = "Select a covariate",
-                                                                                      placement = "top")),
-                                                     choices="", width = "100%")
-                                  ),
-                                  column(6,
-                                         selectInput(inputId=ns("cov2"),
-                                                     label=tagList( "Covariate 2",
-                                                                    icon=tooltip(icon("question-circle"),
-                                                                                      title = "Select a covariate",
-                                                                                      placement = "top")),
-                                                     choices="", width = "100%")
-                                  )
-                                )
-                            ),
-                            fluidRow(
-                              col_3(),
-                              col_6(
-                                actionBttn(inputId = ns("ok"),label = "Fit Model",style = "jelly",color = "success",block = T, icon = icon("check") )
-                              ),
-                              col_3()
-                            )
-               )
-             ) 
+              column(6,
+                     selectInput(
+                       inputId = ns("block"),
+                       label = tagList(
+                         "Block",
+                         icon = tooltip(
+                           icon("question-circle"),
+                           title = "Select the replicate or complete block",
+                           placement = "top"
+                           )
+                         ),
+                       choices = "", 
+                       width = "100%")
+                     ),
+              column(6,
+                     selectInput(
+                       inputId=ns("incomplete"),
+                       label=tagList(
+                         "InBlock",
+                         icon=tooltip(
+                           icon("question-circle"),
+                           title = "Select Incomplete Block",
+                           placement = "top"
+                           )
+                         ),
+                       choices = "",
+                       width = "100%"
+                       )
+                     ),
+              awesomeCheckbox(inputId = ns('block_ran') ,
+                              label='Block as Random Effect',  
+                              value = FALSE ,status = "success"  )
+             )
+            ),
+            materialSwitch(ns("able2"),label = "Include Covariate",status = "success", right = F, width = "100%"),
+            div(id=ns("second"),
+                fluidRow(
+                  column(6,
+                         selectInput(inputId=ns("cov1"),
+                                     label=tagList( "Covariate 1",
+                                                    icon=tooltip(icon("question-circle"),
+                                                                      title = "Select a covariate",
+                                                                      placement = "top")),
+                                     choices="", width = "100%")
+                  ),
+                  column(6,
+                         selectInput(inputId=ns("cov2"),
+                                     label=tagList( "Covariate 2",
+                                                    icon=tooltip(icon("question-circle"),
+                                                                      title = "Select a covariate",
+                                                                      placement = "top")),
+                                     choices="", width = "100%")
+                  )
+                )
+            ),
+            fluidRow(
+              col_3(),
+              col_6(
+                actionBttn(inputId = ns("ok"),label = "Fit Model",style = "jelly",color = "success",block = T, icon = icon("check") )
+              ),
+              col_3()
+            )
+           )
+         ) 
       ),
       column(8,
              shinyjs::hidden(
