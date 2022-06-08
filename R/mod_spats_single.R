@@ -446,48 +446,71 @@ mod_spats_single_server <- function(input, output, session, data){
       )
       return()
     } else {
-      Modelo <- SpATS_mrbean(data$data(), input$variable, input$genotipo, 
-                   input$column, input$fila, input$able , input$segcol, input$segrow, input$replicate,
-                   input$show_fixed, input$show_random, input$res_ran, input$covariate,
-                   input$outliers, input$times, input$selected  )
+      Modelo <- SpATS_mrbean(
+        data = data$data(), 
+        response = input$variable, 
+        genotype = input$genotipo, 
+        col = input$column, 
+        row = input$fila,
+        segm = input$able, 
+        ncols = input$segcol, 
+        nrows = input$segrow,
+        rep = input$replicate,
+        fix_fact = input$show_fixed, 
+        ran_fact = input$show_random, 
+        gen_ran = input$res_ran, 
+        covariate = input$covariate,
+        clean_out = input$outliers,
+        iterations = input$times,
+        checks = input$selected  )
       Modelo
-    }
-    
-  },ignoreNULL = FALSE) 
-  
-  
-  
+      }
+    }, ignoreNULL = FALSE) 
 
-  # Coefficients ------------------------------------------------------------
-
-  ## to output blups
+  # Coefficients
   co.spats <- reactive({
     req(Modelo())
     coef <- coef.SpATS(Modelo())
     coef
   })
   
-  # SALIDA de los coeff en DT TAble
   output$distTable2 <- DT::renderDataTable(
-    if (input$action==0) {return()}
-    else {
-      DT::datatable({
-        co.spats()
-      },
-      option=list(pageLength=10, scrollX = TRUE,columnDefs = list(list(className = 'dt-center', targets = 0:ncol(co.spats())))),
-      filter="top",
-      selection="multiple"
-      )} )
-  
+    if (input$action==0) {
+      return()
+      } else {
+        DT::datatable({
+          co.spats()
+          },
+          option = list(
+            pageLength=10,
+            scrollX = TRUE,
+            columnDefs = list(
+              list(className = 'dt-center', targets = 0:ncol(co.spats()))
+              )
+            ),
+          filter="top",
+          selection="multiple"
+          )
+        }
+    )
   
   observeEvent(input$coeff,{
     showModal(modalDialog(
-      title = "Coefficients", size = "l", easyClose = T,
-      shinycssloaders::withSpinner(DT::dataTableOutput(ns("distTable2")),type = 6,color = "#28a745"),
+      title = "Coefficients",
+      size = "l", 
+      easyClose = T,
+      shinycssloaders::withSpinner(
+        DT::dataTableOutput(ns("distTable2")),
+        type = 6,
+        color = "#28a745"
+        ),
       footer = tagList(
-        downloadButton(ns("downloadData2"), 
-                       "Download Coefficients", class="btn-success",
-                       style= " color: white ; background-color: #28a745; float:left"),
+        downloadButton(
+          ns("downloadData2"),
+          "Download Coefficients",
+          class ="btn-success",
+          style = " color: white ; background-color: #28a745; float:left"
+          ),
         modalButton("Cancel")
       )
     ))
@@ -502,49 +525,62 @@ mod_spats_single_server <- function(input, output, session, data){
     }
   )
   
-  
-
-  # BLUPs / BLUEs -----------------------------------------------------------
-
+  # BLUPs / BLUEs 
   blup <- reactive({
     validate(
       need(input$variable != "", " "),
       need(input$genotipo != "", " "),
       need(input$column != "", " "),
-      need(input$fila != "", " ") )
+      need(input$fila != "", " ") 
+      )
     req(Modelo())
-
     BLUPS <- msa_effects(Modelo())
     BLUPS
-
   })
 
-  # SALIDA de los datos en DT TAble
   output$distTable <- DT::renderDataTable(
-    if (input$action==0) {return()}
-    else {
-      DT::datatable({
-        blup() %>% dplyr::mutate_if(is.numeric, round, 3)
-      },
-      option=list(pageLength=10, scrollX = TRUE, columnDefs = list(list(className = 'dt-center', targets = 0:ncol(blup())))),
-      filter="top",
-      selection="multiple"
-      )} )
-  
-  
+    if (input$action==0) {
+      return()
+      } else {
+        DT::datatable({
+          blup() %>% 
+            dplyr::mutate_if(is.numeric, round, 3)
+          },
+          option = list(
+            pageLength=10, 
+            scrollX = TRUE,
+            columnDefs = list(
+              list(className = 'dt-center', targets = 0:ncol(blup()))
+              )
+            ),
+          filter="top",
+          selection="multiple"
+          )
+        }
+    )
   
   observeEvent(input$tabBut,{
-    showModal(modalDialog(
-      title = "BLUPs/BLUEs", size = "l", easyClose = T,
-      shinycssloaders::withSpinner(DT::dataTableOutput(ns("distTable")),type = 6,color = "#28a745"),
-      footer = tagList(
-        downloadButton(ns("downloadData"), 
-                       "Download Predictions", class="btn-success",
-                       style= " color: white ; background-color: #28a745; float:left"),
-        modalButton("Cancel")
+    showModal(
+      modalDialog(
+        title = "BLUPs/BLUEs",
+        size = "l",
+        easyClose = T,
+        shinycssloaders::withSpinner(
+          DT::dataTableOutput(ns("distTable")),
+          type = 6,
+          color = "#28a745"
+          ),
+        footer = tagList(
+          downloadButton(
+            ns("downloadData"), 
+            "Download Predictions",
+            class="btn-success",
+            style= " color: white ; background-color: #28a745; float:left"),
+          modalButton("Cancel")
+          )
+        )
       )
-    ))
-  })
+    })
   
   output$downloadData <- downloadHandler(
     filename = function() {
@@ -554,11 +590,6 @@ mod_spats_single_server <- function(input, output, session, data){
       write.csv(blup(), file, row.names = FALSE)
     }
   )
-  
-  
-    # observe({
-    #   print(class(Modelo()))
-    # })
   
   return(
     list(Modelo  = Modelo,
