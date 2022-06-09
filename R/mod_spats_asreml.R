@@ -146,105 +146,188 @@ mod_spats_asreml_ui <- function(id){
                      ),
               awesomeCheckbox(inputId = ns('block_ran') ,
                               label='Block as Random Effect',  
-                              value = FALSE ,status = "success"  )
+                              value = FALSE ,status = "success")
              )
             ),
-            materialSwitch(ns("able2"),label = "Include Covariate",status = "success", right = F, width = "100%"),
-            div(id=ns("second"),
+            materialSwitch(
+              ns("able2"),
+              label = "Include Covariate",
+              status = "success", 
+              right = F,
+              width = "100%"
+              ),
+            div(id = ns("second"),
                 fluidRow(
                   column(6,
-                         selectInput(inputId=ns("cov1"),
-                                     label=tagList( "Covariate 1",
-                                                    icon=tooltip(icon("question-circle"),
-                                                                      title = "Select a covariate",
-                                                                      placement = "top")),
-                                     choices="", width = "100%")
-                  ),
+                         selectInput(
+                           inputId=ns("cov1"),
+                           label=tagList( 
+                             "Covariate 1",
+                             icon=tooltip(
+                               icon("question-circle"),
+                               title = "Select a covariate",
+                               placement = "top")
+                             ),
+                           choices = "", 
+                           width = "100%"
+                           )
+                         ),
                   column(6,
-                         selectInput(inputId=ns("cov2"),
-                                     label=tagList( "Covariate 2",
-                                                    icon=tooltip(icon("question-circle"),
-                                                                      title = "Select a covariate",
-                                                                      placement = "top")),
-                                     choices="", width = "100%")
+                         selectInput(
+                           inputId=ns("cov2"),
+                           label=tagList(
+                             "Covariate 2",
+                             icon = tooltip(
+                               icon("question-circle"),
+                               title = "Select a covariate",
+                               placement = "top"
+                               )
+                             ),
+                           choices = "", 
+                           width = "100%"
+                           )
+                         )
                   )
-                )
-            ),
+                ),
             fluidRow(
               col_3(),
               col_6(
-                actionBttn(inputId = ns("ok"),label = "Fit Model",style = "jelly",color = "success",block = T, icon = icon("check") )
-              ),
+                actionBttn(
+                  inputId = ns("ok"),
+                  label = "Fit Model",
+                  style = "jelly",
+                  color = "success",
+                  block = T, 
+                  icon = icon("check")
+                  )
+                ),
               col_3()
+              )
             )
-           )
-         ) 
-      ),
+           ) 
+        ),
       column(8,
              shinyjs::hidden(
-               div(id=ns("only"),
-                   fluidRow(
-                     column(12,
-                        fluidRow(
-                          bs4TabCard(width = 12,id = "single_model",maximizable = T,solidHeader = FALSE,closable = F,
-                                     status ="success", side = "left", type = "tabs",
-                                     tabPanel(title = "Spatial-Plot",active = T,
-                                                 dropdown(
-                                                   prettyRadioButtons(inputId = ns("typefile"),label = "Download Plot File Type", outline = TRUE,fill = FALSE,shape = "square",inline = TRUE,
-                                                                      choices = list(PNG="png",PDF="pdf"),
-                                                                      icon = icon("check"),animation = "tada" ),
-                                                   conditionalPanel(condition="input.typefile=='png'", ns = ns,
-                                                                    sliderInput(inputId=ns("png.wid"),min = 200,max = 2000,value = 900,label = "Width pixels") ,
-                                                                    sliderInput(inputId=ns("png.hei"),min = 200,max = 2000,value = 600,label = "Height pixels")
-                                                   ),
-                                                   conditionalPanel(condition="input.typefile=='pdf'", ns = ns,
-                                                                    sliderInput(inputId=ns("pdf.wid"),min = 2,max = 20,value = 10,label = "Width") ,
-                                                                    sliderInput(inputId=ns("pdf.hei"),min = 2,max = 20,value = 8,label = "Height")
-                                                   ),
-                                                   
-                                                   downloadButton(ns("descargar"), "Download Plot", class="btn-success",
-                                                                  style= " color: white ; background-color: #28a745"), br() ,
-                                                   animate = shinyWidgets::animateOptions(
-                                                     enter = shinyWidgets::animations$fading_entrances$fadeInLeftBig,
-                                                     exit  = shinyWidgets::animations$fading_exits$fadeOutLeftBig
-                                                   ),
-                                                   style = "unite", icon = icon("gear", verify_fa = FALSE),
-                                                   status = "warning", width = "300px"
-                                                 ),
-                                                 shinycssloaders::withSpinner(plotOutput(ns("plot_spats")),type = 5,color = "#28a745"),icon = icon("th")
-                                     ),
-                                     tabPanel(title = "Diagnostics", 
-                                                 prettySwitch(
-                                                   inputId = ns("swicht1"),
-                                                   label = "Residuals", 
-                                                   status = "success",
-                                                   slim = FALSE
-                                                 ),
-                                                 shinycssloaders::withSpinner(plotOutput(ns("residuals_aug")),type = 6,color = "#28a745"),icon = icon("arrow-circle-right")
-                                     ),
-                                     tabPanel(title = "Info",icon = icon("signal"),
-                                                 strong("Formula:"),
-                                                 shinycssloaders::withSpinner(verbatimTextOutput(ns("callModel")),type = 6,color = "#28a745" ),
-                                                 hr(),
-                                                 strong("Variance Components:"),
-                                                 shinycssloaders::withSpinner(verbatimTextOutput(ns("summ")),type = 6,color = "#28a745" ),
-                                                 hr(),
-                                                 strong("ANOVA wald-test:"),
-                                                 shinycssloaders::withSpinner(verbatimTextOutput(ns("aov")),type = 6,color = "#28a745" )
-                                     ),
-                                     tabPanel(title = "Semi-Variogram", 
-                                                 prettySwitch(
-                                                   inputId = ns("swicht2"),
-                                                   label = "Residuals", 
-                                                   status = "success",
-                                                   slim = FALSE
-                                                 ),
-                                                 shinycssloaders::withSpinner(plotOutput(ns("semivariogram")),type = 6,color = "#28a745"),icon = icon("arrow-circle-right")
-                                     )
+               div(
+                 id = ns("only"),
+                 fluidRow(
+                   column(12,
+                      fluidRow(
+                        bs4TabCard(
+                          width = 12,
+                          id = "single_model",
+                          maximizable = T,
+                          solidHeader = FALSE,
+                          closable = F,
+                          status ="success", 
+                          side = "left",
+                          type = "tabs",
+                          tabPanel(
+                            title = "Spatial-Plot",
+                            active = T,
+                            dropdown(
+                              prettyRadioButtons(
+                                inputId = ns("typefile"),
+                                label = "Download Plot File Type",
+                                outline = TRUE,
+                                fill = FALSE,
+                                shape = "square",
+                                inline = TRUE,
+                                choices = list(PNG="png",PDF="pdf"),
+                                icon = icon("check"),
+                                animation = "tada" 
+                                ),
+                              conditionalPanel(
+                                condition="input.typefile=='png'", 
+                                ns = ns,
+                                sliderInput(
+                                  inputId = ns("png.wid"),
+                                  min = 200,
+                                  max = 2000,
+                                  value = 900,
+                                  label = "Width pixels"
+                                  ) ,
+                                sliderInput(
+                                  inputId = ns("png.hei"),
+                                  min = 200,
+                                  max = 2000,
+                                  value = 600,
+                                  label = "Height pixels"
+                                  )
+                                ),
+                              conditionalPanel(
+                                condition="input.typefile=='pdf'",
+                                ns = ns,
+                                sliderInput(
+                                  inputId=ns("pdf.wid"),
+                                  min = 2,
+                                  max = 20,
+                                  value = 10,
+                                  label = "Width"
+                                  ),
+                                sliderInput(
+                                  inputId = ns("pdf.hei"),
+                                  min = 2,
+                                  max = 20,
+                                  value = 8,
+                                  label = "Height"
+                                  )
+                              ),
+                              downloadButton(
+                                ns("descargar"), 
+                                "Download Plot",
+                                class="btn-success",
+                                style= "color: white ; background-color: #28a745"
+                                ), 
+                              br(),
+                              animate = shinyWidgets::animateOptions(
+                                enter = shinyWidgets::animations$fading_entrances$fadeInLeftBig,
+                                exit  = shinyWidgets::animations$fading_exits$fadeOutLeftBig
+                              ),
+                              style = "unite", 
+                              icon = icon("gear", verify_fa = FALSE),
+                              status = "warning", 
+                              width = "300px"
+                              ),
+                            shinycssloaders::withSpinner(
+                              plotOutput(ns("plot_spats")),
+                              type = 5,
+                              color = "#28a745"
+                              ),
+                            icon = icon("th")
+                            ),
+                          tabPanel(title = "Diagnostics", 
+                                      prettySwitch(
+                                        inputId = ns("swicht1"),
+                                        label = "Residuals", 
+                                        status = "success",
+                                        slim = FALSE
+                                      ),
+                                      shinycssloaders::withSpinner(plotOutput(ns("residuals_aug")),type = 6,color = "#28a745"),icon = icon("arrow-circle-right")
+                          ),
+                          tabPanel(title = "Info",icon = icon("signal"),
+                                      strong("Formula:"),
+                                      shinycssloaders::withSpinner(verbatimTextOutput(ns("callModel")),type = 6,color = "#28a745" ),
+                                      hr(),
+                                      strong("Variance Components:"),
+                                      shinycssloaders::withSpinner(verbatimTextOutput(ns("summ")),type = 6,color = "#28a745" ),
+                                      hr(),
+                                      strong("ANOVA wald-test:"),
+                                      shinycssloaders::withSpinner(verbatimTextOutput(ns("aov")),type = 6,color = "#28a745" )
+                          ),
+                          tabPanel(title = "Semi-Variogram", 
+                                      prettySwitch(
+                                        inputId = ns("swicht2"),
+                                        label = "Residuals", 
+                                        status = "success",
+                                        slim = FALSE
+                                      ),
+                                      shinycssloaders::withSpinner(plotOutput(ns("semivariogram")),type = 6,color = "#28a745"),icon = icon("arrow-circle-right")
                           )
                         )
                       )
-                   ),
+                    )
+                 ),
                    fluidRow(
                      column(12,
                             fluidRow(
