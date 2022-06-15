@@ -118,9 +118,9 @@ res_qqplot <- function(data_out) {
   q <- dplyr::filter(data_out, !is.na(Classify)) %>%
     ggpubr::ggqqplot(
       x = "Residuals",
-      fill = "Classify", 
+      fill = "Classify",
       ggtheme = theme_bw(),
-      ylab = "Sample Quantile", 
+      ylab = "Sample Quantile",
       xlab = "Theoretical Quantile"
     )
   plotly::ggplotly(q)

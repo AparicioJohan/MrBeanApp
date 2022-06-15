@@ -31,13 +31,13 @@ stageMET(
 
 \item{type.trial}{model assumption for trial effects: 'random' or 'fixed' (default = 'fixed')}
 
-\item{vc.model}{variance-covariance model to fit: 'diag', 'corv', 'corh', 'fa1', 'fa2', 
+\item{vc.model}{variance-covariance model to fit: 'diag', 'corv', 'corh', 'fa1', 'fa2',
 'fa3', 'fa4', 'corgh' (default = 'corh') (only for type.gen =' random')}
 
 \item{workspace}{asreml workspace}
 }
 \value{
-Several objects with reports of the MET analysis. 
+Several objects with reports of the MET analysis.
 call:        String with the ASReml-R call used to fit the requested model
 mod:         ASReml-R object with all information from the fitted model
 predictions: Predictions for all genotypes across all sites, with thier standard
@@ -45,14 +45,14 @@ predictions: Predictions for all genotypes across all sites, with thier standard
 }
 \description{
 \code{stageMET} Performs the genetic analysis of an MET dataset corresponding
-to the final step of a two-stage analysis, where input corresponds to meand (or 
-adjusted values) of Evaluates and verifies the data originating from several trials with the 
-aim of determining levels of: connectivity, variability, etc., which are reported as 
-statistics. Only non-NA observations are considered in the reports. Note that trial is 
+to the final step of a two-stage analysis, where input corresponds to meand (or
+adjusted values) of Evaluates and verifies the data originating from several trials with the
+aim of determining levels of: connectivity, variability, etc., which are reported as
+statistics. Only non-NA observations are considered in the reports. Note that trial is
 always considered a fixed effect.
 }
 \examples{
-# Example 1: 
+# Example 1:
 
 }
 \author{

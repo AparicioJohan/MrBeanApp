@@ -42,10 +42,10 @@ spatial.aud(
 \item{model}{model number to be fitted (optional)}
 }
 \value{
-A table with goodness-of-fit statistics for models evaluated. This includes columns: 
-number of variance components in the model (n.VC), log-likelihood (logL), Akaike information 
-criteria (AIC), Bayesian information criteria (BIC), heritability based on predictor 
-error variance (heritPEV, only for genotypes 'random'), A-optimality value, logarithm of 
+A table with goodness-of-fit statistics for models evaluated. This includes columns:
+number of variance components in the model (n.VC), log-likelihood (logL), Akaike information
+criteria (AIC), Bayesian information criteria (BIC), heritability based on predictor
+error variance (heritPEV, only for genotypes 'random'), A-optimality value, logarithm of
 D-optimality value, and pvalue of comparison of each model against Independent Model based
 on a likelihood ratio test (LRT).
 If parameter model is specified an object with fitted model number is provided, together with
@@ -62,7 +62,7 @@ be fitted as random effects. Genotype (or treatment) effects can be specified as
 If an additional factor of checks is provided then these will be fitted as fixed effects.
 }
 \examples{
-# Example 1: Analysis Unreplicated Trial 
+# Example 1: Analysis Unreplicated Trial
 # library(agridat)
 # UR <- burgueno.unreplicated
 # UR$col <- as.factor(UR$col)
@@ -72,12 +72,13 @@ If an additional factor of checks is provided then these will be fitted as fixed
 # output.UR <- spatial.aud(data=UR, gen='gen', row='row', col='col', resp='yield',
 #                          type.gen='random')
 # output.UR
-# 
+#
 # # Example 2: Fitting only Model 4: ar1(Row):ar1(Col)
 # mod4.UR <- spatial.aud(data=UR, gen='gen', row='row', col='col', resp='yield',
 #                        type.gen='random', model=4)
 # summary(mod4.UR$mod)$varcomp  # Summary from ASReml-R
 # head(mod4.UR$predictions)     # Predictions
+
 }
 \author{
 Salvador A. Gezan. VSN International

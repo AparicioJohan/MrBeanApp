@@ -72,16 +72,16 @@ spatial.single(
 \item{type.residual}{model assumption for residual terms: 'indep' or 'ar1' (default = 'ar1')}
 }
 \value{
-Several objects with details of the fitted model. 
+Several objects with details of the fitted model.
 aov:         Wald-test (mixed model ANOVA-like table)
 call:        String with the ASReml-R call used to fit the requested model
-gt:          Goodness-of-fit statistics for the model evaluated are reported as summary. This includes columns: 
-              number of variance components in the model (n.VC), log-likelihood (logL), Akaike information 
-              criteria (AIC), Bayesian information criteria (BIC), A-optimality value, logarithm of the 
-              D-optimality value, and heritability based on predictor error variance (heritPEV, only for 
+gt:          Goodness-of-fit statistics for the model evaluated are reported as summary. This includes columns:
+              number of variance components in the model (n.VC), log-likelihood (logL), Akaike information
+              criteria (AIC), Bayesian information criteria (BIC), A-optimality value, logarithm of the
+              D-optimality value, and heritability based on predictor error variance (heritPEV, only for
               genotypes 'random')
 mod:         ASReml-R object with all information from the fitted model
-predictions: Predictions for all genotypes, with an additional column of 'weight' is to be used on a 
+predictions: Predictions for all genotypes, with an additional column of 'weight' is to be used on a
               on a second-stage analysis. These weights are the diagonal of the inverse of the variance-
               covariance matrix of predictions
 }
@@ -92,32 +92,33 @@ with other spatial model. This routine works best for replicated genotypes.
 Some checks on data are incorporated, but data is assumed to come in a full grid.
 }
 \examples{
-# Example 1: Replicated Trial - Genotype random + spatial terms 
+# Example 1: Replicated Trial - Genotype random + spatial terms
 # library(agridat)
 # testREP <- durban.rowcol
-# testREP$bed <- as.factor(testREP$bed) 
-# testREP$row <- as.factor(testREP$row) 
-# testREP$gen <- as.factor(testREP$gen) 
+# testREP$bed <- as.factor(testREP$bed)
+# testREP$row <- as.factor(testREP$row)
+# testREP$gen <- as.factor(testREP$gen)
 # head(testREP)
 # output.REP <- spatial.single(data=testREP, gen='gen', row='row', col='bed', resp='yield',
-#                             add.block=TRUE,  add.row=TRUE,  add.col=TRUE, 
+#                             add.block=TRUE,  add.row=TRUE,  add.col=TRUE,
 #                             type.gen='random', type.block='fixed', type.residual='ar1')
 # output.REP$gt$herit.PEV           # Heritability-PEV
 # output.REP$aov                    # Wald Test
 # summary(output.REP$mod)$varcomp   # Variance Components
 # head(output.REP$predictions)
-# 
-# # Example 2: Simpler model - independent errors 
+#
+# # Example 2: Simpler model - independent errors
 # output.ID <- spatial.single(data=testREP, gen='gen', row='row', col='bed', resp='yield',
-#                             add.block=TRUE,  add.row=TRUE,  add.col=TRUE, 
+#                             add.block=TRUE,  add.row=TRUE,  add.col=TRUE,
 #                             type.gen='random', type.block='fixed', type.residual='indep')
 # output.ID$gt$herit.PEV           # Heritability-PEV
 # output.ID$aov                    # Wald Test
 # summary(output.ID$mod)$varcomp   # Variance Components
 # head(output.ID$predictions)
-# 
-# # Example 3: Comparing Models with a LRT 
-# lrt.asreml(output.REP$mod, output.ID$mod, boundary=FALSE) 
+#
+# # Example 3: Comparing Models with a LRT
+# lrt.asreml(output.REP$mod, output.ID$mod, boundary=FALSE)
+
 }
 \author{
 Salvador A. Gezan. VSN International

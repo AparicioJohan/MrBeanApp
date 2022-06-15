@@ -48,38 +48,38 @@ spatial.selector(
 \item{model}{model number to be fitted (optional)}
 }
 \value{
-A table with goodness-of-fit statistics for models evaluated. This includes columns: 
-   number of variance components in the model (n.VC), log-likelihood (logL), Akaike information 
-   criteria (AIC), Bayesian information criteria (BIC), and heritability based on predictor 
+A table with goodness-of-fit statistics for models evaluated. This includes columns:
+   number of variance components in the model (n.VC), log-likelihood (logL), Akaike information
+   criteria (AIC), Bayesian information criteria (BIC), and heritability based on predictor
    error variance (heritPEV, only for genotypes 'random').
 
-   If parameter 'model' is specified the object with fitted model number is provided, with 
-   several objects with details of the fitted model. 
+   If parameter 'model' is specified the object with fitted model number is provided, with
+   several objects with details of the fitted model.
 
    aov:         Wald-test (mixed model ANOVA-like table)
    call:        String with the ASReml-R call used to fit the requested model
-   gt:          Goodness-of-fit statistics for the model evaluated are reported as summary. This includes columns: 
-                 number of variance components in the model (n.VC), log-likelihood (logL), Akaike information 
-                 criteria (AIC), Bayesian information criteria (BIC), A-optimality value, logarithm of the 
-                 D-optimality value, and heritability based on predictor error variance (heritPEV, only for 
+   gt:          Goodness-of-fit statistics for the model evaluated are reported as summary. This includes columns:
+                 number of variance components in the model (n.VC), log-likelihood (logL), Akaike information
+                 criteria (AIC), Bayesian information criteria (BIC), A-optimality value, logarithm of the
+                 D-optimality value, and heritability based on predictor error variance (heritPEV, only for
                  genotypes 'random')
    mod:         ASReml-R object with all information from the fitted model
-   predictions: Predictions for all genotypes, with an additional column of 'weight' is to be used on a 
+   predictions: Predictions for all genotypes, with an additional column of 'weight' is to be used on a
                  on a second-stage analysis. These weights are the diagonal of the inverse of the variance-
                  covariance matrix of predictions
 }
 \description{
 \code{spatial.selector} Generates a table with the goodness-of-fit statitics to select the
-best spatial model for an analysis of different analyses (unreplicated and replicated). 
-Models that can not fit are reported as NA. 
-The models require some input conditions from user: 1) Genotypes: fixed/random; 2)	Blocks: 
-TRUE/FALSE (if TRUE then fixed/random); 3) Covariates (always fixed, max 2); and 4) 
+best spatial model for an analysis of different analyses (unreplicated and replicated).
+Models that can not fit are reported as NA.
+The models require some input conditions from user: 1) Genotypes: fixed/random; 2)	Blocks:
+TRUE/FALSE (if TRUE then fixed/random); 3) Covariates (always fixed, max 2); and 4)
 Incomplete Blocks: TRUE/FALSE (always random).
-The model selector will run over a series of models with the conditions: 1) Rows within 
+The model selector will run over a series of models with the conditions: 1) Rows within
 replicate: TRUE/FALSE (always random); 2) Columns within replicate: TRUE/FALSE (always
 random); 3) Spline on rows: TRUE/FALSE (fixed linear covariate + random spline); 4) Spline
 on columns: TRUE/FALSE (fixed linear covariate + random spline); and 5) Residual structure:
-'indep' or 'ar1'. In addition the best spatial model (with ar1) and selected according to 
+'indep' or 'ar1'. In addition the best spatial model (with ar1) and selected according to
 A-optimality is fitted with an additional nugget effect. List of 32 models is found on data
 MODLIST.Rda.
 }
@@ -87,16 +87,16 @@ MODLIST.Rda.
 # Example 1: Selecting best model from Replicated Trial
 # library(agridat)
 # testREP <- durban.rowcol
-# testREP$bed <- as.factor(testREP$bed) 
-# testREP$row <- as.factor(testREP$row) 
-# testREP$gen <- as.factor(testREP$gen) 
+# testREP$bed <- as.factor(testREP$bed)
+# testREP$row <- as.factor(testREP$row)
+# testREP$gen <- as.factor(testREP$gen)
 # head(testREP)
-# test.sel <- spatial.selector(data=testREP, gen='gen', row='row', col='bed', 
+# test.sel <- spatial.selector(data=testREP, gen='gen', row='row', col='bed',
 #                              resp='yield', type.gen='random')
 # View(test.sel$parms)
-# 
+#
 # # Example 2: Fitting only selected model 27
-# mod.sel <- spatial.selector(data=testREP, gen='gen', row='row', col='bed', 
+# mod.sel <- spatial.selector(data=testREP, gen='gen', row='row', col='bed',
 #                              resp='yield', type.gen='random', model=27)
 # ls(mod.sel)
 # mod.sel$call                  # Call for model fitted
@@ -106,6 +106,7 @@ MODLIST.Rda.
 # mod.sel$aov                   # Wald-test Table
 # mod.sel$gt$herit.PEV          # Heritability (other statistics on gt)
 # head(mod.sel$predictions)     # Predictions for fitted model with additional weights
+
 }
 \author{
 Salvador A. Gezan. VSN International

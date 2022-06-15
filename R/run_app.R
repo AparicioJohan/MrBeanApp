@@ -11,16 +11,14 @@
 #' @rawNamespace import(lme4, except = show)
 #' @rawNamespace import(Matrix, except = show)
 #' @import shinyWidgets readxl ggplot2 summarytools SpATS waiter echarts4r data.table ggrepel
-run_app <- function(
-  ...
-) {
-  options(shiny.maxRequestSize=100*1024^2)
+run_app <- function(...) {
+  options(shiny.maxRequestSize = 100 * 1024^2)
   with_golem_options(
     app = shinyApp(
-      ui = app_ui, 
+      ui = app_ui,
       server = app_server,
       options = list(launch.browser = TRUE)
-    ), 
+    ),
     golem_opts = list(...)
   )
 }

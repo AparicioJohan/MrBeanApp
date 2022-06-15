@@ -27,15 +27,15 @@ stats.spatial(
 \item{ctable}{table with genotypes and checks (optional)}
 }
 \value{
-A table with goodness-of-fit statistics for models evaluated. This includes columns: 
-number of variance components in the model (n.VC), log-likelihood (logL), Akaike information 
+A table with goodness-of-fit statistics for models evaluated. This includes columns:
+number of variance components in the model (n.VC), log-likelihood (logL), Akaike information
 criteria (AIC), Bayesian information criteria (BIC), heritability based on variance components,
-heritability based on predictor error variance (heritPEV, only for genotypes 'random'), A-optimality value, and logarithm of 
+heritability based on predictor error variance (heritPEV, only for genotypes 'random'), A-optimality value, and logarithm of
 D-optimality value.
 }
 \description{
 \code{stats.spatial} Internal routine that calculates goodness-of-fit statisitcs for a
-specific fitted model provided as input. Statistics obtained are log-likelihood, AIC, 
+specific fitted model provided as input. Statistics obtained are log-likelihood, AIC,
 BIC, heritability based on predictor error variance (heritPEV, only for genotypes 'random'),
 A-optimality value, and logarithm of D-optimality value,
 }
