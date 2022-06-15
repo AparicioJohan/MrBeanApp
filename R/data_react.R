@@ -11,64 +11,62 @@
 #'
 #' @return data.frame
 #' @noRd
-data_react <- function(file = NULL, 
-                      choice = 1, 
-                      header = TRUE, 
-                      sep = ",",
-                      miss = "NA",
-                      string = "" ,
-                      sheet = NULL,
-                      dataBMS = NULL ){ 
-  
+data_react <- function(file = NULL,
+                       choice = 1,
+                       header = TRUE,
+                       sep = ",",
+                       miss = "NA",
+                       string = "",
+                       sheet = NULL,
+                       dataBMS = NULL) {
   inFile <- file
   Ext <- tools::file_ext(inFile$datapath)
-  
+
   if (choice == 1) {
     dt <- Dar16C_hiP
-    } else if (choice == 2) {
-      if (is.null(inFile)) { 
-        dt <- data.frame() 
-        } else { 
-          if (Ext == "xlsx" | Ext == "xls") {
-            if (miss == "Empty" ){ 
-              P = "\" \""
-              } else {
-                P = "NA"
-                if (miss == "Other") {
-                  P = string
-                  }
-                }
-            dt <- as.data.frame(
-              readxl::read_excel(
-                path = inFile$datapath,
-                col_names = header,
-                na = P,
-                sheet = sheet
-                )
-              )
-        
+  } else if (choice == 2) {
+    if (is.null(inFile)) {
+      dt <- data.frame()
+    } else {
+      if (Ext == "xlsx" | Ext == "xls") {
+        if (miss == "Empty") {
+          P <- "\" \""
+        } else {
+          P <- "NA"
+          if (miss == "Other") {
+            P <- string
+          }
+        }
+        dt <- as.data.frame(
+          readxl::read_excel(
+            path = inFile$datapath,
+            col_names = header,
+            na = P,
+            sheet = sheet
+          )
+        )
       } else {
-        dt <-  read.csv(
+        dt <- read.csv(
           file = inFile$datapath,
           header = header,
           sep = sep
-          )
+        )
         if (miss == "Other") {
-          P = string
+          P <- string
           dt <- read.csv(
-            file = inFile$datapath, 
+            file = inFile$datapath,
             header = header,
-            sep = sep, 
+            sep = sep,
             na.strings = P
-            ) 
-          }
+          )
         }
-          }
-      } else if (choice == 3) {
-        dt <- dataBMS
-        }
-  return(dt)
+      }
+    }
+  } else if (choice == 3) {
+    dt <- dataBMS
   }
+  return(dt)
+}
 
 
 #' Subset dataset
@@ -80,18 +78,17 @@ data_react <- function(file = NULL,
 #'
 #' @return data.frame
 #' @noRd
-data_subset <- function(data = NULL, subset = TRUE, variable = "", level = ""){   
+data_subset <- function(data = NULL, subset = TRUE, variable = "", level = "") {
   if (subset == TRUE) {
-    if (variable == "" | paste0(level, collapse = "_") == "" ) {
-      data <- data    
-      } 
-    if( variable != "" & paste0(level, collapse = "_") != "") {
-      req( variable %in% names(data))
-      data <- data %>% dplyr::filter(.data[[variable]] %in% level)  
-      }
+    if (variable == "" | paste0(level, collapse = "_") == "") {
+      data <- data
+    }
+    if (variable != "" & paste0(level, collapse = "_") != "") {
+      req(variable %in% names(data))
+      data <- data %>% dplyr::filter(.data[[variable]] %in% level)
+    }
     return(data)
   } else {
-      return(data)
-    }
+    return(data)
+  }
 }
-
