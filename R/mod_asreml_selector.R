@@ -200,7 +200,7 @@ mod_asreml_selector_ui <- function(id) {
                         DT::dataTableOutput(ns("models")),
                         type = 5, color = "#28a745"
                       ),
-                      icon = icon("arrow-circle-right", verify_fa = FALSE)
+                      icon = icon("circle-arrow-right", verify_fa = FALSE)
                     )
                   )
                 ),

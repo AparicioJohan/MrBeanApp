@@ -596,7 +596,7 @@ mod_MET_results_server <- function(input, output, session, model) {
           tooltip = tooltipOptions(title = "Click to Download!"),
           status = "warning", width = "300px"
         ),
-        shinycssloaders::withSpinner(plotOutput(ns("plot_dend")), type = 6, color = "#28a745"), icon = icon("arrow-circle-right", verify_fa = FALSE),
+        shinycssloaders::withSpinner(plotOutput(ns("plot_dend")), type = 6, color = "#28a745"), icon = icon("circle-arrow-right", verify_fa = FALSE),
         br(),
         strong("Configuration plot:"),
         fluidRow(
@@ -760,7 +760,7 @@ mod_MET_results_server <- function(input, output, session, model) {
           fill = TRUE,
           icon = icon("check"), animation = "jelly"
         ),
-        shinycssloaders::withSpinner(plotOutput(ns("plot_pca")), type = 6, color = "#28a745"), icon = icon("arrow-circle-right", verify_fa = FALSE),
+        shinycssloaders::withSpinner(plotOutput(ns("plot_pca")), type = 6, color = "#28a745"), icon = icon("circle-arrow-right", verify_fa = FALSE),
         conditionalPanel(
           condition = "input.type=='ind'", ns = ns,
           fluidRow(

@@ -52,7 +52,7 @@ mod_residuals_spats_ui <- function(id) {
             status = "success", side = "left", type = "tabs",
             tabPanel(
               title = "QQplot",
-              icon = icon("arrow-circle-right", verify_fa = FALSE),
+              icon = icon("circle-arrow-right", verify_fa = FALSE),
               shinycssloaders::withSpinner(plotly::plotlyOutput(ns("qqplot")), type = 5, color = "#28a745")
             ),
             tabPanel(

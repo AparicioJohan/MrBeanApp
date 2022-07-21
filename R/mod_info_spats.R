@@ -26,7 +26,7 @@ mod_info_spats_ui <- function(id) {
           shinycssloaders::withSpinner(
             verbatimTextOutput(ns("summary2")),
             type = 5, color = "#28a745"
-          ), icon = icon("arrow-circle-right", verify_fa = FALSE)
+          ), icon = icon("circle-arrow-right", verify_fa = FALSE)
         ),
         tabPanel(
           title = "Model Plot",

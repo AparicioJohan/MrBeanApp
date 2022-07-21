@@ -120,7 +120,7 @@ mod_asreml_selector_effects_ui <- function(id) {
                             status = "success",
                             slim = FALSE
                           ),
-                          shinycssloaders::withSpinner(plotOutput(ns("residuals_aug")), type = 6, color = "#28a745"), icon = icon("arrow-circle-right", verify_fa = FALSE),
+                          shinycssloaders::withSpinner(plotOutput(ns("residuals_aug")), type = 6, color = "#28a745"), icon = icon("circle-arrow-right", verify_fa = FALSE),
                           strong("Goodness-of-fit Statistics:"),
                           rep_br(2),
                           HTML(
@@ -147,7 +147,7 @@ mod_asreml_selector_effects_ui <- function(id) {
                             status = "success",
                             slim = FALSE
                           ),
-                          shinycssloaders::withSpinner(plotOutput(ns("semivariogram")), type = 6, color = "#28a745"), icon = icon("arrow-circle-right", verify_fa = FALSE)
+                          shinycssloaders::withSpinner(plotOutput(ns("semivariogram")), type = 6, color = "#28a745"), icon = icon("circle-arrow-right", verify_fa = FALSE)
                         )
                       )
                     )

@@ -172,7 +172,7 @@ mod_GBLUP_ui <- function(id) {
               type = "tabs",
               tabPanel(
                 title = "Summary",
-                icon = icon("arrow-circle-right", verify_fa = FALSE),
+                icon = icon("circle-arrow-right", verify_fa = FALSE),
                 shinycssloaders::withSpinner(
                   DT::dataTableOutput(ns("summary_model")),
                   type = 5,
@@ -196,7 +196,7 @@ mod_GBLUP_ui <- function(id) {
               ),
               tabPanel(
                 title = "Correlation",
-                icon = icon("arrow-circle-right", verify_fa = FALSE),
+                icon = icon("circle-arrow-right", verify_fa = FALSE),
                 dropdown(
                   prettyRadioButtons(
                     inputId = ns("type"),

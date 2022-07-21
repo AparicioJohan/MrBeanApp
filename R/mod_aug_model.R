@@ -197,7 +197,7 @@ mod_aug_model_ui <- function(id) {
                         ),
                         tabPanel(
                           title = "Diagnostics",
-                          shinycssloaders::withSpinner(plotOutput(ns("residuals_aug")), type = 6, color = "#28a745"), icon = icon("arrow-circle-right", verify_fa = FALSE)
+                          shinycssloaders::withSpinner(plotOutput(ns("residuals_aug")), type = 6, color = "#28a745"), icon = icon("circle-arrow-right", verify_fa = FALSE)
                         ),
                         tabPanel(
                           title = "Var-Components", icon = icon("signal"),
@@ -209,7 +209,7 @@ mod_aug_model_ui <- function(id) {
                         ),
                         tabPanel(
                           title = "Semi-Variogram",
-                          shinycssloaders::withSpinner(plotOutput(ns("semivariogram")), type = 6, color = "#28a745"), icon = icon("arrow-circle-right", verify_fa = FALSE)
+                          shinycssloaders::withSpinner(plotOutput(ns("semivariogram")), type = 6, color = "#28a745"), icon = icon("circle-arrow-right", verify_fa = FALSE)
                         )
                       ) # ,
                       # actionLink(inputId = ns("gen_effects"), label = "Genotype Effects", icon = icon("arrow-right"), style = "color: #28a745"),
