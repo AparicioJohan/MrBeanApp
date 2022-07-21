@@ -105,10 +105,10 @@ If an additional factor of checks is provided then these will be fitted as fixed
 </dl></div>
     <div id="value">
     <h2>Value</h2>
-    <p>A table with goodness-of-fit statistics for models evaluated. This includes columns: 
-number of variance components in the model (n.VC), log-likelihood (logL), Akaike information 
-criteria (AIC), Bayesian information criteria (BIC), heritability based on predictor 
-error variance (heritPEV, only for genotypes 'random'), A-optimality value, logarithm of 
+    <p>A table with goodness-of-fit statistics for models evaluated. This includes columns:
+number of variance components in the model (n.VC), log-likelihood (logL), Akaike information
+criteria (AIC), Bayesian information criteria (BIC), heritability based on predictor
+error variance (heritPEV, only for genotypes 'random'), A-optimality value, logarithm of
 D-optimality value, and pvalue of comparison of each model against Independent Model based
 on a likelihood ratio test (LRT).
 If parameter model is specified an object with fitted model number is provided, together with
@@ -123,7 +123,7 @@ covariance matrix of predictions.</p>
 
     <div id="ref-examples">
     <h2>Examples</h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span class="co"># Example 1: Analysis Unreplicated Trial </span></span>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span class="co"># Example 1: Analysis Unreplicated Trial</span></span>
 <span class="r-in"><span class="co"># library(agridat)</span></span>
 <span class="r-in"><span class="co"># UR &lt;- burgueno.unreplicated</span></span>
 <span class="r-in"><span class="co"># UR$col &lt;- as.factor(UR$col)</span></span>
@@ -133,12 +133,13 @@ covariance matrix of predictions.</p>
 <span class="r-in"><span class="co"># output.UR &lt;- spatial.aud(data=UR, gen='gen', row='row', col='col', resp='yield',</span></span>
 <span class="r-in"><span class="co">#                          type.gen='random')</span></span>
 <span class="r-in"><span class="co"># output.UR</span></span>
-<span class="r-in"><span class="co"># </span></span>
+<span class="r-in"><span class="co">#</span></span>
 <span class="r-in"><span class="co"># # Example 2: Fitting only Model 4: ar1(Row):ar1(Col)</span></span>
 <span class="r-in"><span class="co"># mod4.UR &lt;- spatial.aud(data=UR, gen='gen', row='row', col='col', resp='yield',</span></span>
 <span class="r-in"><span class="co">#                        type.gen='random', model=4)</span></span>
 <span class="r-in"><span class="co"># summary(mod4.UR$mod)$varcomp  # Summary from ASReml-R</span></span>
 <span class="r-in"><span class="co"># head(mod4.UR$predictions)     # Predictions</span></span>
+<span class="r-in"></span>
 <span class="r-in"></span>
 </code></pre></div>
     </div>

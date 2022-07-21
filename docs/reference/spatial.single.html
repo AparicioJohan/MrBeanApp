@@ -131,16 +131,16 @@ Some checks on data are incorporated, but data is assumed to come in a full grid
 </dl></div>
     <div id="value">
     <h2>Value</h2>
-    <p>Several objects with details of the fitted model. 
+    <p>Several objects with details of the fitted model.
 aov:         Wald-test (mixed model ANOVA-like table)
 call:        String with the ASReml-R call used to fit the requested model
-gt:          Goodness-of-fit statistics for the model evaluated are reported as summary. This includes columns: 
-              number of variance components in the model (n.VC), log-likelihood (logL), Akaike information 
-              criteria (AIC), Bayesian information criteria (BIC), A-optimality value, logarithm of the 
-              D-optimality value, and heritability based on predictor error variance (heritPEV, only for 
+gt:          Goodness-of-fit statistics for the model evaluated are reported as summary. This includes columns:
+              number of variance components in the model (n.VC), log-likelihood (logL), Akaike information
+              criteria (AIC), Bayesian information criteria (BIC), A-optimality value, logarithm of the
+              D-optimality value, and heritability based on predictor error variance (heritPEV, only for
               genotypes 'random')
 mod:         ASReml-R object with all information from the fitted model
-predictions: Predictions for all genotypes, with an additional column of 'weight' is to be used on a 
+predictions: Predictions for all genotypes, with an additional column of 'weight' is to be used on a
               on a second-stage analysis. These weights are the diagonal of the inverse of the variance-
               covariance matrix of predictions</p>
     </div>
@@ -151,32 +151,33 @@ predictions: Predictions for all genotypes, with an additional column of 'weight
 
     <div id="ref-examples">
     <h2>Examples</h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span class="co"># Example 1: Replicated Trial - Genotype random + spatial terms </span></span>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span class="co"># Example 1: Replicated Trial - Genotype random + spatial terms</span></span>
 <span class="r-in"><span class="co"># library(agridat)</span></span>
 <span class="r-in"><span class="co"># testREP &lt;- durban.rowcol</span></span>
-<span class="r-in"><span class="co"># testREP$bed &lt;- as.factor(testREP$bed) </span></span>
-<span class="r-in"><span class="co"># testREP$row &lt;- as.factor(testREP$row) </span></span>
-<span class="r-in"><span class="co"># testREP$gen &lt;- as.factor(testREP$gen) </span></span>
+<span class="r-in"><span class="co"># testREP$bed &lt;- as.factor(testREP$bed)</span></span>
+<span class="r-in"><span class="co"># testREP$row &lt;- as.factor(testREP$row)</span></span>
+<span class="r-in"><span class="co"># testREP$gen &lt;- as.factor(testREP$gen)</span></span>
 <span class="r-in"><span class="co"># head(testREP)</span></span>
 <span class="r-in"><span class="co"># output.REP &lt;- spatial.single(data=testREP, gen='gen', row='row', col='bed', resp='yield',</span></span>
-<span class="r-in"><span class="co">#                             add.block=TRUE,  add.row=TRUE,  add.col=TRUE, </span></span>
+<span class="r-in"><span class="co">#                             add.block=TRUE,  add.row=TRUE,  add.col=TRUE,</span></span>
 <span class="r-in"><span class="co">#                             type.gen='random', type.block='fixed', type.residual='ar1')</span></span>
 <span class="r-in"><span class="co"># output.REP$gt$herit.PEV           # Heritability-PEV</span></span>
 <span class="r-in"><span class="co"># output.REP$aov                    # Wald Test</span></span>
 <span class="r-in"><span class="co"># summary(output.REP$mod)$varcomp   # Variance Components</span></span>
 <span class="r-in"><span class="co"># head(output.REP$predictions)</span></span>
-<span class="r-in"><span class="co"># </span></span>
-<span class="r-in"><span class="co"># # Example 2: Simpler model - independent errors </span></span>
+<span class="r-in"><span class="co">#</span></span>
+<span class="r-in"><span class="co"># # Example 2: Simpler model - independent errors</span></span>
 <span class="r-in"><span class="co"># output.ID &lt;- spatial.single(data=testREP, gen='gen', row='row', col='bed', resp='yield',</span></span>
-<span class="r-in"><span class="co">#                             add.block=TRUE,  add.row=TRUE,  add.col=TRUE, </span></span>
+<span class="r-in"><span class="co">#                             add.block=TRUE,  add.row=TRUE,  add.col=TRUE,</span></span>
 <span class="r-in"><span class="co">#                             type.gen='random', type.block='fixed', type.residual='indep')</span></span>
 <span class="r-in"><span class="co"># output.ID$gt$herit.PEV           # Heritability-PEV</span></span>
 <span class="r-in"><span class="co"># output.ID$aov                    # Wald Test</span></span>
 <span class="r-in"><span class="co"># summary(output.ID$mod)$varcomp   # Variance Components</span></span>
 <span class="r-in"><span class="co"># head(output.ID$predictions)</span></span>
-<span class="r-in"><span class="co"># </span></span>
-<span class="r-in"><span class="co"># # Example 3: Comparing Models with a LRT </span></span>
-<span class="r-in"><span class="co"># lrt.asreml(output.REP$mod, output.ID$mod, boundary=FALSE) </span></span>
+<span class="r-in"><span class="co">#</span></span>
+<span class="r-in"><span class="co"># # Example 3: Comparing Models with a LRT</span></span>
+<span class="r-in"><span class="co"># lrt.asreml(output.REP$mod, output.ID$mod, boundary=FALSE)</span></span>
+<span class="r-in"></span>
 <span class="r-in"></span>
 </code></pre></div>
     </div>

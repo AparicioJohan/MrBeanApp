@@ -1,3 +1,7 @@
+# MrBean 2.0.9
+
+* Module GBLUP implemented.
+
 # MrBean 2.0.8
 
 * Improved writing style.
@@ -5,4 +9,4 @@
 
 # MrBean 0.0.1
 
-* Added a `NEWS.md` file to track changes to the package.
+* First version.

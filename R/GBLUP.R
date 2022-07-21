@@ -1,21 +1,24 @@
 #' GBLUP and rrBLUP estimation
 #'
 #' @param pheno_data data.frame with phenotypic data
-#' @param geno_matrix matrix n_gen by n_marker dimension in format (-1, 0 , 1)
+#' @param geno_matrix data.frame with first column identifying the genotype names
+#'  and the rest containing marker information in format (-1, 0 , 1).
 #' @param genoype string with the genotype name
 #' @param traits vector with the traits to be analyzed
-#' @param method "GBLUP", "rrBLUP" or "mix" 
+#' @param method "GBLUP", "rrBLUP" or "mix" ("mix" in progress)
 #'
-#' @return list with results, information shared (pheno - geno),
-#'  variance components (if GBLUP or mix was fitted) and marker effects.
+#' @return list with GBLUPs, variance components and marker effects.
+#'  list(results, var_comp, markers)
+#'
 #' @export
 #'
 #' @examples
-#' # GBLUPs(pheno_data = NULL,
+#' # GBLUPs(
+#' # pheno_data = NULL,
 #' # geno_matrix = NULL,
 #' # genoype = NULL,
 #' # traits = NULL,
-#' # method = c("GBLUP", "rrBLUP", "mix)
+#' # method = c("GBLUP", "rrBLUP")
 #' # )
 GBLUPs <- function(pheno_data = NULL,
                    geno_matrix = NULL,
@@ -28,13 +31,13 @@ GBLUPs <- function(pheno_data = NULL,
     tibble::column_to_rownames(genotype) %>%
     dplyr::relocate(level) %>%
     droplevels()
-  
+
   rows <- geno_matrix[, 1]
   cols <- colnames(geno_matrix)[-1]
   geno_matrix <- as.matrix(geno_matrix[, -1])
   rownames(geno_matrix) <- rows
   colnames(geno_matrix) <- cols
-  
+
   check_matrix <- inherits(geno_matrix, what = "matrix")
   if (!check_matrix) {
     stop("Check your genotypic data")
@@ -48,7 +51,7 @@ GBLUPs <- function(pheno_data = NULL,
   if (condition <= 1) {
     stop("The genotypic matrix has to be in (-1, 0, 1) format")
   }
-  
+
   shared <- data.frame(
     trait = as.character(),
     pheno = as.numeric(),
@@ -71,15 +74,15 @@ GBLUPs <- function(pheno_data = NULL,
   cat("\n")
   print(shared, row.names = FALSE)
   cat("\n")
-  
+
   pheno_data <- pheno_data %>%
     subset(level %in% rownames(geno_matrix)) %>%
     droplevels()
-  
+
   gblups_results <- pheno_data %>% dplyr::select(level)
   rrblups_results <- pheno_data %>% dplyr::select(level)
   mix_gblups_results <- pheno_data %>% dplyr::select(level)
-  
+
   if ("GBLUP" %in% method) {
     var_comp <- data.frame(trait = traits, var_g = NA, var_e = NA, h2 = NA)
     K <- sommer::A.mat(geno_matrix)
@@ -96,7 +99,7 @@ GBLUPs <- function(pheno_data = NULL,
       )
       id <- names(GBLUP$U$`u:level`[[1]])
       gblups_results[id, var] <- GBLUP$U$`u:level`[[1]] + GBLUP$Beta$Estimate
-      
+
       var_g <- GBLUP$sigma$`u:level`
       var_e <- GBLUP$sigma$units
       var_comp[var_comp$trait == var, "var_g"] <- var_g
@@ -117,7 +120,7 @@ GBLUPs <- function(pheno_data = NULL,
     var_comp <- NULL
     gblups_results <- NULL
   }
-  
+
   if ("rrBLUP" %in% method) {
     marker_effects <- data.frame(
       marker = colnames(geno_matrix), row.names = colnames(geno_matrix)
@@ -151,21 +154,21 @@ GBLUPs <- function(pheno_data = NULL,
     rrblups_results <- NULL
     marker_effects <- NULL
   }
-  
+
   if ("mix" %in% method) {
     var_comp_mix <- data.frame(trait = traits, var_g = NA, var_e = NA, h2 = NA)
     marker_effects_mix <- data.frame(
       marker = colnames(geno_matrix), row.names = colnames(geno_matrix)
     )
     M <- geno_matrix
-    MMT <- tcrossprod(M) 
+    MMT <- tcrossprod(M)
     colnames(MMT) <- rownames(MMT) <- rownames(geno_matrix)
-    MMT_inv <- solve(MMT + diag(1e-6, ncol(MMT), ncol(MMT))) 
+    MMT_inv <- solve(MMT + diag(1e-6, ncol(MMT), ncol(MMT)))
     MT_MMT_inv <- t(M) %*% MMT_inv
     adj <- adj_vanraden(M)
     for (var in traits) {
-      n <- sum(!is.na(pheno_data[[var]])) 
-      k <- 1 
+      n <- sum(!is.na(pheno_data[[var]]))
+      k <- 1
       equation <- reformulate("1", response = var)
       mixGBLUP <- sommer::mmer(
         equation,
@@ -179,19 +182,19 @@ GBLUPs <- function(pheno_data = NULL,
       var_g <- kronecker(MMT, mixGBLUP$sigma$`u:level`) - mixGBLUP$PevU$`u:level`[[1]]
       var_markers <- t(M) %*% MMT_inv %*% (var_g) %*% t(MMT_inv) %*% M
       se_markers <- sqrt(diag(var_markers))
-      t_stat_from_g <- markers / se_markers 
+      t_stat_from_g <- markers / se_markers
       pval_GBLUP <- dt(t_stat_from_g, df = n - k - 1)
-      
+
       id <- names(gblup)
       intercept <- mixGBLUP$Beta$Estimate
       mix_gblups_results[id, var] <- gblup + intercept
-      
+
       var_g <- mixGBLUP$sigma$`u:level` * adj
       var_e <- mixGBLUP$sigma$units
-      var_comp_mix[var_comp_mix$trait == var, "var_g"] <- var_g 
+      var_comp_mix[var_comp_mix$trait == var, "var_g"] <- var_g
       var_comp_mix[var_comp_mix$trait == var, "var_e"] <- var_e
       var_comp_mix[var_comp_mix$trait == var, "h2"] <- var_g / (var_g + var_e)
-      
+
       marker_effects_mix[rownames(markers), var] <- markers
       marker_effects_mix[rownames(markers), paste0("pvalue_", var)] <- pval_GBLUP
     }
@@ -210,23 +213,23 @@ GBLUPs <- function(pheno_data = NULL,
     mix_gblups_results <- NULL
     marker_effects_mix <- NULL
   }
-  
+
   results <- list(
     "GBLUP" = gblups_results,
     "rrBLUP" = rrblups_results,
     "mixGBLUP" = mix_gblups_results
   )
-  
+
   info_markers <- list(
     "rrBLUP" = marker_effects,
     "mixGBLUP" = marker_effects_mix
   )
-  
+
   variance_comp <- list(
     "GBLUP" = var_comp,
     "mixGBLUP" = var_comp_mix
   )
-  
+
   return(
     list(
       results = results,
@@ -243,7 +246,7 @@ GBLUPs <- function(pheno_data = NULL,
 #'
 #' @return adjusted value van Raden
 #' @noRd
-adj_vanraden <- function(geno_matrix){
+adj_vanraden <- function(geno_matrix) {
   snps <- geno_matrix + 1
   fa <- colSums(snps) / (2 * nrow(snps))
   index_non <- fa >= 1 | fa <= 0

@@ -281,7 +281,7 @@ mod_GBLUP_ui <- function(id) {
                   fluidRow(
                     col_4(
                       colourpicker::colourInput(
-                        ns("col1"), "Minimun", "#db4437"
+                        ns("col1"), "Minimun", "#DB4437"
                       )
                     ),
                     col_4(
@@ -567,7 +567,12 @@ mod_GBLUP_server <- function(id) {
         e_charts(Trait) %>%
         e_bar(VarE, name = "Residual Variance") %>%
         e_bar(VarG, name = "Genotypic Variance") %>%
-        e_legend(show = T, bottom = "bottom", left = "center", orient = "horizontal") %>%
+        e_legend(
+          show = T,
+          bottom = "bottom",
+          left = "center",
+          orient = "horizontal"
+        ) %>%
         e_title("Variance Comparison", subtext = "By trait") %>%
         e_tooltip() %>%
         e_toolbox_feature(feature = "saveAsImage") %>%
@@ -652,7 +657,7 @@ mod_GBLUP_server <- function(id) {
       tryCatch(
         {
           gblups <- gblups %>% dplyr::select(-phenotypic)
-          if(ncol(gblups) <= 2) stop("Only one trait selected.")
+          if (ncol(gblups) <= 2) stop("Only one trait selected.")
           h2 <- round(var_comp$Genomic_h2, 2)
           names(h2) <- var_comp$Trait
           ggCor(gblups[, -1],
@@ -702,12 +707,11 @@ mod_GBLUP_server <- function(id) {
         }
       }
     )
-    
+
     observe({
       toggle("configuration", anim = TRUE, time = 1, animType = "fade")
-    }) %>% 
+    }) %>%
       bindEvent(input$config)
-    
   })
 }
 
