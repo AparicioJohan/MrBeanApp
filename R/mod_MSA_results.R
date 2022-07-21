@@ -29,7 +29,7 @@ mod_MSA_results_ui <- function(id) {
                     status = "success",
                     solidHeader = FALSE,
                     maximizable = T,
-                    title = tagList(icon = icon("info-circle"), "Variance Component Estimates"),
+                    title = tagList(icon = icon("info-circle", verify_fa = FALSE), "Variance Component Estimates"),
                     echarts4r::echarts4rOutput(ns("comparison"))
                   )
                 )
@@ -81,7 +81,7 @@ mod_MSA_results_ui <- function(id) {
                     ),
                     tabPanel(
                       title = "Summary",
-                      icon = icon("info-circle"),
+                      icon = icon("info-circle", verify_fa = FALSE),
                       shinycssloaders::withSpinner(
                         DT::dataTableOutput(ns("table")),
                         type = 5, color = "#28a745"
@@ -111,7 +111,7 @@ mod_MSA_results_ui <- function(id) {
                     ),
                     tabPanel(
                       title = "Potential Outliers",
-                      icon = icon("exclamation-triangle"),
+                      icon = icon("exclamation-triangle", verify_fa = FALSE),
                       DT::dataTableOutput(ns("extrem")),
                       downloadButton(ns("downloadDTclean"),
                         "Download Data-Cleaned",

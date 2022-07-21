@@ -41,7 +41,7 @@ mod_import_dt_ui <- function(id) {
           condition = "input.Id004==2",
           ns = ns,
           bs4Dash::box(
-            title = tagList(shiny::icon("file-upload", verify = FALSE), "Import Data"),
+            title = tagList(shiny::icon("file-upload", verify_fa = FALSE), "Import Data"),
             solidHeader = FALSE,
             width = 12,
             status = "success",
@@ -146,7 +146,7 @@ mod_import_dt_ui <- function(id) {
                   width = "100%",
                   label = tagList(
                     "Subset variable",
-                    tags$a(icon("exclamation-circle"))
+                    tags$a(icon("exclamation-circle", verify_fa = FALSE))
                   ),
                   choices = ""
                 ),
@@ -156,7 +156,7 @@ mod_import_dt_ui <- function(id) {
                   width = "100%",
                   label = tagList(
                     "Which level?",
-                    tags$a(icon("exclamation-circle"))
+                    tags$a(icon("exclamation-circle", verify_fa = FALSE))
                   ),
                   choices = ""
                 ),
@@ -253,7 +253,7 @@ mod_import_dt_ui <- function(id) {
               actionButton(
                 ns("mysql"),
                 label = "Conect",
-                icon = icon("sync")
+                icon = icon("sync", verify_fa = FALSE)
               ),
               strong(
                 a("Can't Log In?",
@@ -267,7 +267,7 @@ mod_import_dt_ui <- function(id) {
           width = 4,
           fluidRow(
             bs4Dash::box(
-              title = tagList(shiny::icon("cogs"), "Information"),
+              title = tagList(shiny::icon("cogs", verify_fa = FALSE), "Information"),
               status = "success",
               width = 12,
               solidHeader = FALSE,
@@ -281,7 +281,7 @@ mod_import_dt_ui <- function(id) {
                 inputId = ns("program"),
                 label = tagList(
                   "Which program?",
-                  tags$a(icon("exclamation-circle"))
+                  tags$a(icon("exclamation-circle", verify_fa = FALSE))
                 ),
                 choices = "",
                 width = "100%"
@@ -290,7 +290,7 @@ mod_import_dt_ui <- function(id) {
                 inputId = ns("trial"),
                 label = tagList(
                   "Which trial?",
-                  tags$a(icon("exclamation-circle"))
+                  tags$a(icon("exclamation-circle", verify_fa = FALSE))
                 ),
                 choices = "",
                 width = "100%",
@@ -300,7 +300,7 @@ mod_import_dt_ui <- function(id) {
                 inputId = ns("study"),
                 label = tagList(
                   "Which study?",
-                  tags$a(icon("exclamation-circle"))
+                  tags$a(icon("exclamation-circle", verify_fa = FALSE))
                 ),
                 choices = "",
                 width = "100%",

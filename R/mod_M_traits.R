@@ -17,11 +17,11 @@ mod_M_traits_ui <- function(id) {
         width = 4,
         fluidRow(
           bs4Dash::box(
-            width = 12, status = "success", solidHeader = FALSE, title = tagList(icon = icon("cogs"), "Components"), # background = "light-blue"
+            width = 12, status = "success", solidHeader = FALSE, title = tagList(icon = icon("cogs", verify_fa = FALSE), "Components"), # background = "light-blue"
             selectInput(
               inputId = ns("variable"),
               label = tagList("Response Variables",
-                icon = tooltip(icon("question-circle"),
+                icon = tooltip(icon("question-circle", verify_fa = FALSE),
                   title = "The column with the continous response variable.
                                                                           (More than one)",
                   placement = "top"
@@ -32,7 +32,7 @@ mod_M_traits_ui <- function(id) {
             selectInput(
               inputId = ns("genotype"),
               label = tagList("Genotype",
-                icon = tooltip(icon("question-circle"),
+                icon = tooltip(icon("question-circle", verify_fa = FALSE),
                   title = "The column with genotypes.",
                   placement = "top"
                 )
@@ -49,7 +49,7 @@ mod_M_traits_ui <- function(id) {
               pickerInput(
                 inputId = ns("selected_checks"),
                 label = tagList("Checks",
-                  icon = tooltip(icon("question-circle"),
+                  icon = tooltip(icon("question-circle", verify_fa = FALSE),
                     title = "Select Checks",
                     placement = "top"
                   )
@@ -79,7 +79,7 @@ mod_M_traits_ui <- function(id) {
                 selectizeInput(ns("show_fixed"),
                   width = "100%",
                   label = tagList("Fixed",
-                    icon = tooltip(icon("question-circle"),
+                    icon = tooltip(icon("question-circle", verify_fa = FALSE),
                       title = "Additional fixed factors.",
                       placement = "top"
                     )
@@ -103,7 +103,7 @@ mod_M_traits_ui <- function(id) {
                 selectizeInput(ns("show_random"),
                   width = "100%",
                   label = tagList("Random",
-                    icon = tooltip(icon("question-circle"),
+                    icon = tooltip(icon("question-circle", verify_fa = FALSE),
                       title = "Additional random factors.",
                       placement = "top"
                     )
@@ -126,7 +126,7 @@ mod_M_traits_ui <- function(id) {
             selectizeInput(ns("covariate"),
               width = "100%",
               label = tagList("Covariate",
-                icon = tooltip(icon("question-circle"),
+                icon = tooltip(icon("question-circle", verify_fa = FALSE),
                   title = "Additional covariate.",
                   placement = "top"
                 )

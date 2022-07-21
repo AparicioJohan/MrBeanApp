@@ -59,34 +59,47 @@ A-optimality value, and logarithm of D-optimality value,</p>
     </div>
 
     <div id="ref-usage">
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="fu">stats.spatial</span><span class="op">(</span>
-  object <span class="op">=</span> <span class="cn">NULL</span>,
-  checks <span class="op">=</span> <span class="cn">FALSE</span>,
-  solution <span class="op">=</span> <span class="cn">NULL</span>,
-  preds <span class="op">=</span> <span class="cn">NULL</span>,
-  k <span class="op">=</span> <span class="fl">1</span>,
-  ctable <span class="op">=</span> <span class="cn">NULL</span>
-<span class="op">)</span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">stats.spatial</span><span class="op">(</span></span>
+<span>  object <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  checks <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>  solution <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  preds <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  k <span class="op">=</span> <span class="fl">1</span>,</span>
+<span>  ctable <span class="op">=</span> <span class="cn">NULL</span></span>
+<span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div id="arguments">
     <h2>Arguments</h2>
     <dl><dt>object</dt>
 <dd><p>model fit output for object class asreml. Genotype factor is called 'gen'</p></dd>
+
+
 <dt>checks</dt>
 <dd><p>logical to indicate if checks were included in the model (default = FALSE)</p></dd>
+
+
 <dt>solution</dt>
 <dd><p>data frame with the random solutions from asreml (BLUPs)</p></dd>
+
+
 <dt>preds</dt>
 <dd><p>data frame with the predictions for genotypes (required to calculate Aopt, Dopt)</p></dd>
+
+
 <dt>k</dt>
 <dd><p>value 1 or 2 to be used for the denominator of heritabilty calculation (herit.PEV) (default = 2)</p></dd>
+
+
 <dt>ctable</dt>
 <dd><p>table with genotypes and checks (optional)</p></dd>
+
 </dl></div>
     <div id="value">
     <h2>Value</h2>
-    <p>A table with goodness-of-fit statistics for models evaluated. This includes columns:
+    
+
+<p>A table with goodness-of-fit statistics for models evaluated. This includes columns:
 number of variance components in the model (n.VC), log-likelihood (logL), Akaike information
 criteria (AIC), Bayesian information criteria (BIC), heritability based on variance components,
 heritability based on predictor error variance (heritPEV, only for genotypes 'random'), A-optimality value, and logarithm of
@@ -99,8 +112,8 @@ D-optimality value.</p>
 
     <div id="ref-examples">
     <h2>Examples</h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span class="co"># Example: Pending</span></span>
-<span class="r-in"></span>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="co"># Example: Pending</span></span></span>
+<span class="r-in"><span></span></span>
 <span class="r-in"></span>
 </code></pre></div>
     </div>
@@ -116,7 +129,7 @@ D-optimality value.</p>
 </div>
 
 <div class="pkgdown">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.3.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.6.</p>
 </div>
 
       </footer></div>

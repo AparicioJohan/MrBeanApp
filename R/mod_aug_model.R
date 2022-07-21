@@ -16,7 +16,7 @@ mod_aug_model_ui <- function(id) {
         width = 4,
         fluidRow(
           bs4Dash::box(
-            width = 12, status = "success", solidHeader = FALSE, title = tagList(icon = icon("cogs"), "Components"), # background = "light-blue"
+            width = 12, status = "success", solidHeader = FALSE, title = tagList(icon = icon("cogs", verify_fa = FALSE), "Components"), # background = "light-blue"
             selectInput(
               inputId = ns("variable"),
               label = tagList("Response Variable",
@@ -146,7 +146,7 @@ mod_aug_model_ui <- function(id) {
                   col_4(),
                   col_4(
                     actionBttn(
-                      inputId = ns("run"), icon = icon("sliders-h"), size = "md",
+                      inputId = ns("run"), icon = icon("sliders-h", verify_fa = FALSE), size = "md",
                       label = "Run Selected Model!", style = "unite", color = "warning", block = T
                     )
                   ),

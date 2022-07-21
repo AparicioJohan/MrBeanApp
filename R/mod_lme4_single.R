@@ -50,7 +50,7 @@ mod_lme4_single_ui <- function(id) {
       #               label='Random Genotype?',
       #               value=TRUE)),
       bs4Card(
-        width = 3, status = "success", solidHeader = FALSE, title = tagList(icon = icon("tasks"), "Model"),
+        width = 3, status = "success", solidHeader = FALSE, title = tagList(icon = icon("tasks", verify_fa = FALSE), "Model"),
         prettyRadioButtons(
           inputId = ns("Id039"),
           label = "Choose:",
@@ -69,7 +69,7 @@ mod_lme4_single_ui <- function(id) {
           style = "display:rigth ;color: white  ; background-color: #00a65a", icon = icon("info")
         ),
         br(), br(),
-        actionButton(ns("multcmp"), label = "Multiple Comp", icon = icon("compress-arrows-alt")),
+        actionButton(ns("multcmp"), label = "Multiple Comp", icon = icon("compress-arrows-alt", verify_fa = FALSE)),
         br(), br(),
         actionLink(inputId = ns("Rlinklme"), label = "Residuals", icon = icon("arrow-right"), style = "color: #28a745")
       ),
@@ -78,7 +78,7 @@ mod_lme4_single_ui <- function(id) {
         conditionalPanel(
           condition = "input.Id039==1|input.Id039==2|input.Id039==4|input.Id039==5", ns = ns,
           bs4Card(
-            width = NULL, status = "success", solidHeader = FALSE, title = tagList(icon = icon("tasks"), "Components"),
+            width = NULL, status = "success", solidHeader = FALSE, title = tagList(icon = icon("tasks", verify_fa = FALSE), "Components"),
             conditionalPanel(
               condition = "input.Id039==1|input.Id039==2|input.Id039==5", ns = ns,
               selectInput(inputId = ns("Id086"), label = "Replicate", choices = "", width = "100%"),
@@ -450,7 +450,7 @@ mod_lme4_single_server <- function(input, output, session, data) {
       gradient = TRUE,
       fill = TRUE,
       value = nreps,
-      icon = shiny::icon("sync"), elevation = 3
+      icon = shiny::icon("sync", verify_fa = FALSE), elevation = 3
     )
   })
 

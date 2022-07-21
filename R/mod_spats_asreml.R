@@ -20,13 +20,13 @@ mod_spats_asreml_ui <- function(id) {
             width = 12,
             status = "success",
             solidHeader = FALSE,
-            title = tagList(icon = icon("cogs"), "ASReml"),
+            title = tagList(icon = icon("cogs", verify_fa = FALSE), "ASReml"),
             selectInput(
               inputId = ns("variable"),
               label = tagList(
                 "Response Variable",
                 icon = tooltip(
-                  icon("question-circle"),
+                  icon("question-circle", verify_fa = FALSE),
                   title = "The column with the continous response variable.",
                   placement = "top"
                 )
@@ -39,7 +39,7 @@ mod_spats_asreml_ui <- function(id) {
               label = tagList(
                 "Genotype",
                 icon = tooltip(
-                  icon("question-circle"),
+                  icon("question-circle", verify_fa = FALSE),
                   title = "The column with genotypes.",
                   placement = "top"
                 )
@@ -133,7 +133,7 @@ mod_spats_asreml_ui <- function(id) {
                     label = tagList(
                       "Block",
                       icon = tooltip(
-                        icon("question-circle"),
+                        icon("question-circle", verify_fa = FALSE),
                         title = "Select the replicate or complete block",
                         placement = "top"
                       )
@@ -149,7 +149,7 @@ mod_spats_asreml_ui <- function(id) {
                     label = tagList(
                       "InBlock",
                       icon = tooltip(
-                        icon("question-circle"),
+                        icon("question-circle", verify_fa = FALSE),
                         title = "Select Incomplete Block",
                         placement = "top"
                       )
@@ -182,7 +182,7 @@ mod_spats_asreml_ui <- function(id) {
                     label = tagList(
                       "Covariate 1",
                       icon = tooltip(
-                        icon("question-circle"),
+                        icon("question-circle", verify_fa = FALSE),
                         title = "Select a covariate",
                         placement = "top"
                       )
@@ -198,7 +198,7 @@ mod_spats_asreml_ui <- function(id) {
                     label = tagList(
                       "Covariate 2",
                       icon = tooltip(
-                        icon("question-circle"),
+                        icon("question-circle", verify_fa = FALSE),
                         title = "Select a covariate",
                         placement = "top"
                       )

@@ -17,7 +17,7 @@ mod_MSA_ui <- function(id) {
         width = 3,
         fluidRow(
           bs4Dash::box(
-            width = 12, status = "success", solidHeader = FALSE, title = tagList(icon = icon("cogs"), "Configuration"), # background = "light-blue"
+            width = 12, status = "success", solidHeader = FALSE, title = tagList(icon = icon("cogs", verify_fa = FALSE), "Configuration"), # background = "light-blue"
             selectInput(
               inputId = ns("variable"),
               label = tagList("Response Variable",
@@ -64,7 +64,7 @@ mod_MSA_ui <- function(id) {
             selectInput(
               inputId = ns("experiment"),
               label = tagList("Experiment",
-                icon = tooltip(icon("question-circle"),
+                icon = tooltip(icon("question-circle", verify_fa = FALSE),
                   title = "Select the variable with Experiment-ID",
                   placement = "top"
                 )
@@ -94,14 +94,14 @@ mod_MSA_ui <- function(id) {
               bs4Dash::box(
                 width = 12, title = tagList(icon = icon("wrench"), "Additional Components"), status = "success", solidHeader = FALSE, collapsible = TRUE,
                 actionBttn(
-                  inputId = ns("tabBut"), icon = icon("sliders-h"), size = "xs",
+                  inputId = ns("tabBut"), icon = icon("sliders-h", verify_fa = FALSE), size = "xs",
                   label = "Info About the Experiments", style = "unite", color = "warning", block = T
                 ),
                 selectInput(inputId = ns("replicate"), label = "Replicate", choices = "", width = "100%"),
                 selectizeInput(ns("show_fixed"),
                   width = "100%",
                   label = tagList("Fixed",
-                    icon = tooltip(icon("question-circle"),
+                    icon = tooltip(icon("question-circle", verify_fa = FALSE),
                       title = "Additional fixed factors.",
                       placement = "top"
                     )
@@ -124,7 +124,7 @@ mod_MSA_ui <- function(id) {
                 selectizeInput(ns("show_random"),
                   width = "100%",
                   label = tagList("Random",
-                    icon = tooltip(icon("question-circle"),
+                    icon = tooltip(icon("question-circle", verify_fa = FALSE),
                       title = "Additional random factors.",
                       placement = "top"
                     )
@@ -147,7 +147,7 @@ mod_MSA_ui <- function(id) {
                 selectizeInput(ns("covariate"),
                   width = "100%",
                   label = tagList("Covariate",
-                    icon = tooltip(icon("question-circle"),
+                    icon = tooltip(icon("question-circle", verify_fa = FALSE),
                       title = "Additional covariate.",
                       placement = "top"
                     )
@@ -161,7 +161,7 @@ mod_MSA_ui <- function(id) {
                   value = FALSE, status = "danger"
                 ),
                 numericInput(ns("times"), "Number of Times to Check", value = 1, min = 1, max = 3, step = 1, width = "100%"),
-                actionBttn(inputId = ns("continue"), label = "Continue?", style = "jelly", color = "success", block = T, icon = icon("exclamation-circle"))
+                actionBttn(inputId = ns("continue"), label = "Continue?", style = "jelly", color = "success", block = T, icon = icon("exclamation-circle", verify_fa = FALSE))
               )
             )
           )

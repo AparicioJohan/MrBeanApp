@@ -17,7 +17,7 @@ mod_asreml_selector_ui <- function(id) {
         width = 4,
         fluidRow(
           bs4Dash::box(
-            width = 12, status = "success", solidHeader = FALSE, title = tagList(icon = icon("cogs"), "Configuration"), # background = "light-blue"
+            width = 12, status = "success", solidHeader = FALSE, title = tagList(icon = icon("cogs", verify_fa = FALSE), "Configuration"), # background = "light-blue"
             selectInput(
               inputId = ns("variable"),
               label = tagList("Response Variable",
@@ -208,7 +208,7 @@ mod_asreml_selector_ui <- function(id) {
                   col_4(),
                   col_4(
                     actionBttn(
-                      inputId = ns("tabBut"), icon = icon("sliders-h"), size = "md",
+                      inputId = ns("tabBut"), icon = icon("sliders-h", verify_fa = FALSE), size = "md",
                       label = "Comparison", style = "jelly", color = "success", block = T
                     ),
                     br()

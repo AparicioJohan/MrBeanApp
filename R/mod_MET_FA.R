@@ -74,7 +74,7 @@ mod_MET_FA_ui <- function(id) {
                   class = "btn-success",
                   style = " color: white ; background-color: #28a745; float:left"
                 ),
-                width = 12, title = tagList(icon = icon("exchange-alt"), "Scores"),
+                width = 12, title = tagList(icon = icon("exchange-alt", verify_fa = FALSE), "Scores"),
                 status = "success", solidHeader = FALSE, maximizable = T
               )
             )
@@ -125,7 +125,7 @@ mod_MET_FA_ui <- function(id) {
                   class = "btn-success",
                   style = " color: white ; background-color: #28a745; float:left"
                 ),
-                width = 12, title = tagList(icon = icon("exchange-alt"), "Loadings"),
+                width = 12, title = tagList(icon = icon("exchange-alt", verify_fa = FALSE), "Loadings"),
                 status = "success", solidHeader = FALSE, maximizable = T
               )
             )

@@ -14,7 +14,7 @@ mod_GBLUP_ui <- function(id) {
     fluidRow(
       col_3(
         bs4Dash::box(
-          title = tagList(shiny::icon("file-upload", verify = FALSE), "Import Data"),
+          title = tagList(shiny::icon("file-upload", verify_fa = FALSE), "Import Data"),
           solidHeader = FALSE,
           width = 12,
           status = "success",
@@ -87,7 +87,7 @@ mod_GBLUP_ui <- function(id) {
               ),
               actionBttn(
                 inputId = ns("ok"),
-                icon = icon("sliders-h"),
+                icon = icon("sliders-h", verify_fa = FALSE),
                 size = "sm",
                 label = "View",
                 style = "unite",
@@ -107,7 +107,7 @@ mod_GBLUP_ui <- function(id) {
                 width = 12,
                 status = "success",
                 solidHeader = FALSE,
-                title = tagList(icon = icon("cogs"), "Components"),
+                title = tagList(icon = icon("cogs", verify_fa = FALSE), "Components"),
                 selectInput(
                   inputId = ns("variables"),
                   label = tagList(

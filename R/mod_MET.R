@@ -17,7 +17,7 @@ mod_MET_ui <- function(id) {
       col_3(
         fluidRow(
           bs4Dash::box(
-            title = tagList(shiny::icon("file-upload", verify = FALSE), "Import Data"), solidHeader = FALSE, width = 12, status = "success",
+            title = tagList(shiny::icon("file-upload", verify_fa = FALSE), "Import Data"), solidHeader = FALSE, width = 12, status = "success",
             maximizable = T, closable = F,
             fileInput(
               inputId = ns("file1"), width = "100%",
@@ -49,7 +49,7 @@ mod_MET_ui <- function(id) {
                   selected = ",", width = "100%"
                 ),
                 actionBttn(
-                  inputId = ns("tabBut"), icon = icon("sliders-h"), size = "sm",
+                  inputId = ns("tabBut"), icon = icon("sliders-h", verify_fa = FALSE), size = "sm",
                   label = "View", style = "unite", color = "warning", block = T
                 )
               )
@@ -73,7 +73,7 @@ mod_MET_ui <- function(id) {
             id = ns("when_file1"),
             fluidRow(
               bs4Dash::box(
-                width = 12, status = "success", solidHeader = FALSE, title = tagList(icon = icon("cogs"), "Components"), # background = "light-blue"
+                width = 12, status = "success", solidHeader = FALSE, title = tagList(icon = icon("cogs", verify_fa = FALSE), "Components"), # background = "light-blue"
                 selectInput(
                   inputId = ns("variable"),
                   label = tagList("Response Variable",

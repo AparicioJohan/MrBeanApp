@@ -63,44 +63,63 @@ always considered a fixed effect.</p>
     </div>
 
     <div id="ref-usage">
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="fu">stageMET</span><span class="op">(</span>
-  data <span class="op">=</span> <span class="cn">NULL</span>,
-  gen <span class="op">=</span> <span class="cn">NULL</span>,
-  trial <span class="op">=</span> <span class="cn">NULL</span>,
-  resp <span class="op">=</span> <span class="cn">NULL</span>,
-  weight <span class="op">=</span> <span class="cn">NULL</span>,
-  type.gen <span class="op">=</span> <span class="st">"random"</span>,
-  type.trial <span class="op">=</span> <span class="st">"fixed"</span>,
-  vc.model <span class="op">=</span> <span class="st">"corh"</span>,
-  workspace <span class="op">=</span> <span class="st">"128mb"</span>
-<span class="op">)</span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">stageMET</span><span class="op">(</span></span>
+<span>  data <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  gen <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  trial <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  resp <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  weight <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  type.gen <span class="op">=</span> <span class="st">"random"</span>,</span>
+<span>  type.trial <span class="op">=</span> <span class="st">"fixed"</span>,</span>
+<span>  vc.model <span class="op">=</span> <span class="st">"corh"</span>,</span>
+<span>  workspace <span class="op">=</span> <span class="st">"128mb"</span></span>
+<span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div id="arguments">
     <h2>Arguments</h2>
     <dl><dt>data</dt>
 <dd><p>dataframe with all relevant columns for MET analyses.</p></dd>
+
+
 <dt>gen</dt>
 <dd><p>factor name for genotypes (or treatments)</p></dd>
+
+
 <dt>trial</dt>
 <dd><p>factor name for trial (or environment)</p></dd>
+
+
 <dt>resp</dt>
 <dd><p>column name for the response variable to evaluate</p></dd>
+
+
 <dt>weight</dt>
 <dd><p>column name for the weight of response (default = 1)</p></dd>
+
+
 <dt>type.gen</dt>
 <dd><p>model assumption for genotype effects: 'random' or 'fixed' (default = 'random')</p></dd>
+
+
 <dt>type.trial</dt>
 <dd><p>model assumption for trial effects: 'random' or 'fixed' (default = 'fixed')</p></dd>
+
+
 <dt>vc.model</dt>
 <dd><p>variance-covariance model to fit: 'diag', 'corv', 'corh', 'fa1', 'fa2',
 'fa3', 'fa4', 'corgh' (default = 'corh') (only for type.gen =' random')</p></dd>
+
+
 <dt>workspace</dt>
 <dd><p>asreml workspace</p></dd>
+
 </dl></div>
     <div id="value">
     <h2>Value</h2>
-    <p>Several objects with reports of the MET analysis.
+    
+
+<p>Several objects with reports of the MET analysis.
 call:        String with the ASReml-R call used to fit the requested model
 mod:         ASReml-R object with all information from the fitted model
 predictions: Predictions for all genotypes across all sites, with thier standard
@@ -113,8 +132,8 @@ predictions: Predictions for all genotypes across all sites, with thier standard
 
     <div id="ref-examples">
     <h2>Examples</h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span class="co"># Example 1:</span></span>
-<span class="r-in"></span>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="co"># Example 1:</span></span></span>
+<span class="r-in"><span></span></span>
 <span class="r-in"></span>
 </code></pre></div>
     </div>
@@ -130,7 +149,7 @@ predictions: Predictions for all genotypes across all sites, with thier standard
 </div>
 
 <div class="pkgdown">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.3.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.6.</p>
 </div>
 
       </footer></div>

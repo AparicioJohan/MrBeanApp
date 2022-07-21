@@ -22,7 +22,9 @@ mod_spats_single_ui <- function(id) {
           "SpATS",
           actionButton(
             inputId = ns("btn"),
-            label = tagList(icon = icon("question-circle"), "Guide"),
+            label = tagList(
+              icon = icon("question-circle", verify_fa = FALSE), "Guide"
+            ),
             style = "color: white ; background-color: #dd4b39",
             class = "btn-danger"
           )
@@ -59,7 +61,7 @@ mod_spats_single_ui <- function(id) {
               label = tagList(
                 "Checks",
                 icon = tooltip(
-                  icon("question-circle"),
+                  icon("question-circle", verify_fa = FALSE),
                   title = "Select Checks",
                   placement = "top"
                 )
@@ -147,7 +149,7 @@ mod_spats_single_ui <- function(id) {
         width = 2,
         status = "success",
         solidHeader = FALSE,
-        title = tagList(icon = icon("tasks"), "Model"),
+        title = tagList(icon = icon("tasks", verify_fa = FALSE), "Model"),
         collapsible = TRUE,
         rintrojs::introBox(
           actionButton(
@@ -199,7 +201,7 @@ mod_spats_single_ui <- function(id) {
         width = 3,
         status = "success",
         solidHeader = FALSE,
-        title = tagList(icon = icon("sliders-h"), "Segments and Report"),
+        title = tagList(icon = icon("sliders-h", verify_fa = FALSE), "Segments and Report"),
         collapsible = TRUE,
         rintrojs::introBox(
           materialSwitch(

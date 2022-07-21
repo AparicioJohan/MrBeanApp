@@ -44,14 +44,14 @@ mod_residuals_lme4_ui <- function(id) {
               shinycssloaders::withSpinner(
                 plotly::plotlyOutput(ns("Normality")),
                 type = 5, color = "#28a745"
-              ), icon = icon("ellipsis-h")
+              ), icon = icon("ellipsis-h", verify_fa = FALSE)
             ),
             tabPanel(
               title = "Hist",
               shinycssloaders::withSpinner(
                 plotly::plotlyOutput(ns("Hgram")),
                 type = 5, color = "#28a745"
-              ), icon = icon("ellipsis-h")
+              ), icon = icon("ellipsis-h", verify_fa = FALSE)
             )
           )
         )

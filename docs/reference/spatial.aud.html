@@ -63,49 +63,72 @@ If an additional factor of checks is provided then these will be fitted as fixed
     </div>
 
     <div id="ref-usage">
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="fu">spatial.aud</span><span class="op">(</span>
-  data <span class="op">=</span> <span class="cn">NULL</span>,
-  gen <span class="op">=</span> <span class="cn">NULL</span>,
-  check <span class="op">=</span> <span class="cn">NULL</span>,
-  block <span class="op">=</span> <span class="cn">NULL</span>,
-  row <span class="op">=</span> <span class="cn">NULL</span>,
-  col <span class="op">=</span> <span class="cn">NULL</span>,
-  covariate <span class="op">=</span> <span class="cn">NULL</span>,
-  nugget <span class="op">=</span> <span class="cn">FALSE</span>,
-  resp <span class="op">=</span> <span class="cn">NULL</span>,
-  type.gen <span class="op">=</span> <span class="st">"random"</span>,
-  model <span class="op">=</span> <span class="cn">NULL</span>
-<span class="op">)</span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">spatial.aud</span><span class="op">(</span></span>
+<span>  data <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  gen <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  check <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  block <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  row <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  col <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  covariate <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  nugget <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>  resp <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  type.gen <span class="op">=</span> <span class="st">"random"</span>,</span>
+<span>  model <span class="op">=</span> <span class="cn">NULL</span></span>
+<span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div id="arguments">
     <h2>Arguments</h2>
     <dl><dt>data</dt>
 <dd><p>dataframe with all relevant columns for spatial model and response variables.</p></dd>
+
+
 <dt>gen</dt>
 <dd><p>factor name for genotypes (or treatments)</p></dd>
+
+
 <dt>check</dt>
 <dd><p>factor name for checks (labeled 'control') and test lines (labeled 'test') (optional)</p></dd>
+
+
 <dt>block</dt>
 <dd><p>factor name for block (or replicates) (optional)</p></dd>
+
+
 <dt>row</dt>
 <dd><p>factor name for row coordinates of each experimental unit</p></dd>
+
+
 <dt>col</dt>
 <dd><p>factor name for column coordinates of each experimental unit</p></dd>
+
+
 <dt>covariate</dt>
 <dd><p>factor for additional covariate (optional)</p></dd>
+
+
 <dt>nugget</dt>
 <dd><p>logical to fit nugget random effects (default = FALSE)</p></dd>
+
+
 <dt>resp</dt>
 <dd><p>column name for the response variable to analyze</p></dd>
+
+
 <dt>type.gen</dt>
 <dd><p>model assumption for genotypes: 'random' or 'fixed' (default = 'random')</p></dd>
+
+
 <dt>model</dt>
 <dd><p>model number to be fitted (optional)</p></dd>
+
 </dl></div>
     <div id="value">
     <h2>Value</h2>
-    <p>A table with goodness-of-fit statistics for models evaluated. This includes columns:
+    
+
+<p>A table with goodness-of-fit statistics for models evaluated. This includes columns:
 number of variance components in the model (n.VC), log-likelihood (logL), Akaike information
 criteria (AIC), Bayesian information criteria (BIC), heritability based on predictor
 error variance (heritPEV, only for genotypes 'random'), A-optimality value, logarithm of
@@ -123,23 +146,23 @@ covariance matrix of predictions.</p>
 
     <div id="ref-examples">
     <h2>Examples</h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span class="co"># Example 1: Analysis Unreplicated Trial</span></span>
-<span class="r-in"><span class="co"># library(agridat)</span></span>
-<span class="r-in"><span class="co"># UR &lt;- burgueno.unreplicated</span></span>
-<span class="r-in"><span class="co"># UR$col &lt;- as.factor(UR$col)</span></span>
-<span class="r-in"><span class="co"># UR$row &lt;- as.factor(UR$row)</span></span>
-<span class="r-in"><span class="co"># UR$gen &lt;- as.factor(UR$gen)</span></span>
-<span class="r-in"><span class="co"># head(UR)</span></span>
-<span class="r-in"><span class="co"># output.UR &lt;- spatial.aud(data=UR, gen='gen', row='row', col='col', resp='yield',</span></span>
-<span class="r-in"><span class="co">#                          type.gen='random')</span></span>
-<span class="r-in"><span class="co"># output.UR</span></span>
-<span class="r-in"><span class="co">#</span></span>
-<span class="r-in"><span class="co"># # Example 2: Fitting only Model 4: ar1(Row):ar1(Col)</span></span>
-<span class="r-in"><span class="co"># mod4.UR &lt;- spatial.aud(data=UR, gen='gen', row='row', col='col', resp='yield',</span></span>
-<span class="r-in"><span class="co">#                        type.gen='random', model=4)</span></span>
-<span class="r-in"><span class="co"># summary(mod4.UR$mod)$varcomp  # Summary from ASReml-R</span></span>
-<span class="r-in"><span class="co"># head(mod4.UR$predictions)     # Predictions</span></span>
-<span class="r-in"></span>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="co"># Example 1: Analysis Unreplicated Trial</span></span></span>
+<span class="r-in"><span><span class="co"># library(agridat)</span></span></span>
+<span class="r-in"><span><span class="co"># UR &lt;- burgueno.unreplicated</span></span></span>
+<span class="r-in"><span><span class="co"># UR$col &lt;- as.factor(UR$col)</span></span></span>
+<span class="r-in"><span><span class="co"># UR$row &lt;- as.factor(UR$row)</span></span></span>
+<span class="r-in"><span><span class="co"># UR$gen &lt;- as.factor(UR$gen)</span></span></span>
+<span class="r-in"><span><span class="co"># head(UR)</span></span></span>
+<span class="r-in"><span><span class="co"># output.UR &lt;- spatial.aud(data=UR, gen='gen', row='row', col='col', resp='yield',</span></span></span>
+<span class="r-in"><span><span class="co">#                          type.gen='random')</span></span></span>
+<span class="r-in"><span><span class="co"># output.UR</span></span></span>
+<span class="r-in"><span><span class="co">#</span></span></span>
+<span class="r-in"><span><span class="co"># # Example 2: Fitting only Model 4: ar1(Row):ar1(Col)</span></span></span>
+<span class="r-in"><span><span class="co"># mod4.UR &lt;- spatial.aud(data=UR, gen='gen', row='row', col='col', resp='yield',</span></span></span>
+<span class="r-in"><span><span class="co">#                        type.gen='random', model=4)</span></span></span>
+<span class="r-in"><span><span class="co"># summary(mod4.UR$mod)$varcomp  # Summary from ASReml-R</span></span></span>
+<span class="r-in"><span><span class="co"># head(mod4.UR$predictions)     # Predictions</span></span></span>
+<span class="r-in"><span></span></span>
 <span class="r-in"></span>
 </code></pre></div>
     </div>
@@ -155,7 +178,7 @@ covariance matrix of predictions.</p>
 </div>
 
 <div class="pkgdown">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.3.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.6.</p>
 </div>
 
       </footer></div>

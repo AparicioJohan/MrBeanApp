@@ -57,7 +57,7 @@ mod_residuals_spats_ui <- function(id) {
             ),
             tabPanel(
               title = "Residual against Other",
-              icon = icon("exchange-alt"),
+              icon = icon("exchange-alt", verify_fa = FALSE),
               fluidRow(
                 column(
                   width = 6,
@@ -92,7 +92,7 @@ mod_residuals_spats_ui <- function(id) {
               style = "color: white ; background-color: #28a745"
             )),
             width = 12, style = "overflow-x: scroll;",
-            status = "success", title = tagList(icon = icon("exclamation-triangle"), "Potential Outliers"), solidHeader = FALSE, collapsible = TRUE, collapsed = TRUE
+            status = "success", title = tagList(icon = icon("exclamation-triangle", verify_fa = FALSE), "Potential Outliers"), solidHeader = FALSE, collapsible = TRUE, collapsed = TRUE
           )
         )
       )

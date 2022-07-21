@@ -59,79 +59,122 @@ Some checks on data are incorporated, but data is assumed to come in a full grid
     </div>
 
     <div id="ref-usage">
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="fu">spatial.single</span><span class="op">(</span>
-  data <span class="op">=</span> <span class="cn">NULL</span>,
-  gen <span class="op">=</span> <span class="cn">NULL</span>,
-  block <span class="op">=</span> <span class="cn">NULL</span>,
-  ibk <span class="op">=</span> <span class="cn">NULL</span>,
-  row <span class="op">=</span> <span class="cn">NULL</span>,
-  col <span class="op">=</span> <span class="cn">NULL</span>,
-  cov1 <span class="op">=</span> <span class="cn">NULL</span>,
-  cov2 <span class="op">=</span> <span class="cn">NULL</span>,
-  resp <span class="op">=</span> <span class="cn">NULL</span>,
-  add.block <span class="op">=</span> <span class="cn">FALSE</span>,
-  add.ibk <span class="op">=</span> <span class="cn">FALSE</span>,
-  add.row <span class="op">=</span> <span class="cn">FALSE</span>,
-  add.col <span class="op">=</span> <span class="cn">FALSE</span>,
-  add.spl.row <span class="op">=</span> <span class="cn">FALSE</span>,
-  add.spl.col <span class="op">=</span> <span class="cn">FALSE</span>,
-  add.cov1 <span class="op">=</span> <span class="cn">FALSE</span>,
-  add.cov2 <span class="op">=</span> <span class="cn">FALSE</span>,
-  add.nugget <span class="op">=</span> <span class="cn">FALSE</span>,
-  type.gen <span class="op">=</span> <span class="st">"random"</span>,
-  type.block <span class="op">=</span> <span class="st">"fixed"</span>,
-  type.residual <span class="op">=</span> <span class="st">"ar1"</span>
-<span class="op">)</span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">spatial.single</span><span class="op">(</span></span>
+<span>  data <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  gen <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  block <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  ibk <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  row <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  col <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  cov1 <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  cov2 <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  resp <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  add.block <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>  add.ibk <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>  add.row <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>  add.col <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>  add.spl.row <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>  add.spl.col <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>  add.cov1 <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>  add.cov2 <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>  add.nugget <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>  type.gen <span class="op">=</span> <span class="st">"random"</span>,</span>
+<span>  type.block <span class="op">=</span> <span class="st">"fixed"</span>,</span>
+<span>  type.residual <span class="op">=</span> <span class="st">"ar1"</span></span>
+<span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div id="arguments">
     <h2>Arguments</h2>
     <dl><dt>data</dt>
 <dd><p>dataframe with all relevant columns for spatial model and response variables.</p></dd>
+
+
 <dt>gen</dt>
 <dd><p>factor name for genotypes (or treatments)</p></dd>
+
+
 <dt>block</dt>
 <dd><p>factor name for full block (or replicates) (optional)</p></dd>
+
+
 <dt>ibk</dt>
 <dd><p>factor name for incomplete block (optional) (optional)</p></dd>
+
+
 <dt>row</dt>
 <dd><p>column name for row coordinates of each experimental unit</p></dd>
+
+
 <dt>col</dt>
 <dd><p>column name for column coordinates of each experimental unit</p></dd>
+
+
 <dt>cov1</dt>
 <dd><p>column name with additional covariate 1 (optional)</p></dd>
+
+
 <dt>cov2</dt>
 <dd><p>column name with additional covariate 2 (optional)</p></dd>
+
+
 <dt>resp</dt>
 <dd><p>column name for the response variable to analyze</p></dd>
+
+
 <dt>add.block</dt>
 <dd><p>logical to add to model block effects (default = FALSE)</p></dd>
+
+
 <dt>add.ibk</dt>
 <dd><p>logical to fit incomplete block random effects (default = FALSE)</p></dd>
+
+
 <dt>add.row</dt>
 <dd><p>logical to fit row within block random effects (default = FALSE)</p></dd>
+
+
 <dt>add.col</dt>
 <dd><p>logical to fit column within block random effects (default = FALSE)</p></dd>
+
+
 <dt>add.spl.row</dt>
 <dd><p>logical to fit splines across rows (default = FALSE)</p></dd>
+
+
 <dt>add.spl.col</dt>
 <dd><p>logical to fit splines across columns (default = FALSE)</p></dd>
+
+
 <dt>add.cov1</dt>
 <dd><p>logical to fit additional covariate 1 (default = FALSE)</p></dd>
+
+
 <dt>add.cov2</dt>
 <dd><p>logical to fit additional covariate 2 (default = FALSE)</p></dd>
+
+
 <dt>add.nugget</dt>
 <dd><p>logical to fit nugget random effects (only for autoregressive errors) (default = FALSE)</p></dd>
+
+
 <dt>type.gen</dt>
 <dd><p>model assumption for genotypes: 'random' or 'fixed' (default = 'random')</p></dd>
+
+
 <dt>type.block</dt>
 <dd><p>model assumption for full blocks: 'random' or 'fixed' (default = 'fixed')</p></dd>
+
+
 <dt>type.residual</dt>
 <dd><p>model assumption for residual terms: 'indep' or 'ar1' (default = 'ar1')</p></dd>
+
 </dl></div>
     <div id="value">
     <h2>Value</h2>
-    <p>Several objects with details of the fitted model.
+    
+
+<p>Several objects with details of the fitted model.
 aov:         Wald-test (mixed model ANOVA-like table)
 call:        String with the ASReml-R call used to fit the requested model
 gt:          Goodness-of-fit statistics for the model evaluated are reported as summary. This includes columns:
@@ -151,33 +194,33 @@ predictions: Predictions for all genotypes, with an additional column of 'weight
 
     <div id="ref-examples">
     <h2>Examples</h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span class="co"># Example 1: Replicated Trial - Genotype random + spatial terms</span></span>
-<span class="r-in"><span class="co"># library(agridat)</span></span>
-<span class="r-in"><span class="co"># testREP &lt;- durban.rowcol</span></span>
-<span class="r-in"><span class="co"># testREP$bed &lt;- as.factor(testREP$bed)</span></span>
-<span class="r-in"><span class="co"># testREP$row &lt;- as.factor(testREP$row)</span></span>
-<span class="r-in"><span class="co"># testREP$gen &lt;- as.factor(testREP$gen)</span></span>
-<span class="r-in"><span class="co"># head(testREP)</span></span>
-<span class="r-in"><span class="co"># output.REP &lt;- spatial.single(data=testREP, gen='gen', row='row', col='bed', resp='yield',</span></span>
-<span class="r-in"><span class="co">#                             add.block=TRUE,  add.row=TRUE,  add.col=TRUE,</span></span>
-<span class="r-in"><span class="co">#                             type.gen='random', type.block='fixed', type.residual='ar1')</span></span>
-<span class="r-in"><span class="co"># output.REP$gt$herit.PEV           # Heritability-PEV</span></span>
-<span class="r-in"><span class="co"># output.REP$aov                    # Wald Test</span></span>
-<span class="r-in"><span class="co"># summary(output.REP$mod)$varcomp   # Variance Components</span></span>
-<span class="r-in"><span class="co"># head(output.REP$predictions)</span></span>
-<span class="r-in"><span class="co">#</span></span>
-<span class="r-in"><span class="co"># # Example 2: Simpler model - independent errors</span></span>
-<span class="r-in"><span class="co"># output.ID &lt;- spatial.single(data=testREP, gen='gen', row='row', col='bed', resp='yield',</span></span>
-<span class="r-in"><span class="co">#                             add.block=TRUE,  add.row=TRUE,  add.col=TRUE,</span></span>
-<span class="r-in"><span class="co">#                             type.gen='random', type.block='fixed', type.residual='indep')</span></span>
-<span class="r-in"><span class="co"># output.ID$gt$herit.PEV           # Heritability-PEV</span></span>
-<span class="r-in"><span class="co"># output.ID$aov                    # Wald Test</span></span>
-<span class="r-in"><span class="co"># summary(output.ID$mod)$varcomp   # Variance Components</span></span>
-<span class="r-in"><span class="co"># head(output.ID$predictions)</span></span>
-<span class="r-in"><span class="co">#</span></span>
-<span class="r-in"><span class="co"># # Example 3: Comparing Models with a LRT</span></span>
-<span class="r-in"><span class="co"># lrt.asreml(output.REP$mod, output.ID$mod, boundary=FALSE)</span></span>
-<span class="r-in"></span>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="co"># Example 1: Replicated Trial - Genotype random + spatial terms</span></span></span>
+<span class="r-in"><span><span class="co"># library(agridat)</span></span></span>
+<span class="r-in"><span><span class="co"># testREP &lt;- durban.rowcol</span></span></span>
+<span class="r-in"><span><span class="co"># testREP$bed &lt;- as.factor(testREP$bed)</span></span></span>
+<span class="r-in"><span><span class="co"># testREP$row &lt;- as.factor(testREP$row)</span></span></span>
+<span class="r-in"><span><span class="co"># testREP$gen &lt;- as.factor(testREP$gen)</span></span></span>
+<span class="r-in"><span><span class="co"># head(testREP)</span></span></span>
+<span class="r-in"><span><span class="co"># output.REP &lt;- spatial.single(data=testREP, gen='gen', row='row', col='bed', resp='yield',</span></span></span>
+<span class="r-in"><span><span class="co">#                             add.block=TRUE,  add.row=TRUE,  add.col=TRUE,</span></span></span>
+<span class="r-in"><span><span class="co">#                             type.gen='random', type.block='fixed', type.residual='ar1')</span></span></span>
+<span class="r-in"><span><span class="co"># output.REP$gt$herit.PEV           # Heritability-PEV</span></span></span>
+<span class="r-in"><span><span class="co"># output.REP$aov                    # Wald Test</span></span></span>
+<span class="r-in"><span><span class="co"># summary(output.REP$mod)$varcomp   # Variance Components</span></span></span>
+<span class="r-in"><span><span class="co"># head(output.REP$predictions)</span></span></span>
+<span class="r-in"><span><span class="co">#</span></span></span>
+<span class="r-in"><span><span class="co"># # Example 2: Simpler model - independent errors</span></span></span>
+<span class="r-in"><span><span class="co"># output.ID &lt;- spatial.single(data=testREP, gen='gen', row='row', col='bed', resp='yield',</span></span></span>
+<span class="r-in"><span><span class="co">#                             add.block=TRUE,  add.row=TRUE,  add.col=TRUE,</span></span></span>
+<span class="r-in"><span><span class="co">#                             type.gen='random', type.block='fixed', type.residual='indep')</span></span></span>
+<span class="r-in"><span><span class="co"># output.ID$gt$herit.PEV           # Heritability-PEV</span></span></span>
+<span class="r-in"><span><span class="co"># output.ID$aov                    # Wald Test</span></span></span>
+<span class="r-in"><span><span class="co"># summary(output.ID$mod)$varcomp   # Variance Components</span></span></span>
+<span class="r-in"><span><span class="co"># head(output.ID$predictions)</span></span></span>
+<span class="r-in"><span><span class="co">#</span></span></span>
+<span class="r-in"><span><span class="co"># # Example 3: Comparing Models with a LRT</span></span></span>
+<span class="r-in"><span><span class="co"># lrt.asreml(output.REP$mod, output.ID$mod, boundary=FALSE)</span></span></span>
+<span class="r-in"><span></span></span>
 <span class="r-in"></span>
 </code></pre></div>
     </div>
@@ -193,7 +236,7 @@ predictions: Predictions for all genotypes, with an additional column of 'weight
 </div>
 
 <div class="pkgdown">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.3.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.6.</p>
 </div>
 
       </footer></div>

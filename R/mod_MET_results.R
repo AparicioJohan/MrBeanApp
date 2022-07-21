@@ -245,7 +245,7 @@ mod_MET_results_ui <- function(id) {
                   col_3()
                 ),
                 DT::dataTableOutput(ns("anovamix")),
-                width = 12, title = tagList(icon = icon("exchange-alt"), "Comparison"), status = "success", solidHeader = FALSE
+                width = 12, title = tagList(icon = icon("exchange-alt", verify_fa = FALSE), "Comparison"), status = "success", solidHeader = FALSE
               )
             )
           )
