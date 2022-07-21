@@ -730,7 +730,8 @@ ggCor <-
   function(myData, colours = c("#db4437", "white", "#FF9D00"),
            blackLabs = c(-0.7, 0.7), showSignif = TRUE,
            pBreaks = c(0, .0001, .001, .01, Inf), pLabels = c("***", "**", "*", "ns"),
-           showDiagonal = FALSE, Diag = NULL, returnTable = FALSE) {
+           showDiagonal = FALSE, Diag = NULL, returnTable = FALSE,
+           size_text = 4) {
 
     #   Goal      : Return a ggplot object to plot a triangular correlation figure between 2 or more variables.
     #               Depends on the packages 'ggplot2' 'psych' and 'reshape'
@@ -874,7 +875,7 @@ ggCor <-
       geom_tile(color = "gray") +
       labs(x = NULL, y = NULL) +
       theme_minimal(base_size = 16) +
-      geom_text(aes(x = col, y = row, label = label), color = cors$txtCol, size = 4) +
+      geom_text(aes(x = col, y = row, label = label), color = cors$txtCol, size = size_text) +
       scale_fill_gradient2(low = colours[1], mid = colours[2], high = colours[3]) +
       theme(
         axis.text.x = element_text(angle = 40, hjust = 1), legend.position = "none",

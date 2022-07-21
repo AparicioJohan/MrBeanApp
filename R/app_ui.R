@@ -104,28 +104,12 @@ app_ui <- function(request) {
             icon = shiny::icon("sitemap"),
             startExpanded = F,
             bs4SidebarMenuSubItem(
-              HTML(
-                paste(
-                  "Model Specs",
-                  bs4Badge("new",
-                    position = "right",
-                    color = "danger"
-                  )
-                )
-              ),
+              text = "Model Specs",
               tabName = "msa",
               icon = shiny::icon("circle-thin", verify_fa = FALSE)
             ),
             bs4SidebarMenuSubItem(
-              HTML(
-                paste(
-                  "Results",
-                  bs4Badge("new",
-                    position = "right",
-                    color = "danger"
-                  )
-                )
-              ),
+              text = "Results",
               tabName = "msa_result",
               icon = shiny::icon("circle-thin", verify_fa = FALSE)
             )
@@ -136,15 +120,7 @@ app_ui <- function(request) {
             icon = shiny::icon("ruler"),
             startExpanded = F,
             bs4SidebarMenuSubItem(
-              HTML(
-                paste(
-                  "Model Specs",
-                  bs4Badge("new",
-                    position = "right",
-                    color = "danger"
-                  )
-                )
-              ),
+              text = "Model Specs",
               tabName = "multi_trait",
               icon = shiny::icon("circle-thin", verify_fa = FALSE)
             )
@@ -156,28 +132,12 @@ app_ui <- function(request) {
             icon = shiny::icon("braille"),
             startExpanded = F,
             bs4SidebarMenuSubItem(
-              HTML(
-                paste(
-                  "Model Specs",
-                  bs4Badge("new",
-                    position = "right",
-                    color = "success"
-                  )
-                )
-              ),
+              text = "Model Specs",
               tabName = "spats_asreml",
               icon = shiny::icon("circle-thin", verify_fa = FALSE)
             ),
             bs4SidebarMenuSubItem(
-              HTML(
-                paste(
-                  "BLUPs/BLUEs",
-                  bs4Badge("new",
-                    position = "right",
-                    color = "success"
-                  )
-                )
-              ),
+              text = "BLUPs/BLUEs",
               tabName = "spats_asreml_effects",
               icon = shiny::icon("circle-thin", verify_fa = FALSE)
             )
@@ -188,28 +148,12 @@ app_ui <- function(request) {
             icon = shiny::icon("crosshairs"),
             startExpanded = F,
             bs4SidebarMenuSubItem(
-              HTML(
-                paste(
-                  "Model Specs",
-                  bs4Badge("new",
-                    position = "right",
-                    color = "danger"
-                  )
-                )
-              ),
+              text = "Model Specs",
               tabName = "aug_model",
               icon = shiny::icon("circle-thin", verify_fa = FALSE)
             ),
             bs4SidebarMenuSubItem(
-              HTML(
-                paste(
-                  "BLUPs/BLUEs",
-                  bs4Badge("new",
-                    position = "right",
-                    color = "danger"
-                  )
-                )
-              ),
+              text = "BLUPs/BLUEs",
               tabName = "aug_result",
               icon = shiny::icon("circle-thin", verify_fa = FALSE)
             )
@@ -289,6 +233,26 @@ app_ui <- function(request) {
                 )
               ),
               tabName = "met_fa",
+              icon = shiny::icon("circle-thin", verify_fa = FALSE)
+            )
+          ),
+          # GBLUP
+          bs4SidebarHeader("GBLUP"),
+          bs4SidebarMenuItem(
+            text = "Genomic Prediction",
+            icon = shiny::icon("dna"),
+            startExpanded = F,
+            bs4SidebarMenuSubItem(
+              text = HTML(
+                paste(
+                  "Model Specs",
+                  bs4Badge("new",
+                           position = "right",
+                           color = "danger"
+                  )
+                )
+              ),
+              tabName = "gblup",
               icon = shiny::icon("circle-thin", verify_fa = FALSE)
             )
           ),
@@ -415,6 +379,11 @@ app_ui <- function(request) {
             tabName = "met_fa",
             mod_MET_FA_ui("MET_FA_ui_1")
           ),
+          # GBLUP
+          bs4TabItem(
+            tabName = "gblup",
+            mod_GBLUP_ui("GBLUP_1")
+          ),
           # lme4 basic models
           bs4TabItem(
             tabName = "mixed",
@@ -468,7 +437,7 @@ app_ui <- function(request) {
       footer = bs4DashFooter(
         fixed = F,
         left = tagList(
-          "v.2.0.8",
+          "v.2.0.9",
           HTML("&nbsp; &nbsp; &nbsp; &nbsp;"),
           a(
             href = "https://www.linkedin.com/in/johan-steven-aparicio-arce-b68976193/",

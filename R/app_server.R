@@ -85,8 +85,10 @@ app_server <- function(input, output, session) {
   MET_res
   observeEvent(MET_res(), updatebs4TabItems(session, inputId = "tabs", selected = "met_fa"))
 
-
   callModule(mod_MET_FA_server, "MET_FA_ui_1", model = MET)
+  
+  # GBLUP
+  mod_GBLUP_server("GBLUP_1")
 
   # About
   callModule(mod_about_server, "about_ui_1")
