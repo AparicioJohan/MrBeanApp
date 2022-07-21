@@ -47,7 +47,7 @@ mod_MSA_results_ui <- function(id) {
                     status = "success", side = "left", type = "tabs",
                     tabPanel(
                       title = "Correlation",
-                      icon = icon("arrow-circle-right"),
+                      icon = icon("arrow-circle-right", verify_fa = FALSE),
                       # echarts4r::echarts4rOutput(ns("correlation")),
                       dropdown(
                         prettyRadioButtons(
@@ -77,7 +77,7 @@ mod_MSA_results_ui <- function(id) {
                         status = "warning", width = "300px"
                       ),
                       shinycssloaders::withSpinner(plotOutput(ns("corr")), type = 5, color = "#28a745")
-                      # icon = icon("arrow-circle-right")
+                      # icon = icon("arrow-circle-right", verify_fa = FALSE)
                     ),
                     tabPanel(
                       title = "Summary",
@@ -91,7 +91,7 @@ mod_MSA_results_ui <- function(id) {
                         class = "btn-success",
                         style = " color: white ; background-color: #28a745; float:left"
                       )
-                      # icon = icon("arrow-circle-right")
+                      # icon = icon("arrow-circle-right", verify_fa = FALSE)
                     ),
                     tabPanel(
                       title = "Predictions",
@@ -107,7 +107,7 @@ mod_MSA_results_ui <- function(id) {
                         class = "btn-danger",
                         style = " color: white ; background-color: #d9534f; float:left"
                       )
-                      # icon = icon("arrow-circle-right")
+                      # icon = icon("arrow-circle-right", verify_fa = FALSE)
                     ),
                     tabPanel(
                       title = "Potential Outliers",
@@ -118,7 +118,7 @@ mod_MSA_results_ui <- function(id) {
                         class = "btn-success",
                         style = " color: white ; background-color: #28a745; float:left"
                       )
-                      # icon = icon("arrow-circle-right")
+                      # icon = icon("arrow-circle-right", verify_fa = FALSE)
                     )
                   )
                 )

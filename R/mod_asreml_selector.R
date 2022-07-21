@@ -21,7 +21,7 @@ mod_asreml_selector_ui <- function(id) {
             selectInput(
               inputId = ns("variable"),
               label = tagList("Response Variable",
-                icon = tooltip(icon("question-circle"),
+                icon = tooltip(icon("question-circle", verify_fa = FALSE),
                   title = "The column with the continous response variable.",
                   placement = "top"
                 )
@@ -31,7 +31,7 @@ mod_asreml_selector_ui <- function(id) {
             selectInput(
               inputId = ns("genotype"),
               label = tagList("Genotype",
-                icon = tooltip(icon("question-circle"),
+                icon = tooltip(icon("question-circle", verify_fa = FALSE),
                   title = "The column with genotypes.",
                   placement = "top"
                 )
@@ -92,7 +92,7 @@ mod_asreml_selector_ui <- function(id) {
                   selectInput(
                     inputId = ns("block"),
                     label = tagList("Block",
-                      icon = tooltip(icon("question-circle"),
+                      icon = tooltip(icon("question-circle", verify_fa = FALSE),
                         title = "Select the replicate or complete block",
                         placement = "top"
                       )
@@ -105,7 +105,7 @@ mod_asreml_selector_ui <- function(id) {
                   selectInput(
                     inputId = ns("incomplete"),
                     label = tagList("IncBlock",
-                      icon = tooltip(icon("question-circle"),
+                      icon = tooltip(icon("question-circle", verify_fa = FALSE),
                         title = "Select Incomplete Block",
                         placement = "top"
                       )
@@ -129,7 +129,7 @@ mod_asreml_selector_ui <- function(id) {
                   selectInput(
                     inputId = ns("cov1"),
                     label = tagList("Covariate 1",
-                      icon = tooltip(icon("question-circle"),
+                      icon = tooltip(icon("question-circle", verify_fa = FALSE),
                         title = "Select a covariate",
                         placement = "top"
                       )
@@ -142,7 +142,7 @@ mod_asreml_selector_ui <- function(id) {
                   selectInput(
                     inputId = ns("cov2"),
                     label = tagList("Covariate 2",
-                      icon = tooltip(icon("question-circle"),
+                      icon = tooltip(icon("question-circle", verify_fa = FALSE),
                         title = "Select a covariate",
                         placement = "top"
                       )
@@ -192,7 +192,7 @@ mod_asreml_selector_ui <- function(id) {
                         plotly::plotlyOutput(ns("plot")),
                         type = 5, color = "#28a745"
                       ),
-                      icon = icon("th")
+                      icon = icon("table-cells", verify_fa = FALSE)
                     ),
                     tabPanel(
                       title = "Summary",
@@ -200,7 +200,7 @@ mod_asreml_selector_ui <- function(id) {
                         DT::dataTableOutput(ns("models")),
                         type = 5, color = "#28a745"
                       ),
-                      icon = icon("arrow-circle-right")
+                      icon = icon("arrow-circle-right", verify_fa = FALSE)
                     )
                   )
                 ),

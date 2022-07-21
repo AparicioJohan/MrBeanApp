@@ -23,7 +23,7 @@ mod_home_module1_ui <- function(id) {
           width = 12,
           status = "success",
           solidHeader = FALSE,
-          title = tagList(shiny::icon("home"), "Home")
+          title = tagList(shiny::icon("house", verify_fa = FALSE), "Home")
         )
       ),
       column(

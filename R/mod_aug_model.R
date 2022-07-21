@@ -20,7 +20,7 @@ mod_aug_model_ui <- function(id) {
             selectInput(
               inputId = ns("variable"),
               label = tagList("Response Variable",
-                icon = tooltip(icon("question-circle"),
+                icon = tooltip(icon("question-circle", verify_fa = FALSE),
                   title = "The column with the continous response variable.",
                   placement = "top"
                 )
@@ -30,7 +30,7 @@ mod_aug_model_ui <- function(id) {
             selectInput(
               inputId = ns("genotype"),
               label = tagList("Genotype",
-                icon = tooltip(icon("question-circle"),
+                icon = tooltip(icon("question-circle", verify_fa = FALSE),
                   title = "The column with genotypes.",
                   placement = "top"
                 )
@@ -56,7 +56,7 @@ mod_aug_model_ui <- function(id) {
             hr(),
             # selectInput(inputId=ns("block"),
             #             label=tagList( "Block",
-            #                            icon=tooltip(icon("question-circle"),
+            #                            icon=tooltip(icon("question-circle", verify_fa = FALSE),
             #                                              title = "Select the variable with Experiment-ID",
             #                                              placement = "top")),
             #             choices="", width = "100%"),
@@ -66,7 +66,7 @@ mod_aug_model_ui <- function(id) {
                 selectInput(
                   inputId = ns("block"),
                   label = tagList("Block",
-                    icon = tooltip(icon("question-circle"),
+                    icon = tooltip(icon("question-circle", verify_fa = FALSE),
                       title = "Select the variable with Experiment-ID",
                       placement = "top"
                     )
@@ -79,7 +79,7 @@ mod_aug_model_ui <- function(id) {
                 selectInput(
                   inputId = ns("covariate"),
                   label = tagList("Covariate (Optional)",
-                    icon = tooltip(icon("question-circle"),
+                    icon = tooltip(icon("question-circle", verify_fa = FALSE),
                       title = "Select covariate",
                       placement = "top"
                     )
@@ -193,11 +193,11 @@ mod_aug_model_ui <- function(id) {
                             style = "unite", icon = icon("gear", verify_fa = FALSE),
                             status = "warning", width = "300px"
                           ),
-                          shinycssloaders::withSpinner(plotOutput(ns("plot_spats")), type = 5, color = "#28a745"), icon = icon("th")
+                          shinycssloaders::withSpinner(plotOutput(ns("plot_spats")), type = 5, color = "#28a745"), icon = icon("table-cells", verify_fa = FALSE)
                         ),
                         tabPanel(
                           title = "Diagnostics",
-                          shinycssloaders::withSpinner(plotOutput(ns("residuals_aug")), type = 6, color = "#28a745"), icon = icon("arrow-circle-right")
+                          shinycssloaders::withSpinner(plotOutput(ns("residuals_aug")), type = 6, color = "#28a745"), icon = icon("arrow-circle-right", verify_fa = FALSE)
                         ),
                         tabPanel(
                           title = "Var-Components", icon = icon("signal"),
@@ -209,7 +209,7 @@ mod_aug_model_ui <- function(id) {
                         ),
                         tabPanel(
                           title = "Semi-Variogram",
-                          shinycssloaders::withSpinner(plotOutput(ns("semivariogram")), type = 6, color = "#28a745"), icon = icon("arrow-circle-right")
+                          shinycssloaders::withSpinner(plotOutput(ns("semivariogram")), type = 6, color = "#28a745"), icon = icon("arrow-circle-right", verify_fa = FALSE)
                         )
                       ) # ,
                       # actionLink(inputId = ns("gen_effects"), label = "Genotype Effects", icon = icon("arrow-right"), style = "color: #28a745"),

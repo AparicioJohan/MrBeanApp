@@ -85,7 +85,7 @@ mod_spats_single_ui <- function(id) {
         status = "success",
         solidHeader = FALSE,
         collapsible = TRUE,
-        title = tagList(icon = icon("th"), "Coordinates"),
+        title = tagList(icon = icon("table-cells", verify_fa = FALSE), "Coordinates"),
         rintrojs::introBox(
           selectInput(
             inputId = ns("column"),

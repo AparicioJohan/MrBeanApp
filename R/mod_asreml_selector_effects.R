@@ -110,7 +110,7 @@ mod_asreml_selector_effects_ui <- function(id) {
                             style = "unite", icon = icon("gear", verify_fa = FALSE),
                             status = "warning", width = "300px"
                           ),
-                          shinycssloaders::withSpinner(plotOutput(ns("plot_spats")), type = 5, color = "#28a745"), icon = icon("th")
+                          shinycssloaders::withSpinner(plotOutput(ns("plot_spats")), type = 5, color = "#28a745"), icon = icon("table-cells", verify_fa = FALSE)
                         ),
                         tabPanel(
                           title = "Diagnostics",
@@ -120,7 +120,7 @@ mod_asreml_selector_effects_ui <- function(id) {
                             status = "success",
                             slim = FALSE
                           ),
-                          shinycssloaders::withSpinner(plotOutput(ns("residuals_aug")), type = 6, color = "#28a745"), icon = icon("arrow-circle-right"),
+                          shinycssloaders::withSpinner(plotOutput(ns("residuals_aug")), type = 6, color = "#28a745"), icon = icon("arrow-circle-right", verify_fa = FALSE),
                           strong("Goodness-of-fit Statistics:"),
                           rep_br(2),
                           HTML(
@@ -147,7 +147,7 @@ mod_asreml_selector_effects_ui <- function(id) {
                             status = "success",
                             slim = FALSE
                           ),
-                          shinycssloaders::withSpinner(plotOutput(ns("semivariogram")), type = 6, color = "#28a745"), icon = icon("arrow-circle-right")
+                          shinycssloaders::withSpinner(plotOutput(ns("semivariogram")), type = 6, color = "#28a745"), icon = icon("arrow-circle-right", verify_fa = FALSE)
                         )
                       )
                     )

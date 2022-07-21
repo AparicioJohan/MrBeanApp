@@ -26,7 +26,7 @@ mod_info_spats_ui <- function(id) {
           shinycssloaders::withSpinner(
             verbatimTextOutput(ns("summary2")),
             type = 5, color = "#28a745"
-          ), icon = icon("arrow-circle-right")
+          ), icon = icon("arrow-circle-right", verify_fa = FALSE)
         ),
         tabPanel(
           title = "Model Plot",
@@ -59,7 +59,7 @@ mod_info_spats_ui <- function(id) {
           ),
           shinycssloaders::withSpinner(plotOutput(ns("plot_spats")), type = 5, color = "#28a745"),
           materialSwitch(ns("tog_plot"), label = "Percentage", status = "success", value = FALSE),
-          icon = icon("th")
+          icon = icon("table-cells", verify_fa = FALSE)
         ),
         tabPanel(
           title = "Variance-Plot", icon = icon("signal"),

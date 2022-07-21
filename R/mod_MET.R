@@ -17,7 +17,7 @@ mod_MET_ui <- function(id) {
       col_3(
         fluidRow(
           bs4Dash::box(
-            title = tagList(shiny::icon("file-upload"), "Import Data"), solidHeader = FALSE, width = 12, status = "success",
+            title = tagList(shiny::icon("file-upload", verify = FALSE), "Import Data"), solidHeader = FALSE, width = 12, status = "success",
             maximizable = T, closable = F,
             fileInput(
               inputId = ns("file1"), width = "100%",
@@ -77,7 +77,7 @@ mod_MET_ui <- function(id) {
                 selectInput(
                   inputId = ns("variable"),
                   label = tagList("Response Variable",
-                    icon = tooltip(icon("question-circle"),
+                    icon = tooltip(icon("question-circle", verify_fa = FALSE),
                       title = "The column with the continous response variable.",
                       placement = "top"
                     )
@@ -87,7 +87,7 @@ mod_MET_ui <- function(id) {
                 selectInput(
                   inputId = ns("genotype"),
                   label = tagList("Genotype",
-                    icon = tooltip(icon("question-circle"),
+                    icon = tooltip(icon("question-circle", verify_fa = FALSE),
                       title = "The column with genotypes.",
                       placement = "top"
                     )
@@ -102,7 +102,7 @@ mod_MET_ui <- function(id) {
                 selectInput(
                   inputId = ns("experiment"),
                   label = tagList("Experiment",
-                    icon = tooltip(icon("question-circle"),
+                    icon = tooltip(icon("question-circle", verify_fa = FALSE),
                       title = "Select the variable with Experiment-ID",
                       placement = "top"
                     )
@@ -118,7 +118,7 @@ mod_MET_ui <- function(id) {
                   pickerInput(
                     inputId = ns("selected"),
                     label = tagList("Subset",
-                      icon = tooltip(icon("question-circle"),
+                      icon = tooltip(icon("question-circle", verify_fa = FALSE),
                         title = "Select the experiments that you want to analyze.",
                         placement = "top"
                       )
@@ -133,7 +133,7 @@ mod_MET_ui <- function(id) {
                 selectInput(
                   inputId = ns("weight"),
                   label = tagList("Weights",
-                    icon = tooltip(icon("question-circle"),
+                    icon = tooltip(icon("question-circle", verify_fa = FALSE),
                       title = "Select the variable with weights",
                       placement = "top"
                     )
@@ -143,7 +143,7 @@ mod_MET_ui <- function(id) {
                 selectInput(
                   inputId = ns("VC"),
                   label = tagList("Covariance Structure",
-                    icon = tooltip(icon("question-circle"),
+                    icon = tooltip(icon("question-circle", verify_fa = FALSE),
                       title = "Select the Variance-covariance Structure",
                       placement = "top"
                     )
@@ -156,7 +156,7 @@ mod_MET_ui <- function(id) {
                 ),
                 textInput(ns("workspace"),
                   label = tagList("Workspace",
-                    icon = tooltip(icon("question-circle"),
+                    icon = tooltip(icon("question-circle", verify_fa = FALSE),
                       title = "128mb / 1gb / 2gb ",
                       placement = "top"
                     )

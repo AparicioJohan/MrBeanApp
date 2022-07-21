@@ -53,7 +53,7 @@ app_ui <- function(request) {
           bs4SidebarHeader("Menu"),
           bs4SidebarMenuItem(
             "Home",
-            tabName = "home", icon = shiny::icon("home")
+            tabName = "home", icon = shiny::icon("house", verify_fa = FALSE)
           ),
           # Import data
           bs4SidebarMenuItem(
@@ -63,7 +63,7 @@ app_ui <- function(request) {
             bs4SidebarMenuItem(
               text = "Upload",
               tabName = "Data",
-              icon = shiny::icon("file-upload")
+              icon = shiny::icon("file-upload", verify = FALSE)
             ),
             bs4SidebarMenuItem(
               text = "Descriptives",
@@ -410,7 +410,7 @@ app_ui <- function(request) {
           actionLink(
             inputId = "toAwesome00",
             label = "Home",
-            icon = icon("home")
+            icon = icon("house", verify = FALSE)
           ),
           br(),
           actionLink(

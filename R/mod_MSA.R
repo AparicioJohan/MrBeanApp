@@ -21,7 +21,7 @@ mod_MSA_ui <- function(id) {
             selectInput(
               inputId = ns("variable"),
               label = tagList("Response Variable",
-                icon = tooltip(icon("question-circle"),
+                icon = tooltip(icon("question-circle", verify_fa = FALSE),
                   title = "The column with the continous response variable.",
                   placement = "top"
                 )
@@ -31,7 +31,7 @@ mod_MSA_ui <- function(id) {
             selectInput(
               inputId = ns("genotype"),
               label = tagList("Genotype",
-                icon = tooltip(icon("question-circle"),
+                icon = tooltip(icon("question-circle", verify_fa = FALSE),
                   title = "The column with genotypes.",
                   placement = "top"
                 )
@@ -48,7 +48,7 @@ mod_MSA_ui <- function(id) {
               pickerInput(
                 inputId = ns("selected_checks"),
                 label = tagList("Checks",
-                  icon = tooltip(icon("question-circle"),
+                  icon = tooltip(icon("question-circle", verify_fa = FALSE),
                     title = "Select Checks",
                     placement = "top"
                   )

@@ -14,7 +14,7 @@ mod_GBLUP_ui <- function(id) {
     fluidRow(
       col_3(
         bs4Dash::box(
-          title = tagList(shiny::icon("file-upload"), "Import Data"),
+          title = tagList(shiny::icon("file-upload", verify = FALSE), "Import Data"),
           solidHeader = FALSE,
           width = 12,
           status = "success",
@@ -25,7 +25,7 @@ mod_GBLUP_ui <- function(id) {
             width = "100%",
             label = tagList(
               "Phenotypic Data",
-              icon = tooltip(icon("question-circle"),
+              icon = tooltip(icon("question-circle", verify_fa = FALSE),
                 title = "CSV file with one record per genotype",
                 placement = "top"
               )
@@ -59,7 +59,7 @@ mod_GBLUP_ui <- function(id) {
                 width = "100%",
                 label = tagList(
                   "Genotypic Data",
-                  icon = tooltip(icon("question-circle"),
+                  icon = tooltip(icon("question-circle", verify_fa = FALSE),
                     title = "CSV file with genotypic data in
                              numeric format (-1, 0, 1)",
                     placement = "top"
@@ -113,7 +113,7 @@ mod_GBLUP_ui <- function(id) {
                   label = tagList(
                     "Response Variables",
                     icon = tooltip(
-                      icon("question-circle"),
+                      icon("question-circle", verify_fa = FALSE),
                       title = "The column with the continous response variable.",
                       placement = "top"
                     )
@@ -125,7 +125,7 @@ mod_GBLUP_ui <- function(id) {
                 selectInput(
                   inputId = ns("genotype"),
                   label = tagList("Genotype",
-                    icon = tooltip(icon("question-circle"),
+                    icon = tooltip(icon("question-circle", verify_fa = FALSE),
                       title = "The column with genotypes.",
                       placement = "top"
                     )
@@ -135,7 +135,7 @@ mod_GBLUP_ui <- function(id) {
                 selectInput(
                   inputId = ns("Method"),
                   label = tagList("Method",
-                    icon = tooltip(icon("question-circle"),
+                    icon = tooltip(icon("question-circle", verify_fa = FALSE),
                       title = "Only GBLUP available",
                       placement = "top"
                     )
@@ -172,7 +172,7 @@ mod_GBLUP_ui <- function(id) {
               type = "tabs",
               tabPanel(
                 title = "Summary",
-                icon = icon("arrow-circle-right"),
+                icon = icon("arrow-circle-right", verify_fa = FALSE),
                 shinycssloaders::withSpinner(
                   DT::dataTableOutput(ns("summary_model")),
                   type = 5,
@@ -187,7 +187,7 @@ mod_GBLUP_ui <- function(id) {
               ),
               tabPanel(
                 title = "Plot",
-                icon = icon("th"),
+                icon = icon("table-cells", verify_fa = FALSE),
                 shinycssloaders::withSpinner(
                   echarts4r::echarts4rOutput(ns("comparison")),
                   type = 5,
@@ -196,7 +196,7 @@ mod_GBLUP_ui <- function(id) {
               ),
               tabPanel(
                 title = "Correlation",
-                icon = icon("arrow-circle-right"),
+                icon = icon("arrow-circle-right", verify_fa = FALSE),
                 dropdown(
                   prettyRadioButtons(
                     inputId = ns("type"),

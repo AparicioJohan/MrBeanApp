@@ -16,7 +16,7 @@ mod_lme4_single_ui <- function(id) {
     ),
     fluidRow(
       bs4Card(
-        title = tagList(shiny::icon("question-circle"), "Help"),
+        title = tagList(shiny::icon("question-circle", verify_fa = FALSE), "Help"),
         solidHeader = FALSE, footer = "Let's start", width = 3, status = "danger",
         h3("Factors in the formula:"),
         hr(),
@@ -463,7 +463,7 @@ mod_lme4_single_server <- function(input, output, session, data) {
       gradient = TRUE,
       fill = TRUE,
       value = nbl,
-      icon = shiny::icon("th"), elevation = 3
+      icon = shiny::icon("table-cells", verify_fa = FALSE), elevation = 3
     )
   })
 

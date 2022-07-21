@@ -215,11 +215,11 @@ mod_M_traits_ui <- function(id) {
                       #     selectInput(ns("selected"), label = HTML("<center> Trait </center>"), choices = "", width = "100%")),
                       #   col_4()
                       # ),
-                      icon = icon("th")
+                      icon = icon("table-cells", verify_fa = FALSE)
                     ),
                     # tabPanel(title = "Corr-1",
                     #             echarts4r::echarts4rOutput(ns("correlation")),
-                    #             icon = icon("arrow-circle-right")
+                    #             icon = icon("arrow-circle-right", verify_fa = FALSE)
                     # ),
                     tabPanel(
                       title = "Correlations",
@@ -265,7 +265,7 @@ mod_M_traits_ui <- function(id) {
                         color = "success",
                         icon = icon("check")
                       ),
-                      icon = icon("arrow-circle-right")
+                      icon = icon("arrow-circle-right", verify_fa = FALSE)
                     ),
                     tabPanel(
                       title = "Summary",
@@ -278,7 +278,7 @@ mod_M_traits_ui <- function(id) {
                         class = "btn-success",
                         style = " color: white ; background-color: #28a745; float:left"
                       ),
-                      icon = icon("arrow-circle-right")
+                      icon = icon("arrow-circle-right", verify_fa = FALSE)
                     ),
                     tabPanel(
                       title = "Predictions",
@@ -293,12 +293,12 @@ mod_M_traits_ui <- function(id) {
                         class = "btn-danger",
                         style = " color: white ; background-color: #d9534f; float:left"
                       ),
-                      icon = icon("arrow-circle-right")
+                      icon = icon("arrow-circle-right", verify_fa = FALSE)
                     ),
                     tabPanel(
                       title = "Potential Outliers",
                       DT::dataTableOutput(ns("extrem")),
-                      icon = icon("arrow-circle-right")
+                      icon = icon("arrow-circle-right", verify_fa = FALSE)
                     )
                   )
                 )
@@ -700,7 +700,7 @@ mod_M_traits_server <- function(input, output, session, data) {
           fill = TRUE,
           icon = icon("check"), animation = "jelly"
         ),
-        shinycssloaders::withSpinner(plotOutput(ns("plot_pca")), type = 6, color = "#28a745"), icon = icon("arrow-circle-right"),
+        shinycssloaders::withSpinner(plotOutput(ns("plot_pca")), type = 6, color = "#28a745"), icon = icon("arrow-circle-right", verify_fa = FALSE),
         conditionalPanel(
           condition = "input.typep=='ind'", ns = ns,
           fluidRow(
@@ -844,7 +844,7 @@ mod_M_traits_server <- function(input, output, session, data) {
           tooltip = tooltipOptions(title = "Click to Download!"),
           status = "warning", width = "300px"
         ),
-        shinycssloaders::withSpinner(plotOutput(ns("plot_dend")), type = 6, color = "#28a745"), icon = icon("arrow-circle-right"),
+        shinycssloaders::withSpinner(plotOutput(ns("plot_dend")), type = 6, color = "#28a745"), icon = icon("arrow-circle-right", verify_fa = FALSE),
         br(),
         strong("Configuration plot:"),
         fluidRow(

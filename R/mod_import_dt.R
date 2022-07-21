@@ -41,7 +41,7 @@ mod_import_dt_ui <- function(id) {
           condition = "input.Id004==2",
           ns = ns,
           bs4Dash::box(
-            title = tagList(shiny::icon("file-upload"), "Import Data"),
+            title = tagList(shiny::icon("file-upload", verify = FALSE), "Import Data"),
             solidHeader = FALSE,
             width = 12,
             status = "success",
@@ -176,7 +176,7 @@ mod_import_dt_ui <- function(id) {
           width = 4,
           fluidRow(
             bs4Dash::box(
-              title = tagList(shiny::icon("question-circle"), "Help"),
+              title = tagList(shiny::icon("question-circle", verify_fa = FALSE), "Help"),
               solidHeader = FALSE,
               width = 12,
               status = "success",
@@ -204,7 +204,7 @@ mod_import_dt_ui <- function(id) {
                   shiny::icon("server"),
                   "Server",
                   tooltip(
-                    icon("question-circle"),
+                    icon("question-circle", verify_fa = FALSE),
                     title = "For example:
                      https://cassavabase.org
                      https://sweetpotatobase.org
