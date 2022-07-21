@@ -15,26 +15,28 @@ GBLUPs(
 \arguments{
 \item{pheno_data}{data.frame with phenotypic data}
 
-\item{geno_matrix}{matrix n_gen by n_marker dimension in format (-1, 0 , 1)}
+\item{geno_matrix}{data.frame with first column identifying the genotype names
+and the rest containing marker information in format (-1, 0 , 1).}
 
 \item{traits}{vector with the traits to be analyzed}
 
-\item{method}{"GBLUP", "rrBLUP" or "mix"}
+\item{method}{"GBLUP", "rrBLUP" or "mix" ("mix" in progress)}
 
 \item{genoype}{string with the genotype name}
 }
 \value{
-list with results, information shared (pheno - geno),
- variance components (if GBLUP or mix was fitted) and marker effects.
+list with GBLUPs, variance components and marker effects.
+ list(results, var_comp, markers)
 }
 \description{
 GBLUP and rrBLUP estimation
 }
 \examples{
-# GBLUPs(pheno_data = NULL,
+# GBLUPs(
+# pheno_data = NULL,
 # geno_matrix = NULL,
 # genoype = NULL,
 # traits = NULL,
-# method = c("GBLUP", "rrBLUP", "mix)
+# method = c("GBLUP", "rrBLUP")
 # )
 }

@@ -340,10 +340,17 @@ mod_GBLUP_ui <- function(id) {
 mod_GBLUP_server <- function(id) {
   moduleServer(id, function(input, output, session) {
     ns <- session$ns
+    
+    loading <- Waiter$new(
+      html = HTML("<center> <div class='ball-loader'></div> </center>
+      <br><br><br><br><br><H3><FONT COLOR='grey'>Loading Data...</FONT></H3>"),
+      color = transparent(0.3)
+    )
 
     data_read <- reactive({
       req(input$phenotypic)
       req(input$genotypic)
+      loading$show()
       tryCatch(
         {
           file_phen <- input$phenotypic
@@ -380,8 +387,10 @@ mod_GBLUP_server <- function(id) {
             hideMethod = "hide",
             hideEasing = "linear"
           )
+          loading$hide()
         }
       )
+      loading$hide()
       if (!exists("data_imported")) data_imported <- NULL
       return(data_imported)
     })
@@ -469,7 +478,7 @@ mod_GBLUP_server <- function(id) {
 
     w <- Waiter$new(
       html = HTML("<center> <div class='ball-loader'></div> </center>
-      <br><br><br><br><br><H3><FONT COLOR='black'>Please wait...</FONT></H3>"),
+      <br><br><br><br><br><H3><FONT COLOR='grey'>Please wait...</FONT></H3>"),
       color = transparent(0.3)
     )
 
