@@ -136,6 +136,22 @@ mod_GBLUP_ui <- function(id) {
                   ),
                   choices = "", width = "100%"
                 ),
+                pickerInput(
+                  inputId = ns("filter_gen"),
+                  label = tagList(
+                    "Ignore Genotypes?",
+                    icon = tooltip(
+                      icon("question-circle", verify_fa = FALSE),
+                      title = "Subset of genotypes",
+                      placement = "top"
+                    )
+                  ),
+                  choices = NULL,
+                  options = list(
+                    `actions-box` = TRUE, size = 5, `live-search` = TRUE
+                  ),
+                  multiple = TRUE, width = "100%"
+                ),
                 selectInput(
                   inputId = ns("Method"),
                   label = tagList("Method",
@@ -279,15 +295,29 @@ mod_GBLUP_ui <- function(id) {
                 div(
                   id = ns("configuration"),
                   fluidRow(
-                    col_3(),
+                    col_3(
+                      rep_br(1),
+                      prettyCheckbox(
+                        inputId = ns("include_predicted"),
+                        label = "Include Predictions?",
+                        icon = icon("check"),
+                        outline = TRUE,
+                        fill = FALSE,
+                        shape = "square",
+                        animation = "tada",
+                        value = TRUE,
+                        status = "success",
+                        bigger = TRUE
+                      )
+                    ),
+                    col_2(),
                     col_6(
                       sliderInput(
                         inputId = ns("size"),
                         label = "Text Size",
                         min = 1, max = 8, value = 4, step = 1
                       )
-                    ),
-                    col_3()
+                    )
                   ),
                   fluidRow(
                     col_4(
@@ -509,6 +539,28 @@ mod_GBLUP_server <- function(id) {
         hide(id = "marker_details", anim = TRUE, animType = "slide")
       }
     })
+    
+    observe({
+      req(data_read())
+      tryCatch(
+        {
+          dt <- data_read()[["dt_phenotypic"]]
+          lvl <- as.character(dt[, input$genotype])
+          updatePickerInput(session, inputId = "filter_gen", choices = lvl)
+        },
+        error = function(e) {
+          shinytoastr::toastr_error(
+            title = "Error:",
+            conditionMessage(e),
+            position = "bottom-full-width",
+            showMethod = "slideDown",
+            hideMethod = "hide",
+            hideEasing = "linear"
+          )
+        }
+      )
+    }) %>% 
+      bindEvent(input$genotype)
 
     w <- Waiter$new(
       html = HTML("<center> <div class='ball-loader'></div> </center>
@@ -535,6 +587,10 @@ mod_GBLUP_server <- function(id) {
       w$show()
       tryCatch(
         {
+          if(!is.null(input$filter_gen)) {
+            pheno <- pheno %>% 
+              dplyr::filter(! .data[[input$genotype]] %in% input$filter_gen)
+          } 
           model <- GBLUPs(
             pheno_data = pheno,
             geno_matrix = geno,
@@ -719,11 +775,18 @@ mod_GBLUP_server <- function(id) {
 
     output$corr <- renderPlot({
       req(modelo())
-      gblups <- modelo()$results$GBLUP
+      if (input$include_predicted) {
+        type_pred <- c("fit", "prediction")
+      } else {
+        type_pred <- "fit"
+      }
+      gblups <- modelo()$results$GBLUP %>% 
+        dplyr::filter(type %in% type_pred) %>% 
+        dplyr::select(trait, level, predicted.value) %>% 
+        tidyr::spread(trait, value = "predicted.value")
       var_comp <- modelo()$var_comp$GBLUP
       tryCatch(
         {
-          gblups <- gblups %>% dplyr::select(-phenotypic)
           if (ncol(gblups) <= 2) stop("Only one trait selected.")
           h2 <- round(var_comp$Genomic_h2, 2)
           names(h2) <- var_comp$Trait
@@ -752,9 +815,16 @@ mod_GBLUP_server <- function(id) {
       },
       content = function(file) {
         req(modelo())
-        gblups <- modelo()$results$GBLUP
+        if (input$include_predicted) {
+          type_pred <- c("fit", "prediction")
+        } else {
+          type_pred <- "fit"
+        }
+        gblups <- modelo()$results$GBLUP %>% 
+          dplyr::filter(type %in% type_pred) %>% 
+          dplyr::select(trait, level, predicted.value) %>% 
+          tidyr::spread(trait, value = "predicted.value")
         var_comp <- modelo()$var_comp$GBLUP
-        gblups <- gblups %>% dplyr::select(-phenotypic)
         h2 <- round(var_comp$Genomic_h2, 2)
         names(h2) <- var_comp$Trait
         gg <- ggCor(gblups[, -1],

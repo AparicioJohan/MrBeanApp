@@ -31,13 +31,13 @@ GBLUPs <- function(pheno_data = NULL,
     tibble::column_to_rownames(genotype) %>%
     dplyr::relocate(level) %>%
     droplevels()
-
+  
   rows <- geno_matrix[, 1]
   cols <- colnames(geno_matrix)[-1]
   geno_matrix <- as.matrix(geno_matrix[, -1])
   rownames(geno_matrix) <- rows
   colnames(geno_matrix) <- cols
-
+  
   check_matrix <- inherits(geno_matrix, what = "matrix")
   if (!check_matrix) {
     stop("Check your genotypic data")
@@ -51,7 +51,7 @@ GBLUPs <- function(pheno_data = NULL,
   if (condition <= 1) {
     stop("The genotypic matrix has to be in (-1, 0, 1) format")
   }
-
+  
   shared <- data.frame(
     trait = as.character(),
     pheno = as.numeric(),
@@ -74,17 +74,18 @@ GBLUPs <- function(pheno_data = NULL,
   cat("\n")
   print(shared, row.names = FALSE)
   cat("\n")
-
+  
   pheno_data <- pheno_data %>%
     subset(level %in% rownames(geno_matrix)) %>%
     droplevels()
-
-  gblups_results <- pheno_data %>% dplyr::select(level)
+  
+  gblups_results <- data.frame(NULL)
   rrblups_results <- pheno_data %>% dplyr::select(level)
   mix_gblups_results <- pheno_data %>% dplyr::select(level)
-
+  
   if ("GBLUP" %in% method) {
     var_comp <- data.frame(trait = traits, var_g = NA, var_e = NA, h2 = NA)
+    tmp_list <- list()
     K <- sommer::A.mat(geno_matrix)
     colnames(K) <- rownames(K) <- rownames(geno_matrix)
     for (var in traits) {
@@ -93,25 +94,37 @@ GBLUPs <- function(pheno_data = NULL,
         equation,
         random = ~ sommer::vsr(level, Gu = K),
         rcov = ~units,
-        getPEV = FALSE,
+        getPEV = TRUE,
         data = pheno_data,
         verbose = FALSE
       )
-      id <- names(GBLUP$U$`u:level`[[1]])
-      gblups_results[id, var] <- GBLUP$U$`u:level`[[1]] + GBLUP$Beta$Estimate
-
+      
       var_g <- GBLUP$sigma$`u:level`
       var_e <- GBLUP$sigma$units
       var_comp[var_comp$trait == var, "var_g"] <- var_g
       var_comp[var_comp$trait == var, "var_e"] <- var_e
       var_comp[var_comp$trait == var, "h2"] <- var_g / (var_g + var_e)
+      
+      coefficients <- GBLUP$U$`u:level`[[1]]
+      id <- names(coefficients)
+      gblups_results[id, "trait"] <- var
+      gblups_results[, "level"] <- id
+      gblups_results[gen_in_common[[var]], "type"] <- "fit"
+      gblups_results <- gblups_results %>% 
+        dplyr::mutate(type = ifelse(is.na(type), "prediction", type))
+      
+      intercept <- GBLUP$Beta$Estimate
+      PEV <- diag(GBLUP$PevU$`u:level`[[1]])
+      gblups_results[, "predicted.value"] <- coefficients + intercept
+      gblups_results[, "gblup"] <- coefficients
+      gblups_results[, "standard.error"] <- sqrt(PEV)
+      gblups_results[, "z.ratio"] <- coefficients / sqrt(PEV)
+      gblups_results[, "PEV"] <- PEV
+      gblups_results[, "reliability"] <- 1 - PEV / c(var_g)
+      tmp_list[[var]] <- gblups_results
+      gblups_results <- data.frame(NULL)
     }
-    gblups_results <- gblups_results %>%
-      dplyr::mutate(
-        phenotypic = ifelse(!is.na(level), TRUE, FALSE),
-        level = rownames(.)
-      ) %>%
-      dplyr::relocate(level, phenotypic)
+    gblups_results <- data.frame(dplyr::bind_rows(tmp_list), row.names = NULL)
     var_comp <- merge(shared, var_comp, by = "trait")
     names(var_comp) <- c(
       "Trait", "Pheno", "Geno", "Shared", "VarG", "VarE", "Genomic_h2"
@@ -120,7 +133,7 @@ GBLUPs <- function(pheno_data = NULL,
     var_comp <- NULL
     gblups_results <- NULL
   }
-
+  
   if ("rrBLUP" %in% method) {
     marker_effects <- data.frame(
       marker = colnames(geno_matrix), row.names = colnames(geno_matrix)
@@ -154,7 +167,7 @@ GBLUPs <- function(pheno_data = NULL,
     rrblups_results <- NULL
     marker_effects <- NULL
   }
-
+  
   if ("mix" %in% method) {
     var_comp_mix <- data.frame(trait = traits, var_g = NA, var_e = NA, h2 = NA)
     marker_effects_mix <- data.frame(
@@ -184,17 +197,17 @@ GBLUPs <- function(pheno_data = NULL,
       se_markers <- sqrt(diag(var_markers))
       t_stat_from_g <- markers / se_markers
       pval_GBLUP <- dt(t_stat_from_g, df = n - k - 1)
-
+      
       id <- names(gblup)
       intercept <- mixGBLUP$Beta$Estimate
       mix_gblups_results[id, var] <- gblup + intercept
-
+      
       var_g <- mixGBLUP$sigma$`u:level` * adj
       var_e <- mixGBLUP$sigma$units
       var_comp_mix[var_comp_mix$trait == var, "var_g"] <- var_g
       var_comp_mix[var_comp_mix$trait == var, "var_e"] <- var_e
       var_comp_mix[var_comp_mix$trait == var, "h2"] <- var_g / (var_g + var_e)
-
+      
       marker_effects_mix[rownames(markers), var] <- markers
       marker_effects_mix[rownames(markers), paste0("pvalue_", var)] <- pval_GBLUP
     }
@@ -213,23 +226,23 @@ GBLUPs <- function(pheno_data = NULL,
     mix_gblups_results <- NULL
     marker_effects_mix <- NULL
   }
-
+  
   results <- list(
     "GBLUP" = gblups_results,
     "rrBLUP" = rrblups_results,
     "mixGBLUP" = mix_gblups_results
   )
-
+  
   info_markers <- list(
     "rrBLUP" = marker_effects,
     "mixGBLUP" = marker_effects_mix
   )
-
+  
   variance_comp <- list(
     "GBLUP" = var_comp,
     "mixGBLUP" = var_comp_mix
   )
-
+  
   return(
     list(
       results = results,
