@@ -14,7 +14,18 @@ mod_GBLUP_ui <- function(id) {
     fluidRow(
       col_3(
         bs4Dash::box(
-          title = tagList(shiny::icon("file-upload", verify_fa = FALSE), "Import Data"),
+          title = tagList(
+            shiny::icon("file-upload", verify_fa = FALSE), 
+            "Import Data",
+            actionBttn(
+              inputId = ns("example"),
+              label = NULL,
+              style = "material-circle", 
+              color = "warning",
+              size = "xs",
+              icon = icon("question")
+            )
+          ),
           solidHeader = FALSE,
           width = 12,
           status = "success",
@@ -23,13 +34,7 @@ mod_GBLUP_ui <- function(id) {
           fileInput(
             inputId = ns("phenotypic"),
             width = "100%",
-            label = tagList(
-              "Phenotypic Data",
-              icon = tooltip(icon("question-circle", verify_fa = FALSE),
-                title = "CSV file with one record per genotype",
-                placement = "top"
-              )
-            ),
+            label = with_red_star("Phenotypic Data"),
             accept = c(
               "text/csv",
               "text/comma-separated-values",
@@ -57,14 +62,7 @@ mod_GBLUP_ui <- function(id) {
               fileInput(
                 inputId = ns("genotypic"),
                 width = "100%",
-                label = tagList(
-                  "Genotypic Data",
-                  icon = tooltip(icon("question-circle", verify_fa = FALSE),
-                    title = "CSV file with genotypic data in
-                             numeric format (-1, 0, 1)",
-                    placement = "top"
-                  )
-                ),
+                label = with_red_star("Genotypic Data"),
                 accept = c(
                   "text/csv",
                   "text/comma-separated-values",
@@ -95,6 +93,12 @@ mod_GBLUP_ui <- function(id) {
                 block = TRUE
               )
             )
+          )
+        ),
+        shinyjs::hidden(
+          div(
+            id = ns("marker_details"),
+            bs4InfoBoxOutput(ns("info_gen"), width = 12)
           )
         )
       ),
@@ -192,6 +196,13 @@ mod_GBLUP_ui <- function(id) {
                   echarts4r::echarts4rOutput(ns("comparison")),
                   type = 5,
                   color = "#28a745"
+                ),
+                materialSwitch(
+                  ns("plot_type"),
+                  label = "Variance or Heritability",
+                  status = "success",
+                  right = T,
+                  width = "100%"
                 )
               ),
               tabPanel(
@@ -291,7 +302,7 @@ mod_GBLUP_ui <- function(id) {
                     ),
                     col_4(
                       colourpicker::colourInput(
-                        ns("col3"), "Maximun", "#FF9D00"
+                        ns("col3"), "Maximun", "#4285F4"
                       )
                     )
                   )
@@ -405,7 +416,7 @@ mod_GBLUP_server <- function(id) {
         choices = names(dt)[1], selected = "line"
       )
     })
-
+    
     output$table <- DT::renderDataTable({
       req(data_read())
       DT::datatable(
@@ -475,6 +486,29 @@ mod_GBLUP_server <- function(id) {
       show(id = "second_data", animType = "fade", anim = TRUE)
     }) %>%
       bindEvent(input$phenotypic)
+    
+    output$info_gen <- renderbs4InfoBox({
+      req(data_read())
+      dt_gen <- data_read()[["dt_genotypic"]]
+      n_markers <- ncol(dt_gen) - 1
+      n_gen <- nrow(dt_gen)
+      bs4InfoBox(
+        title = "Dimension of G:", 
+        color = "success", 
+        iconElevation = 2,
+        value = paste0("(Ind = ",n_gen, ", Markers = ", n_markers, ")"),
+        icon = shiny::icon("pagelines"), 
+        elevation = 1
+      )
+    })
+    
+    observe({
+      if (!is.null(data_read())) {
+        show(id = "marker_details", animType = "fade", anim = TRUE)
+      } else {
+        hide(id = "marker_details", anim = TRUE, animType = "slide")
+      }
+    })
 
     w <- Waiter$new(
       html = HTML("<center> <div class='ball-loader'></div> </center>
@@ -572,23 +606,47 @@ mod_GBLUP_server <- function(id) {
     output$comparison <- echarts4r::renderEcharts4r({
       req(modelo())
       table <- modelo()$var_comp$GBLUP
-      comp <- table %>%
-        e_charts(Trait) %>%
-        e_bar(VarE, name = "Residual Variance") %>%
-        e_bar(VarG, name = "Genotypic Variance") %>%
-        e_legend(
-          show = T,
-          bottom = "bottom",
-          left = "center",
-          orient = "horizontal"
-        ) %>%
-        e_title("Variance Comparison", subtext = "By trait") %>%
-        e_tooltip() %>%
-        e_toolbox_feature(feature = "saveAsImage") %>%
-        e_toolbox_feature(feature = "dataView") %>%
-        e_flip_coords() %>%
-        e_grid(left = "20%")
-      comp
+      if(input$plot_type) {
+        comp <- table %>%
+          e_charts(Trait) %>%
+          e_bar(Genomic_h2, name = "Genomic Heritability") %>%
+          e_legend(
+            show = T,
+            bottom = "bottom",
+            left = "center",
+            orient = "horizontal"
+          ) %>%
+          e_title("Heritability", subtext = "By trait") %>%
+          e_tooltip() %>%
+          e_toolbox_feature(feature = "saveAsImage") %>%
+          e_toolbox_feature(feature = "dataView") %>%
+          e_flip_coords() %>%
+          e_grid(left = "20%")
+        comp
+      } else {
+        comp <- table %>%
+          dplyr::mutate(
+            Total = VarG + VarE, 
+            VarG = VarG/Total,
+            VarE = VarE/Total
+          ) %>% 
+          e_charts(Trait) %>%
+          e_bar(VarE, name = "Residual Variance") %>%
+          e_bar(VarG, name = "Genotypic Variance") %>%
+          e_legend(
+            show = T,
+            bottom = "bottom",
+            left = "center",
+            orient = "horizontal"
+          ) %>%
+          e_title("Variance Components", subtext = "As a percentage") %>%
+          e_tooltip() %>%
+          e_toolbox_feature(feature = "saveAsImage") %>%
+          e_toolbox_feature(feature = "dataView") %>%
+          e_flip_coords() %>%
+          e_grid(left = "20%")
+        comp
+      }
     })
 
     output$gblups_table <- DT::renderDataTable({
@@ -721,6 +779,47 @@ mod_GBLUP_server <- function(id) {
       toggle("configuration", anim = TRUE, time = 1, animType = "fade")
     }) %>%
       bindEvent(input$config)
+    
+    
+    example_pheno <- data.frame(
+      genotype = c(paste("TRT_", LETTERS[1:4], sep = "")),
+      trait_1 = c(12.1, 11.5, 14, 13.6),
+      trait_2 = c(80.5, 91.1, 89.2, 79.8),
+      "..." = rep(".", 4),
+      trait_k = c(25, 32.2, 28.6, 30.8)
+    )
+    example_geno <- data.frame(
+      genotype = c(paste("TRT_", LETTERS[1:4], sep = "")),
+      marker_1 = c(-1, -1, 0, 1),
+      marker_2 = c(1, -1, 1, 0),
+      marker_3 = c(-1, -1, 0, -1),
+      "..." = rep(".", 4),
+      marker_n = c(0, -1, 0, 1)
+    )
+    observe({
+      showModal(
+        modalDialog(
+          size = "l",
+          title = div(tags$h3("Help message", style = "color: red;")),
+          h4("Please, follow the format shown in the following example. Make sure to upload a CSV file!"),
+          h6("Phenotypic Data"),
+          renderTable(example_pheno,
+                      bordered = TRUE,
+                      align = 'c',
+                      striped = TRUE),
+          hr(),
+          h6("Genotypic Data"),
+          renderTable(example_geno,
+                      bordered = TRUE,
+                      align = 'c',
+                      striped = TRUE, 
+                      digits = 0),
+          easyClose = FALSE
+        )
+      )
+    }) %>% 
+      bindEvent(input$example, ignoreInit = TRUE)
+    
   })
 }
 
