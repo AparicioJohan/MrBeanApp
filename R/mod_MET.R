@@ -410,7 +410,7 @@ mod_MET_server <- function(input, output, session) {
       bs4InfoBox(
         title = "Number of Trials", color = "info", iconElevation = 2,
         value = num,
-        icon = shiny::icon("sort-amount-down"), elevation = 1
+        icon = shiny::icon("sort-amount-down", verify_fa = FALSE), elevation = 1
       )
     })
   })

@@ -437,7 +437,7 @@ mod_lme4_single_server <- function(input, output, session, data) {
       gradient = TRUE,
       fill = TRUE,
       value = ngen,
-      icon = shiny::icon("sort-amount-down"), elevation = 3
+      icon = shiny::icon("sort-amount-down", verify_fa = FALSE), elevation = 3
     )
   })
 
