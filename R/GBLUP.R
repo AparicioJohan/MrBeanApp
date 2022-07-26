@@ -7,7 +7,7 @@
 #' @param traits vector with the traits to be analyzed
 #' @param method "GBLUP", "rrBLUP" or "mix" ("mix" in progress)
 #'
-#' @return list with GBLUPs, variance components and marker effects.
+#' @return List with GBLUPs, variance components and marker effects.
 #'  list(results, var_comp, markers)
 #'
 #' @export
@@ -115,19 +115,27 @@ GBLUPs <- function(pheno_data = NULL,
       
       intercept <- GBLUP$Beta$Estimate
       PEV <- diag(GBLUP$PevU$`u:level`[[1]])
+      id_phen <- as.character(pheno_data[, "level"])
+      gblups_results[id_phen, "observed"] <- pheno_data[, var]
       gblups_results[, "predicted.value"] <- coefficients + intercept
       gblups_results[, "gblup"] <- coefficients
       gblups_results[, "standard.error"] <- sqrt(PEV)
-      # gblups_results[, "z.ratio"] <- coefficients / sqrt(PEV)
-      gblups_results[, "PEV"] <- PEV
       gblups_results[, "reliability"] <- 1 - PEV / c(var_g)
+      corr <- cor(
+        x = gblups_results$observed,
+        y = gblups_results$predicted.value, 
+        use = "pairwise.complete.obs"
+      )
+      var_comp[var_comp$trait == var, "Corr"] <- corr
+      # gblups_results[, "z.ratio"] <- coefficients / sqrt(PEV)
+      # gblups_results[, "PEV"] <- PEV
       tmp_list[[var]] <- gblups_results
       gblups_results <- data.frame(NULL)
     }
     gblups_results <- data.frame(dplyr::bind_rows(tmp_list), row.names = NULL)
     var_comp <- merge(shared, var_comp, by = "trait")
     names(var_comp) <- c(
-      "Trait", "Pheno", "Geno", "Shared", "VarG", "VarE", "Genomic_h2"
+      "Trait", "Pheno", "Geno", "Shared", "VarG", "VarE", "Genomic_h2", "Corr"
     )
   } else {
     var_comp <- NULL

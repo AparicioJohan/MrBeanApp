@@ -25,7 +25,7 @@ and the rest containing marker information in format (-1, 0 , 1).}
 \item{genoype}{string with the genotype name}
 }
 \value{
-list with GBLUPs, variance components and marker effects.
+List with GBLUPs, variance components and marker effects.
  list(results, var_comp, markers)
 }
 \description{

@@ -191,21 +191,6 @@ mod_GBLUP_ui <- function(id) {
               side = "left",
               type = "tabs",
               tabPanel(
-                title = "Summary",
-                icon = icon("circle-arrow-right", verify_fa = FALSE),
-                shinycssloaders::withSpinner(
-                  DT::dataTableOutput(ns("summary_model")),
-                  type = 5,
-                  color = "#28a745"
-                ),
-                downloadButton(
-                  ns("download_summary"),
-                  label = "Download Table",
-                  class = "btn-success",
-                  style = "color: white ; background-color: #28a745; float:left"
-                )
-              ),
-              tabPanel(
                 title = "Plot",
                 icon = icon("table-cells", verify_fa = FALSE),
                 shinycssloaders::withSpinner(
@@ -219,6 +204,36 @@ mod_GBLUP_ui <- function(id) {
                   status = "success",
                   right = T,
                   width = "100%"
+                )
+              ),
+              tabPanel(
+                title = "Summary",
+                icon = icon("circle-arrow-right", verify_fa = FALSE),
+                shinycssloaders::withSpinner(
+                  DT::dataTableOutput(ns("summary_model")),
+                  type = 5,
+                  color = "#28a745"
+                ),
+                fluidRow(
+                  col_3(),
+                  col_6(
+                    actionBttn(
+                      inputId = ns("obs_pred"),
+                      icon = icon("check", verify_fa = FALSE),
+                      size = "sm",
+                      label = "View",
+                      style = "unite",
+                      color = "warning",
+                      block = T
+                    )
+                  ),
+                  col_3()
+                ),
+                downloadButton(
+                  ns("download_summary"),
+                  label = "Download Table",
+                  class = "btn-success",
+                  style = "color: white ; background-color: #28a745; float:left"
                 )
               ),
               tabPanel(
@@ -923,10 +938,10 @@ mod_GBLUP_server <- function(id) {
           title = "Dendogram", size = "l", easyClose = T,
           dropdown(
             prettyRadioButtons(
-              inputId = ns("filetype3"), 
-              label = "Download Plot File Type", 
+              inputId = ns("filetype3"),
+              label = "Download Plot File Type",
               outline = TRUE,
-              fill = FALSE, 
+              fill = FALSE,
               shape = "square",
               inline = TRUE,
               choices = list(PNG = "png", PDF = "pdf"),
@@ -935,19 +950,27 @@ mod_GBLUP_server <- function(id) {
             ),
             conditionalPanel(
               condition = "input.filetype3=='png'", ns = ns,
-              sliderInput(inputId = ns("png.wid.den"),
-                          min = 200, max = 2000, value = 900,
-                          label = "Width pixels"),
-              sliderInput(inputId = ns("png.hei.den"), 
-                          min = 200, max = 2000, value = 600,
-                          label = "Height pixels")
+              sliderInput(
+                inputId = ns("png.wid.den"),
+                min = 200, max = 2000, value = 900,
+                label = "Width pixels"
+              ),
+              sliderInput(
+                inputId = ns("png.hei.den"),
+                min = 200, max = 2000, value = 600,
+                label = "Height pixels"
+              )
             ),
             conditionalPanel(
               condition = "input.filetype3=='pdf'", ns = ns,
-              sliderInput(inputId = ns("pdf.wid.den"),
-                          min = 2, max = 20, value = 10, label = "Width"),
-              sliderInput(inputId = ns("pdf.hei.den"), 
-                          min = 2, max = 20, value = 8, label = "Height")
+              sliderInput(
+                inputId = ns("pdf.wid.den"),
+                min = 2, max = 20, value = 10, label = "Width"
+              ),
+              sliderInput(
+                inputId = ns("pdf.hei.den"),
+                min = 2, max = 20, value = 8, label = "Height"
+              )
             ),
             downloadButton(ns("descargar3"), "Download Plot",
               class = "btn-success",
@@ -957,17 +980,17 @@ mod_GBLUP_server <- function(id) {
               enter = shinyWidgets::animations$fading_entrances$fadeInLeftBig,
               exit  = shinyWidgets::animations$fading_exits$fadeOutLeftBig
             ),
-            style = "unite", 
+            style = "unite",
             icon = icon("gear", verify_fa = FALSE),
             tooltip = tooltipOptions(title = "Click to Download!"),
             status = "warning",
             width = "300px"
           ),
           shinycssloaders::withSpinner(
-            plotOutput(ns("plot_dend")), 
+            plotOutput(ns("plot_dend")),
             type = 6,
             color = "#28a745"
-          ), 
+          ),
           icon = icon("circle-arrow-right", verify_fa = FALSE),
           br(),
           strong("Configuration plot:"),
@@ -1023,7 +1046,7 @@ mod_GBLUP_server <- function(id) {
       ignoreInit = T,
       ignoreNULL = T
     )
-    
+
     output$descargar3 <- downloadHandler(
       filename = function() {
         paste("dendogram", input$filetype3, sep = ".")
@@ -1081,7 +1104,102 @@ mod_GBLUP_server <- function(id) {
         }
       }
     )
+
+    output$observed_pred <- renderPlot({
+      req(modelo())
+      req(input$selected)
+      trait_selected <- input$selected
+      tryCatch(
+        {
+          BLUPS <- modelo()$results$GBLUP %>% 
+            dplyr::filter(trait %in% trait_selected) %>% 
+            dplyr::select(type, level, observed, predicted.value)
+          
+          plot_corr <- BLUPS %>% 
+            ggplot(
+              aes(
+                x = observed,
+                y = predicted.value
+              )
+            ) + 
+            geom_point(
+              alpha = input$alpha, 
+              size = input$point_size,
+              color = "grey"
+            ) +
+            theme_bw(base_size = input$legend_size) + 
+            labs(x = "Observed", y = "Predicted") + 
+            ggpubr::stat_cor(size = input$point_size) +
+            geom_smooth(method = "lm", se = FALSE) +
+            coord_fixed()
+          plot_corr
+        },
+        error = function(e) {
+          shinytoastr::toastr_error(
+            title = "Error:",
+            conditionMessage(e),
+            position = "bottom-full-width",
+            showMethod = "slideDown",
+            hideMethod = "hide",
+            hideEasing = "linear"
+          )
+        }
+      )
+    })
     
+    observeEvent(input$obs_pred,
+      {
+        showModal(modalDialog(
+          title = "Accuracy",
+          size = "l", 
+          easyClose = T,
+          pickerInput(
+            inputId = ns("selected"),
+            label = "Trait",
+            choices = input$variables,
+            selected = input$variables[1],
+            options = list(
+              title = "Select a trait...", 
+              size = 5
+            ), 
+            width = 'fit',
+            inline = TRUE
+          ),
+          shinycssloaders::withSpinner(
+            plotOutput(ns("observed_pred")),
+            type = 6,
+            color = "#28a745"
+          ),
+          fluidRow(
+            col_4(
+              sliderTextInput(
+                inputId = ns("point_size"), label = "Point Size:",
+                choices = c(1:10),
+                grid = TRUE, selected = 5, width = "100%"
+              )
+            ),
+            col_4(
+              sliderTextInput(
+                inputId = ns("legend_size"), label = "Legend Size:",
+                choices = c(8:20),
+                grid = TRUE, selected = 15, width = "100%"
+              )
+            ),
+            col_4(
+              sliderTextInput(
+                inputId = ns("alpha"), label = "Alpha:",
+                choices = c(0.2, 0.4, 0.6, 0.8, 1, 1.5, 2, 2.5),
+                grid = TRUE, selected = 0.8, width = "100%"
+              )
+            )
+          )
+        ))
+      },
+      ignoreInit = T,
+      ignoreNULL = T
+    )
+
+
 
     example_pheno <- data.frame(
       genotype = c(paste("TRT_", LETTERS[1:4], sep = "")),

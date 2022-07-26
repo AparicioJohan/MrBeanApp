@@ -59,7 +59,8 @@ mod_GBLUP_results_ui <- function(id) {
                 solidHeader = FALSE, 
                 status = "success",
                 width = 12, 
-                collapsed = FALSE
+                collapsed = FALSE,
+                maximizable = TRUE
               )
             )
           )
@@ -147,8 +148,6 @@ mod_GBLUP_results_server <- function(id, gblup) {
           )
         }
       )
-      
-      
     })
     
   })
