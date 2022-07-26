@@ -80,6 +80,7 @@ golem::add_module( name = "MET" ) # Name of the module
 golem::add_module( name = "MET_results" ) # Name of the module
 golem::add_module( name = "MET_FA" ) # Name of the module
 golem::add_module( name = "GBLUP" ) # Name of the module
+golem::add_module( name = "GBLUP_results" ) # Name of the module
 
 
 

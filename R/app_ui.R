@@ -254,6 +254,19 @@ app_ui <- function(request) {
               ),
               tabName = "gblup",
               icon = shiny::icon("circle-thin", verify_fa = FALSE)
+            ),
+            bs4SidebarMenuSubItem(
+              HTML(
+                paste(
+                  "Results",
+                  bs4Badge("new",
+                           position = "right",
+                           color = "danger"
+                  )
+                )
+              ),
+              tabName = "gblup_results",
+              icon = shiny::icon("circle-thin", verify_fa = FALSE)
             )
           ),
           bs4SidebarHeader("Traditional Designs"),
@@ -383,6 +396,10 @@ app_ui <- function(request) {
           bs4TabItem(
             tabName = "gblup",
             mod_GBLUP_ui("GBLUP_1")
+          ),
+          bs4TabItem(
+            tabName = "gblup_results",
+            mod_GBLUP_results_ui("GBLUP_results_1")
           ),
           # lme4 basic models
           bs4TabItem(

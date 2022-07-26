@@ -88,7 +88,8 @@ app_server <- function(input, output, session) {
   callModule(mod_MET_FA_server, "MET_FA_ui_1", model = MET)
   
   # GBLUP
-  mod_GBLUP_server("GBLUP_1")
+  GBLUP_result <- mod_GBLUP_server("GBLUP_1")
+  mod_GBLUP_results_server("GBLUP_results_1", gblup = GBLUP_result)
 
   # About
   callModule(mod_about_server, "about_ui_1")
