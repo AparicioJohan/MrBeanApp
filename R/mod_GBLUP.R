@@ -15,12 +15,12 @@ mod_GBLUP_ui <- function(id) {
       col_3(
         bs4Dash::box(
           title = tagList(
-            shiny::icon("file-upload", verify_fa = FALSE), 
+            shiny::icon("file-upload", verify_fa = FALSE),
             "Import Data",
             actionBttn(
               inputId = ns("example"),
               label = NULL,
-              style = "material-circle", 
+              style = "material-circle",
               color = "warning",
               size = "xs",
               icon = icon("question")
@@ -285,6 +285,20 @@ mod_GBLUP_ui <- function(id) {
                   type = 5,
                   color = "#28a745"
                 ),
+                fluidRow(
+                  col_3(),
+                  col_6(
+                    actionBttn(
+                      inputId = ns("dendo"),
+                      label = "Dendogram",
+                      style = "jelly",
+                      color = "warning",
+                      block = T,
+                      icon = icon("check")
+                    )
+                  ),
+                  col_3()
+                ),
                 materialSwitch(
                   ns("config"),
                   label = "Config Plot",
@@ -381,7 +395,7 @@ mod_GBLUP_ui <- function(id) {
 mod_GBLUP_server <- function(id) {
   moduleServer(id, function(input, output, session) {
     ns <- session$ns
-    
+
     loading <- Waiter$new(
       html = HTML("<center> <div class='ball-loader'></div> </center>
       <br><br><br><br><br><H3><FONT COLOR='grey'>Loading Data...</FONT></H3>"),
@@ -446,7 +460,7 @@ mod_GBLUP_server <- function(id) {
         choices = names(dt)[1], selected = "line"
       )
     })
-    
+
     output$table <- DT::renderDataTable({
       req(data_read())
       DT::datatable(
@@ -516,22 +530,22 @@ mod_GBLUP_server <- function(id) {
       show(id = "second_data", animType = "fade", anim = TRUE)
     }) %>%
       bindEvent(input$phenotypic)
-    
+
     output$info_gen <- renderbs4InfoBox({
       req(data_read())
       dt_gen <- data_read()[["dt_genotypic"]]
       n_markers <- ncol(dt_gen) - 1
       n_gen <- nrow(dt_gen)
       bs4InfoBox(
-        title = "Dimension of G:", 
-        color = "success", 
+        title = "Dimension of G:",
+        color = "success",
         iconElevation = 2,
-        value = paste0("(Ind = ",n_gen, ", Markers = ", n_markers, ")"),
-        icon = shiny::icon("pagelines"), 
+        value = paste0("(Ind = ", n_gen, ", Markers = ", n_markers, ")"),
+        icon = shiny::icon("pagelines"),
         elevation = 1
       )
     })
-    
+
     observe({
       if (!is.null(data_read())) {
         show(id = "marker_details", animType = "fade", anim = TRUE)
@@ -539,7 +553,7 @@ mod_GBLUP_server <- function(id) {
         hide(id = "marker_details", anim = TRUE, animType = "slide")
       }
     })
-    
+
     observe({
       req(data_read())
       tryCatch(
@@ -559,7 +573,7 @@ mod_GBLUP_server <- function(id) {
           )
         }
       )
-    }) %>% 
+    }) %>%
       bindEvent(input$genotype)
 
     w <- Waiter$new(
@@ -587,10 +601,10 @@ mod_GBLUP_server <- function(id) {
       w$show()
       tryCatch(
         {
-          if(!is.null(input$filter_gen)) {
-            pheno <- pheno %>% 
-              dplyr::filter(! .data[[input$genotype]] %in% input$filter_gen)
-          } 
+          if (!is.null(input$filter_gen)) {
+            pheno <- pheno %>%
+              dplyr::filter(!.data[[input$genotype]] %in% input$filter_gen)
+          }
           model <- GBLUPs(
             pheno_data = pheno,
             geno_matrix = geno,
@@ -662,7 +676,7 @@ mod_GBLUP_server <- function(id) {
     output$comparison <- echarts4r::renderEcharts4r({
       req(modelo())
       table <- modelo()$var_comp$GBLUP
-      if(input$plot_type) {
+      if (input$plot_type) {
         comp <- table %>%
           e_charts(Trait) %>%
           e_bar(Genomic_h2, name = "Genomic Heritability") %>%
@@ -682,10 +696,10 @@ mod_GBLUP_server <- function(id) {
       } else {
         comp <- table %>%
           dplyr::mutate(
-            Total = VarG + VarE, 
-            VarG = VarG/Total,
-            VarE = VarE/Total
-          ) %>% 
+            Total = VarG + VarE,
+            VarG = VarG / Total,
+            VarE = VarE / Total
+          ) %>%
           e_charts(Trait) %>%
           e_bar(VarE, name = "Residual Variance") %>%
           e_bar(VarG, name = "Genotypic Variance") %>%
@@ -780,9 +794,9 @@ mod_GBLUP_server <- function(id) {
       } else {
         type_pred <- "fit"
       }
-      gblups <- modelo()$results$GBLUP %>% 
-        dplyr::filter(type %in% type_pred) %>% 
-        dplyr::select(trait, level, predicted.value) %>% 
+      gblups <- modelo()$results$GBLUP %>%
+        dplyr::filter(type %in% type_pred) %>%
+        dplyr::select(trait, level, predicted.value) %>%
         tidyr::spread(trait, value = "predicted.value")
       var_comp <- modelo()$var_comp$GBLUP
       tryCatch(
@@ -820,9 +834,9 @@ mod_GBLUP_server <- function(id) {
         } else {
           type_pred <- "fit"
         }
-        gblups <- modelo()$results$GBLUP %>% 
-          dplyr::filter(type %in% type_pred) %>% 
-          dplyr::select(trait, level, predicted.value) %>% 
+        gblups <- modelo()$results$GBLUP %>%
+          dplyr::filter(type %in% type_pred) %>%
+          dplyr::select(trait, level, predicted.value) %>%
           tidyr::spread(trait, value = "predicted.value")
         var_comp <- modelo()$var_comp$GBLUP
         h2 <- round(var_comp$Genomic_h2, 2)
@@ -849,8 +863,226 @@ mod_GBLUP_server <- function(id) {
       toggle("configuration", anim = TRUE, time = 1, animType = "fade")
     }) %>%
       bindEvent(input$config)
+
+
+    output$plot_dend <- renderPlot({
+      input$dendo
+      input$box
+      input$horiz
+      input$size_dendo
+      input$size_line
+      input$num_k
+      req(modelo())
+      isolate({
+        if (input$include_predicted) {
+          type_pred <- c("fit", "prediction")
+        } else {
+          type_pred <- "fit"
+        }
+        gblups <- modelo()$results$GBLUP %>%
+          dplyr::filter(type %in% type_pred) %>%
+          dplyr::select(trait, level, predicted.value) %>%
+          tidyr::spread(trait, value = "predicted.value")
+        tryCatch(
+          {
+            if (ncol(gblups) <= 2) stop("Only one trait selected.")
+            corr <- cor(gblups[, -1], use = "pairwise.complete.obs")
+            validate(
+              need(
+                input$num_k <= ncol(corr),
+                "The number of clusters should be less"
+              )
+            )
+            res <- factoextra::hcut(corr, k = input$num_k, stand = FALSE)
+            dend <- factoextra::fviz_dend(
+              res,
+              rect = input$box,
+              cex = input$size_dendo,
+              lwd = input$size_line, main = "Cluster Dendrogram",
+              horiz = input$horiz
+            )
+            dend
+          },
+          error = function(e) {
+            shinytoastr::toastr_error(
+              title = "Error in Dendogram:",
+              conditionMessage(e),
+              position = "bottom-full-width",
+              showMethod = "slideDown",
+              hideMethod = "hide",
+              hideEasing = "linear"
+            )
+          }
+        )
+      })
+    })
+
+    observeEvent(input$dendo,
+      {
+        showModal(modalDialog(
+          title = "Dendogram", size = "l", easyClose = T,
+          dropdown(
+            prettyRadioButtons(
+              inputId = ns("filetype3"), 
+              label = "Download Plot File Type", 
+              outline = TRUE,
+              fill = FALSE, 
+              shape = "square",
+              inline = TRUE,
+              choices = list(PNG = "png", PDF = "pdf"),
+              icon = icon("check"),
+              animation = "tada"
+            ),
+            conditionalPanel(
+              condition = "input.filetype3=='png'", ns = ns,
+              sliderInput(inputId = ns("png.wid.den"),
+                          min = 200, max = 2000, value = 900,
+                          label = "Width pixels"),
+              sliderInput(inputId = ns("png.hei.den"), 
+                          min = 200, max = 2000, value = 600,
+                          label = "Height pixels")
+            ),
+            conditionalPanel(
+              condition = "input.filetype3=='pdf'", ns = ns,
+              sliderInput(inputId = ns("pdf.wid.den"),
+                          min = 2, max = 20, value = 10, label = "Width"),
+              sliderInput(inputId = ns("pdf.hei.den"), 
+                          min = 2, max = 20, value = 8, label = "Height")
+            ),
+            downloadButton(ns("descargar3"), "Download Plot",
+              class = "btn-success",
+              style = " color: white ; background-color: #28a745"
+            ), br(),
+            animate = shinyWidgets::animateOptions(
+              enter = shinyWidgets::animations$fading_entrances$fadeInLeftBig,
+              exit  = shinyWidgets::animations$fading_exits$fadeOutLeftBig
+            ),
+            style = "unite", 
+            icon = icon("gear", verify_fa = FALSE),
+            tooltip = tooltipOptions(title = "Click to Download!"),
+            status = "warning",
+            width = "300px"
+          ),
+          shinycssloaders::withSpinner(
+            plotOutput(ns("plot_dend")), 
+            type = 6,
+            color = "#28a745"
+          ), 
+          icon = icon("circle-arrow-right", verify_fa = FALSE),
+          br(),
+          strong("Configuration plot:"),
+          fluidRow(
+            col_2(),
+            col_4(
+              switchInput(
+                inputId = ns("box"),
+                label = "Boxes?",
+                labelWidth = "100%",
+                onStatus = "success",
+                offStatus = "danger",
+                width = "100%", value = TRUE
+              )
+            ),
+            col_4(
+              switchInput(
+                inputId = ns("horiz"),
+                label = "Horizontal?",
+                labelWidth = "100%",
+                onStatus = "success",
+                offStatus = "danger",
+                width = "100%", value = TRUE
+              )
+            ),
+            col_2(),
+          ),
+          fluidRow(
+            col_4(
+              sliderTextInput(
+                inputId = ns("num_k"), label = "Clusters:",
+                choices = c(2, 3, 4, 5),
+                grid = TRUE, selected = 2, width = "100%"
+              )
+            ),
+            col_4(
+              sliderTextInput(
+                inputId = ns("size_dendo"), label = "Letter size:",
+                choices = c(0.2, 0.4, 0.6, 0.8, 1, 1.5, 2, 2.5),
+                grid = TRUE, selected = 1, width = "100%"
+              )
+            ),
+            col_4(
+              sliderTextInput(
+                inputId = ns("size_line"), label = "Line size:",
+                choices = c(0.2, 0.4, 0.6, 0.8, 1, 1.5, 2, 2.5),
+                grid = TRUE, selected = 0.8, width = "100%"
+              )
+            )
+          )
+        ))
+      },
+      ignoreInit = T,
+      ignoreNULL = T
+    )
     
+    output$descargar3 <- downloadHandler(
+      filename = function() {
+        paste("dendogram", input$filetype3, sep = ".")
+      },
+      content = function(file) {
+        req(modelo())
+        if (input$include_predicted) {
+          type_pred <- c("fit", "prediction")
+        } else {
+          type_pred <- "fit"
+        }
+        gblups <- modelo()$results$GBLUP %>%
+          dplyr::filter(type %in% type_pred) %>%
+          dplyr::select(trait, level, predicted.value) %>%
+          tidyr::spread(trait, value = "predicted.value")
+        tryCatch(
+          {
+            if (ncol(gblups) <= 2) stop("Only one trait selected.")
+            corr <- cor(gblups[, -1], use = "pairwise.complete.obs")
+            validate(
+              need(
+                input$num_k <= ncol(corr),
+                "The number of clusters should be less"
+              )
+            )
+            res <- factoextra::hcut(corr, k = input$num_k, stand = FALSE)
+            dend <- factoextra::fviz_dend(
+              res,
+              rect = input$box,
+              cex = input$size_dendo,
+              lwd = input$size_line, main = "Cluster Dendrogram",
+              horiz = input$horiz
+            )
+            dend
+          },
+          error = function(e) {
+            shinytoastr::toastr_error(
+              title = "Error in Dendogram:",
+              conditionMessage(e),
+              position = "bottom-full-width",
+              showMethod = "slideDown",
+              hideMethod = "hide",
+              hideEasing = "linear"
+            )
+          }
+        )
+        if (input$filetype3 == "png") {
+          png(file, width = input$png.wid.den, height = input$png.hei.den)
+          print(dend)
+          dev.off()
+        } else {
+          pdf(file, width = input$pdf.wid.den, height = input$pdf.hei.den)
+          print(dend)
+          dev.off()
+        }
+      }
+    )
     
+
     example_pheno <- data.frame(
       genotype = c(paste("TRT_", LETTERS[1:4], sep = "")),
       trait_1 = c(12.1, 11.5, 14, 13.6),
@@ -874,22 +1106,27 @@ mod_GBLUP_server <- function(id) {
           h4("Please, follow the format shown in the following example. Make sure to upload a CSV file!"),
           h6("Phenotypic Data"),
           renderTable(example_pheno,
-                      bordered = TRUE,
-                      align = 'c',
-                      striped = TRUE),
+            bordered = TRUE,
+            align = "c",
+            striped = TRUE
+          ),
           hr(),
           h6("Genotypic Data"),
           renderTable(example_geno,
-                      bordered = TRUE,
-                      align = 'c',
-                      striped = TRUE, 
-                      digits = 0),
+            bordered = TRUE,
+            align = "c",
+            striped = TRUE,
+            digits = 0
+          ),
           easyClose = FALSE
         )
       )
-    }) %>% 
+    }) %>%
       bindEvent(input$example, ignoreInit = TRUE)
-    
+
+    return(list(
+      model = modelo
+    ))
   })
 }
 

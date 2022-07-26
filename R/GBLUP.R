@@ -118,7 +118,7 @@ GBLUPs <- function(pheno_data = NULL,
       gblups_results[, "predicted.value"] <- coefficients + intercept
       gblups_results[, "gblup"] <- coefficients
       gblups_results[, "standard.error"] <- sqrt(PEV)
-      gblups_results[, "z.ratio"] <- coefficients / sqrt(PEV)
+      # gblups_results[, "z.ratio"] <- coefficients / sqrt(PEV)
       gblups_results[, "PEV"] <- PEV
       gblups_results[, "reliability"] <- 1 - PEV / c(var_g)
       tmp_list[[var]] <- gblups_results
