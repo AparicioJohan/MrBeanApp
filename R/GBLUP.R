@@ -118,7 +118,7 @@ GBLUPs <- function(pheno_data = NULL,
       id_phen <- as.character(pheno_data[, "level"])
       gblups_results[id_phen, "observed"] <- pheno_data[, var]
       gblups_results[, "predicted.value"] <- coefficients + intercept
-      gblups_results[, "gblup"] <- coefficients
+      gblups_results[, "GEBVs"] <- coefficients
       gblups_results[, "standard.error"] <- sqrt(PEV)
       gblups_results[, "reliability"] <- 1 - PEV / c(var_g)
       corr <- cor(

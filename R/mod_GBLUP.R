@@ -374,6 +374,22 @@ mod_GBLUP_ui <- function(id) {
                   type = 6,
                   color = "#28a745"
                 ),
+                fluidRow(
+                  col_3(),
+                  col_6(
+                    br(),
+                    actionBttn(
+                      inputId = ns("plot_reliability"),
+                      icon = icon("check", verify_fa = FALSE),
+                      size = "sm",
+                      label = "Reliability",
+                      style = "unite",
+                      color = "warning",
+                      block = T
+                    )
+                  ),
+                  col_3()
+                ),
                 downloadButton(
                   ns("download_gblups"),
                   "Download Table",
@@ -1111,24 +1127,24 @@ mod_GBLUP_server <- function(id) {
       trait_selected <- input$selected
       tryCatch(
         {
-          BLUPS <- modelo()$results$GBLUP %>% 
-            dplyr::filter(trait %in% trait_selected) %>% 
+          BLUPS <- modelo()$results$GBLUP %>%
+            dplyr::filter(trait %in% trait_selected) %>%
             dplyr::select(type, level, observed, predicted.value)
-          
-          plot_corr <- BLUPS %>% 
+
+          plot_corr <- BLUPS %>%
             ggplot(
               aes(
                 x = observed,
                 y = predicted.value
               )
-            ) + 
+            ) +
             geom_point(
-              alpha = input$alpha, 
+              alpha = input$alpha,
               size = input$point_size,
               color = "grey"
             ) +
-            theme_bw(base_size = input$legend_size) + 
-            labs(x = "Observed", y = "Predicted") + 
+            theme_bw(base_size = input$legend_size) +
+            labs(x = "Observed", y = "Predicted") +
             ggpubr::stat_cor(size = input$point_size) +
             geom_smooth(method = "lm", se = FALSE) +
             coord_fixed()
@@ -1146,12 +1162,12 @@ mod_GBLUP_server <- function(id) {
         }
       )
     })
-    
+
     observeEvent(input$obs_pred,
       {
         showModal(modalDialog(
           title = "Accuracy",
-          size = "l", 
+          size = "l",
           easyClose = T,
           pickerInput(
             inputId = ns("selected"),
@@ -1159,10 +1175,10 @@ mod_GBLUP_server <- function(id) {
             choices = input$variables,
             selected = input$variables[1],
             options = list(
-              title = "Select a trait...", 
+              title = "Select a trait...",
               size = 5
-            ), 
-            width = 'fit',
+            ),
+            width = "fit",
             inline = TRUE
           ),
           shinycssloaders::withSpinner(
@@ -1188,8 +1204,8 @@ mod_GBLUP_server <- function(id) {
             col_4(
               sliderTextInput(
                 inputId = ns("alpha"), label = "Alpha:",
-                choices = c(0.2, 0.4, 0.6, 0.8, 1, 1.5, 2, 2.5),
-                grid = TRUE, selected = 0.8, width = "100%"
+                choices = c(0.2, 0.4, 0.6, 0.8, 1),
+                grid = TRUE, selected = 0.6, width = "100%"
               )
             )
           )
@@ -1199,6 +1215,100 @@ mod_GBLUP_server <- function(id) {
       ignoreNULL = T
     )
 
+    output$pred_reliab <- plotly::renderPlotly({
+      req(modelo())
+      req(input$selected_to_relia)
+      trait_selected <- input$selected_to_relia
+      tryCatch(
+        {
+          table_dt <- modelo()$results$GBLUP %>%
+            dplyr::filter(trait %in% trait_selected) %>%
+            dplyr::select(type, level, predicted.value, reliability)
+
+          plot_corr <- table_dt %>%
+            ggplot(
+              aes(
+                x = reliability,
+                y = predicted.value,
+                color = type,
+                label = level
+              )
+            ) +
+            geom_point(
+              alpha = input$alpha_rel,
+              size = input$point_size_rel
+            ) +
+            theme_bw(base_size = input$legend_size_rel) +
+            labs(x = "Reliability", y = "Predicted") + 
+            geom_vline(xintercept = 0, linetype = 2, color = "grey")
+          plot_corr
+          plotly::ggplotly(plot_corr)
+        },
+        error = function(e) {
+          shinytoastr::toastr_error(
+            title = "Error:",
+            conditionMessage(e),
+            position = "bottom-full-width",
+            showMethod = "slideDown",
+            hideMethod = "hide",
+            hideEasing = "linear"
+          )
+        }
+      )
+    })
+
+
+    observeEvent(input$plot_reliability,
+      {
+        showModal(modalDialog(
+          title = "Reliability",
+          size = "l",
+          easyClose = T,
+          pickerInput(
+            inputId = ns("selected_to_relia"),
+            label = "Trait",
+            choices = input$variables,
+            selected = input$variables[1],
+            options = list(
+              title = "Select a trait...",
+              size = 5
+            ),
+            width = "fit",
+            inline = TRUE
+          ),
+          shinycssloaders::withSpinner(
+            plotly::plotlyOutput(ns("pred_reliab")),
+            type = 6,
+            color = "#28a745"
+          ),
+          fluidRow(
+            col_4(
+              sliderTextInput(
+                inputId = ns("point_size_rel"), label = "Point Size:",
+                choices = c(1:10),
+                grid = TRUE, selected = 2, width = "100%"
+              )
+            ),
+            col_4(
+              sliderTextInput(
+                inputId = ns("legend_size_rel"), label = "Legend Size:",
+                choices = c(6:15),
+                grid = TRUE, selected = 12, width = "100%"
+              )
+            ),
+            col_4(
+              sliderTextInput(
+                inputId = ns("alpha_rel"), label = "Alpha:",
+                choices = c(0.2, 0.4, 0.6, 0.8, 1),
+                grid = TRUE, selected = 0.4, width = "100%"
+              )
+            )
+          )
+        ))
+      },
+      ignoreInit = T,
+      ignoreNULL = T
+    )
 
 
     example_pheno <- data.frame(
