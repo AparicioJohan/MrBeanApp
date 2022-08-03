@@ -107,7 +107,9 @@ mod_GBLUP_results_server <- function(id, gblup) {
           BLUPS <- gblup$model()$results$GBLUP %>% 
             dplyr::filter(type %in% type_pred) %>% 
             dplyr::filter(trait %in% trait_selected) %>% 
-            dplyr::select(type, level, predicted.value, standard.error)
+            dplyr::select(
+              type, level, predicted.value, standard.error, reliability
+            )
           BLUPS$Lu <- BLUPS[, 3] - 1.645 * BLUPS[, 4]
           BLUPS$Ls <- BLUPS[, 3] + 1.645 * BLUPS[, 4]
           v <- as.character(BLUPS[order(BLUPS[, 3], decreasing = TRUE), 2])
@@ -115,9 +117,12 @@ mod_GBLUP_results_server <- function(id, gblup) {
           names(BLUPS)[3] <- "GBLUP"
           lvls_type <- length(unique(BLUPS$type))
           if (lvls_type >= 2) {
-            q <- ggplot(BLUPS, aes(x = Line, y = GBLUP, color = type))
+            q <- ggplot(
+              BLUPS,
+              aes(x = Line, y = GBLUP, color = type, label = reliability)
+              )
           } else {
-            q <- ggplot(BLUPS, aes(x = Line, y = GBLUP))
+            q <- ggplot(BLUPS, aes(x = Line, y = GBLUP, label = reliability))
           }
           p <- q +
             geom_point(size = 1) +
