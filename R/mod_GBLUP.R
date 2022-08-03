@@ -301,18 +301,29 @@ mod_GBLUP_ui <- function(id) {
                   color = "#28a745"
                 ),
                 fluidRow(
-                  col_3(),
-                  col_6(
+                  col_2(),
+                  col_4(
                     actionBttn(
                       inputId = ns("dendo"),
+                      icon = icon("check", verify_fa = FALSE),
+                      size = "sm",
                       label = "Dendogram",
-                      style = "jelly",
+                      style = "unite",
                       color = "warning",
-                      block = T,
-                      icon = icon("check")
+                      block = TRUE
                     )
                   ),
-                  col_3()
+                  col_4(
+                    actionBttn(
+                      inputId = ns("pca"),
+                      icon = icon("check", verify_fa = FALSE),
+                      size = "sm",
+                      label = "PCA",
+                      style = "unite",
+                      color = "warning",
+                      block = TRUE
+                    )
+                  )
                 ),
                 materialSwitch(
                   ns("config"),
@@ -405,6 +416,22 @@ mod_GBLUP_ui <- function(id) {
                   type = 6,
                   color = "#28a745"
                 ),
+                fluidRow(
+                  col_3(),
+                  col_6(
+                    br(),
+                    actionBttn(
+                      inputId = ns("markers_plot"),
+                      icon = icon("check", verify_fa = FALSE),
+                      size = "sm",
+                      label = "Markers",
+                      style = "unite",
+                      color = "warning",
+                      block = T
+                    )
+                  ),
+                  col_3()
+                ),
                 downloadButton(
                   ns("download_markers"),
                   "Download Table",
@@ -448,7 +475,7 @@ mod_GBLUP_server <- function(id) {
             file = file_phen$datapath,
             header = input$header_phen,
             sep = ","
-          ) %>% 
+          ) %>%
             as.data.frame()
           file_gen <- input$genotypic
           ext <- tools::file_ext(file_gen$datapath)
@@ -459,7 +486,7 @@ mod_GBLUP_server <- function(id) {
             file = file_gen$datapath,
             header = input$header_gen,
             sep = ","
-          ) %>% 
+          ) %>%
             as.data.frame()
           data_imported <- list(
             dt_phenotypic = dt_phenotypic,
@@ -1226,7 +1253,6 @@ mod_GBLUP_server <- function(id) {
           table_dt <- modelo()$results$GBLUP %>%
             dplyr::filter(trait %in% trait_selected) %>%
             dplyr::select(type, level, predicted.value, reliability)
-
           plot_corr <- table_dt %>%
             ggplot(
               aes(
@@ -1241,7 +1267,7 @@ mod_GBLUP_server <- function(id) {
               size = input$point_size_rel
             ) +
             theme_bw(base_size = input$legend_size_rel) +
-            labs(x = "Reliability", y = "Predicted") + 
+            labs(x = "Reliability", y = "Predicted") +
             geom_vline(xintercept = 0, linetype = 2, color = "grey")
           plot_corr
           plotly::ggplotly(plot_corr)
@@ -1311,6 +1337,320 @@ mod_GBLUP_server <- function(id) {
       ignoreInit = T,
       ignoreNULL = T
     )
+
+    output$plot_pca <- renderPlot({
+      input$pca
+      input$type
+      input$type_plot
+      input$number
+      input$ind_pca
+      input$var_pca
+      input$scale
+      input$invisible_pca
+      input$include_predicted_pca
+      isolate({
+        req(modelo())
+        if (input$include_predicted_pca) {
+          type_pred <- c("fit", "prediction")
+        } else {
+          type_pred <- "fit"
+        }
+        data <- modelo()$results$GBLUP %>%
+          dplyr::filter(type %in% type_pred) %>%
+          dplyr::select(trait, level, predicted.value) %>%
+          tidyr::spread(trait, value = "predicted.value") %>%
+          tibble::column_to_rownames("level")
+        tryCatch(
+          {
+            res.pca <- prcomp(data, scale. = T)
+            if (input$type_plot == "var") {
+              res.pca.non <- prcomp(data, scale. = input$scale)
+              factoextra::fviz_pca_var(
+                res.pca.non,
+                col.var = "steelblue",
+                repel = TRUE,
+                alpha.var = 0.2,
+                labelsize = 5
+              )
+            } else if (input$type_plot == "ind") {
+              top <- as.numeric(input$number)
+              req(top <= nrow(data))
+              fa12_scores <- res.pca$x[, 1:2] %>%
+                data.frame() %>%
+                tibble::rownames_to_column("Genotypes")
+              fa12_scores$Score <- sqrt(fa12_scores$PC1^2 + fa12_scores$PC2^2)
+              gen <- fa12_scores %>%
+                dplyr::arrange(desc(Score)) %>%
+                dplyr::top_n(top) %>%
+                dplyr::pull(Genotypes)
+              factoextra::fviz_pca_ind(
+                res.pca,
+                repel = TRUE,
+                alpha.ind = 0.5,
+                select.ind = list(name = gen),
+                labelsize = 4
+              )
+            } else {
+              geom.ind <- c("point", "text")
+              geom.var <- c("arrow", "text")
+              invisible <- "none"
+              if (!is.null(input$ind_pca)) geom.ind <- input$ind_pca
+              if (!is.null(input$var_pca)) geom.var <- input$var_pca
+              if (!is.null(input$invisible_pca)) invisible <- input$invisible_pca
+              factoextra::fviz_pca_biplot(
+                res.pca,
+                repel = FALSE,
+                alpha.ind = 0.5,
+                geom.ind = geom.ind,
+                geom.var = geom.var,
+                invisible = invisible
+              )
+            }
+          },
+          error = function(e) {
+            shinytoastr::toastr_error(
+              title = "Error in PCA:",
+              conditionMessage(e),
+              position = "bottom-full-width",
+              showMethod = "slideDown",
+              hideMethod = "hide",
+              hideEasing = "linear"
+            )
+          }
+        )
+      })
+    })
+
+    observeEvent(input$pca,
+      {
+        showModal(modalDialog(
+          title = tagList(icon = icon("chart-pie"), "PCA"),
+          size = "l",
+          easyClose = TRUE,
+          prettyRadioButtons(
+            inputId = ns("type_plot"),
+            label = "Choose:",
+            choices = c(
+              "Biplot" = "bip",
+              "Variables" = "var",
+              "Individuals" = "ind"
+            ),
+            selected = "bip",
+            inline = TRUE,
+            status = "danger",
+            fill = TRUE,
+            icon = icon("check"),
+            animation = "jelly"
+          ),
+          prettyCheckbox(
+            inputId = ns("include_predicted_pca"),
+            label = "Include Predictions?",
+            icon = icon("check"),
+            outline = TRUE,
+            fill = FALSE,
+            shape = "square",
+            animation = "tada",
+            value = TRUE,
+            status = "success",
+            bigger = TRUE
+          ),
+          shinycssloaders::withSpinner(
+            plotOutput(ns("plot_pca")),
+            type = 6,
+            color = "#28a745"
+          ),
+          conditionalPanel(
+            condition = "input.type_plot=='ind'",
+            ns = ns,
+            fluidRow(
+              col_4(),
+              col_4(
+                pickerInput(
+                  inputId = ns("number"),
+                  label = "Top (n)",
+                  choices = 4:100, selected = 20,
+                  options = list(
+                    size = 5
+                  )
+                )
+              ),
+              col_4()
+            )
+          ),
+          conditionalPanel(
+            condition = "input.type_plot=='var'",
+            ns = ns,
+            fluidRow(
+              col_4(),
+              col_4(
+                switchInput(
+                  inputId = ns("scale"),
+                  label = "Scale?",
+                  labelWidth = "100%",
+                  onStatus = "success",
+                  offStatus = "danger",
+                  width = "100%", value = TRUE
+                )
+              ),
+              col_4()
+            )
+          ),
+          conditionalPanel(
+            condition = "input.type_plot=='bip'", ns = ns,
+            fluidRow(
+              col_1(),
+              col_3(
+                checkboxGroupButtons(
+                  inputId = ns("ind_pca"),
+                  label = "Individuals",
+                  choices = c("point", "text"), justified = T,
+                  status = "success",
+                  checkIcon = list(
+                    yes = icon("ok", lib = "glyphicon"),
+                    no = icon("remove", lib = "glyphicon")
+                  )
+                )
+              ),
+              col_3(
+                checkboxGroupButtons(
+                  inputId = ns("var_pca"),
+                  label = "Variables",
+                  choices = c("arrow", "text"), justified = T,
+                  status = "success",
+                  checkIcon = list(
+                    yes = icon("ok", lib = "glyphicon"),
+                    no = icon("remove", lib = "glyphicon")
+                  )
+                )
+              ),
+              col_3(
+                checkboxGroupButtons(
+                  inputId = ns("invisible_pca"),
+                  label = "Invisible",
+                  choices = c("ind", "var"), justified = T,
+                  status = "success",
+                  checkIcon = list(
+                    yes = icon("ok", lib = "glyphicon"),
+                    no = icon("remove", lib = "glyphicon")
+                  )
+                )
+              )
+            )
+          )
+        ))
+      },
+      ignoreInit = T,
+      ignoreNULL = T
+    )
+
+    output$markers_ggplot <- renderPlot({
+      req(modelo())
+      req(input$trait_marker)
+      trait_selected <- input$trait_marker
+      tryCatch(
+        {
+          table_dt <- modelo()$markers$rrBLUP %>%
+            tidyr::gather(key = "trait", value = "value", -1) %>%
+            dplyr::filter(trait %in% trait_selected)
+          plot_markers <- table_dt %>%
+            ggplot(
+              aes(
+                x = marker,
+                y = value^2
+              )
+            ) +
+            geom_segment(
+              aes(
+                x = marker,
+                xend = marker,
+                y = 0,
+                yend = value^2
+              ),
+              alpha = input$alpha_mark
+            ) +
+            theme(
+              text = element_text(size = input$legend_size_mark),
+              axis.text.x = element_blank(),
+              axis.ticks.x = element_blank(),
+              panel.background = element_rect(
+                fill = "white",
+                colour = "white"
+              )
+            ) +
+            labs(
+              x = "Marker",
+              y = "Estimated Squared-Marker Effect"
+            ) +
+            facet_wrap(~trait, nrow = length(trait_selected), scales = "free_y")
+          print(plot_markers)
+        },
+        error = function(e) {
+          shinytoastr::toastr_error(
+            title = "Error:",
+            conditionMessage(e),
+            position = "bottom-full-width",
+            showMethod = "slideDown",
+            hideMethod = "hide",
+            hideEasing = "linear"
+          )
+        }
+      )
+    })
+
+
+    observeEvent(input$markers_plot,
+      {
+        showModal(modalDialog(
+          title = "Marker Effects",
+          size = "xl",
+          easyClose = T,
+          pickerInput(
+            inputId = ns("trait_marker"),
+            label = tagList(
+              "Trait",
+              icon = tooltip(
+                icon("question-circle", verify_fa = FALSE),
+                title = "Select a trait",
+                placement = "top"
+              )
+            ),
+            choices = input$variables,
+            selected = input$variables[1],
+            options = list(
+              `actions-box` = TRUE, size = 5, `live-search` = TRUE
+            ),
+            multiple = TRUE,
+            width = "100%"
+          ),
+          shinycssloaders::withSpinner(
+            plotOutput(ns("markers_ggplot"), height = "500"),
+            type = 6,
+            color = "#28a745"
+          ),
+          fluidRow(
+            col_2(),
+            col_4(
+              sliderTextInput(
+                inputId = ns("legend_size_mark"), label = "Legend Size:",
+                choices = c(8:20),
+                grid = TRUE, selected = 15, width = "100%"
+              )
+            ),
+            col_4(
+              sliderTextInput(
+                inputId = ns("alpha_mark"), label = "Transparency:",
+                choices = seq(0.1, 1, by = 0.1),
+                grid = TRUE, selected = 0.4, width = "100%"
+              )
+            )
+          )
+        ))
+      },
+      ignoreInit = T,
+      ignoreNULL = T
+    )
+
+
 
 
     example_pheno <- data.frame(
