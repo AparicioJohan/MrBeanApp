@@ -127,7 +127,6 @@ mod_GBLUP_results_server <- function(id, gblup) {
           p <- q +
             geom_point(size = 1) +
             geom_errorbar(aes(ymax = Ls, ymin = Lu)) +
-            theme_bw() +
             geom_hline(
               yintercept = mean(BLUPS[, 3]), 
               linetype = 2, 
@@ -136,7 +135,11 @@ mod_GBLUP_results_server <- function(id, gblup) {
             theme(
               axis.title.x = element_blank(), 
               axis.text.x = element_blank(),
-              axis.ticks.x = element_blank()
+              axis.ticks.x = element_blank(),
+              panel.background = element_rect(
+                fill = "white",
+                colour = "white"
+              )
             ) +
             ylab(names(BLUPS)[3]) +
             scale_x_discrete(limits = v)
