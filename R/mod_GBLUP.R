@@ -444,21 +444,23 @@ mod_GBLUP_server <- function(id) {
           if (!ext %in% c("csv", "CSV")) {
             stop("Only csv allowed in the phenotypic data")
           }
-          dt_phenotypic <- read.csv(
+          dt_phenotypic <- data.table::fread(
             file = file_phen$datapath,
             header = input$header_phen,
             sep = ","
-          )
+          ) %>% 
+            as.data.frame()
           file_gen <- input$genotypic
           ext <- tools::file_ext(file_gen$datapath)
           if (!ext %in% c("csv", "CSV")) {
             stop("Only csv allowed in the genotypic data")
           }
-          dt_genotypic <- read.csv(
+          dt_genotypic <- data.table::fread(
             file = file_gen$datapath,
             header = input$header_gen,
             sep = ","
-          )
+          ) %>% 
+            as.data.frame()
           data_imported <- list(
             dt_phenotypic = dt_phenotypic,
             dt_genotypic = dt_genotypic
