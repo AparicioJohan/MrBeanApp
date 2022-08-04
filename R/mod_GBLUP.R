@@ -379,6 +379,12 @@ mod_GBLUP_ui <- function(id) {
                       )
                     )
                   )
+                ),
+                downloadButton(
+                  ns("desire"),
+                  label = "Desire-Gain File",
+                  class = "btn-success",
+                  style = "color: white ; background-color: #28a745; float:left"
                 )
               ),
               tabPanel(
@@ -1653,6 +1659,61 @@ mod_GBLUP_server <- function(id) {
       ignoreInit = T,
       ignoreNULL = T
     )
+    
+    output$desire <- downloadHandler(
+      filename = function() {
+        paste("desire_gain", ".txt", sep = "")
+      },
+      content = function(file) {
+        req(modelo())
+        if (input$include_predicted) {
+          type_pred <- c("fit", "prediction")
+        } else {
+          type_pred <- "fit"
+        }
+        tryCatch(
+          {
+            gblups <- modelo()$results$GBLUP %>%
+              dplyr::filter(type %in% type_pred) %>%
+              dplyr::select(trait, level, predicted.value) %>%
+              tidyr::spread(trait, value = "predicted.value")
+            var_comp <- modelo()$var_comp$GBLUP
+            corGen <- cor(
+              gblups %>% dplyr::select_if(is.numeric),
+              use = "pairwise.complete.obs"
+            )
+            if (ncol(gblups) <= 2) stop("Only one trait selected.")
+            h2 <- var_comp$Genomic_h2
+            sd_g <- sqrt(var_comp$VarG)
+            ds <- desireFormat(
+              n_traits = length(h2),
+              traits = var_comp$Trait,
+              heritability = h2, 
+              sd = sd_g,
+              corPhen = NULL, 
+              corGen = corGen
+            )
+          },
+          error = function(e) {
+            shinytoastr::toastr_error(
+              title = "Error:",
+              conditionMessage(e),
+              position = "bottom-full-width",
+              showMethod = "slideDown",
+              hideMethod = "hide",
+              hideEasing = "linear"
+            )
+          }
+        )
+        write.table(
+          ds,
+          file = file,
+          quote = FALSE, 
+          col.names = FALSE, 
+          row.names = FALSE)
+      }
+    )
+    
 
 
     example_pheno <- data.frame(
