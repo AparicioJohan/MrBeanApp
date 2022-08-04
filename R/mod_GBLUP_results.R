@@ -26,7 +26,7 @@ mod_GBLUP_results_ui <- function(id) {
               bs4Card(
                 pickerInput(
                   inputId = ns("selected"),
-                  label = "Trait",
+                  label = tagList(icon = icon("circle-check"), "Trait"),
                   choices = "",
                   options = list(
                     title = "Select a trait...", 
@@ -51,6 +51,24 @@ mod_GBLUP_results_ui <- function(id) {
                   plotly::plotlyOutput(ns("plot_gblups")),
                   type = 5,
                   color = "#28a745"
+                ),
+                fluidRow(
+                  col_4(),
+                  col_4(
+                    pickerInput(
+                      inputId = ns("sort_by"),
+                      label = tagList(
+                        icon = icon("arrow-down-wide-short"), "Sort by"
+                      ),
+                      choices = c("GBLUP", "reliability"),
+                      options = list(
+                        title = "Select one", 
+                        size = 2
+                      ), 
+                      selected = "GBLUP",
+                      width = '100%'
+                    )
+                  )
                 ),
                 title = tagList(
                   icon = icon("sort-numeric-up", verify_fa = FALSE), 
@@ -112,17 +130,34 @@ mod_GBLUP_results_server <- function(id, gblup) {
             )
           BLUPS$Lu <- BLUPS[, 3] - 1.645 * BLUPS[, 4]
           BLUPS$Ls <- BLUPS[, 3] + 1.645 * BLUPS[, 4]
-          v <- as.character(BLUPS[order(BLUPS[, 3], decreasing = TRUE), 2])
           names(BLUPS)[2] <- "Line"
           names(BLUPS)[3] <- "GBLUP"
+          if(input$sort_by == "GBLUP"){
+            indx <- 3
+          } else {
+            indx <- 5
+          }
+          v <- as.character(BLUPS[order(BLUPS[, indx], decreasing = TRUE), 2])
           lvls_type <- length(unique(BLUPS$type))
           if (lvls_type >= 2) {
             q <- ggplot(
               BLUPS,
-              aes(x = Line, y = GBLUP, color = type, label = reliability)
+              aes(
+                x = Line,
+                y = GBLUP, 
+                color = type, 
+                label = reliability
               )
+            )
           } else {
-            q <- ggplot(BLUPS, aes(x = Line, y = GBLUP, label = reliability))
+            q <- ggplot(
+              BLUPS, 
+              aes(
+                x = Line,
+                y = GBLUP,
+                label = reliability
+              )
+            )
           }
           p <- q +
             geom_point(size = 1) +

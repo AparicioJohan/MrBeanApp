@@ -111,7 +111,10 @@ mod_GBLUP_ui <- function(id) {
                 width = 12,
                 status = "success",
                 solidHeader = FALSE,
-                title = tagList(icon = icon("cogs", verify_fa = FALSE), "Components"),
+                title = tagList(
+                  icon = icon("cogs", verify_fa = FALSE), 
+                  "Components"
+                ),
                 selectInput(
                   inputId = ns("variables"),
                   label = tagList(
@@ -1374,7 +1377,9 @@ mod_GBLUP_server <- function(id) {
               )
             } else if (input$type_plot == "ind") {
               top <- as.numeric(input$number)
-              req(top <= nrow(data))
+              if (top > nrow(data)) {
+                stop("You have to select a lower number for making this plot.")
+              }
               fa12_scores <- res.pca$x[, 1:2] %>%
                 data.frame() %>%
                 tibble::rownames_to_column("Genotypes")
@@ -1468,7 +1473,7 @@ mod_GBLUP_server <- function(id) {
                 pickerInput(
                   inputId = ns("number"),
                   label = "Top (n)",
-                  choices = 4:100, selected = 20,
+                  choices = 4:1000, selected = 20,
                   options = list(
                     size = 5
                   )
@@ -1597,7 +1602,6 @@ mod_GBLUP_server <- function(id) {
       )
     })
 
-
     observeEvent(input$markers_plot,
       {
         showModal(modalDialog(
@@ -1649,8 +1653,6 @@ mod_GBLUP_server <- function(id) {
       ignoreInit = T,
       ignoreNULL = T
     )
-
-
 
 
     example_pheno <- data.frame(
