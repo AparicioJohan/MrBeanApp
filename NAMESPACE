@@ -2,6 +2,7 @@
 
 export(GBLUPs)
 export(desireFormat)
+export(marker_plot)
 export(run_app)
 import(Matrix, except = show)
 import(SpATS)

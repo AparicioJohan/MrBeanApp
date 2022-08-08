@@ -278,3 +278,136 @@ adj_vanraden <- function(geno_matrix) {
   adj <- 2 * sum(p * (1 - p))
   return(adj)
 }
+
+
+#' Marker Plot
+#'
+#' @param marker data.frame with marker effects (marker, trait_1, trait_2, ...).
+#' @param map data.frame with the genetic map (marker, position, chr).
+#' @param trait_selected vector with traits to plot
+#' @param type string selecting whether to use points or lines in the geom.
+#'  (point by default).
+#' @param legend_size numeric value to define the size of the theme 
+#' (15 by default).
+#' @param alpha numeric value between (0, 1) to define the alpha in the geom.
+#'
+#' @return ggplot object
+#' @export
+#'
+#' @examples
+#' # marker_plot(
+#' # marker = marker_info,
+#' # map = map,
+#' # trait_selected = traits,
+#' # type = "line",
+#' # alpha = 1
+#' # )
+marker_plot <- function(marker = NULL,
+                        map = NULL,
+                        trait_selected = "",
+                        type = "point",
+                        legend_size = 15,
+                        alpha = 1) {
+  lvls <- colnames(map)
+  if (length(lvls) > 3) {
+    stop("Check the format of the genetic map")
+  }
+  required_names <- c("marker", "position", "chr")
+  check <- which(names(map) %in% required_names)
+  if (length(check) < 3) {
+    stop("Column names; 'marker', 'position' and 'chr' need \n
+         to be present in the data frame provided.",
+         call. = FALSE
+    )
+  }
+  num_chr <- dplyr::n_distinct(map$chr)
+  if (num_chr == 1) {
+    table_dt <- marker %>%
+      tidyr::gather(key = "trait", value = "value", -1) %>%
+      dplyr::filter(trait %in% trait_selected)
+    mark_plot <- table_dt %>%
+      ggplot(
+        aes(
+          x = marker,
+          y = value^2
+        )
+      ) +
+      {
+        if (type == "point") {
+          geom_point(alpha = alpha)
+        } else if (type == "line") {
+          geom_segment(
+            aes(
+              x = marker,
+              xend = marker,
+              y = 0,
+              yend = value^2
+            ),
+            alpha = alpha
+          )
+        }
+      } +
+      theme(
+        text = element_text(size = legend_size),
+        axis.text.x = element_blank(),
+        axis.ticks.x = element_blank(),
+        panel.background = element_rect(
+          fill = "white",
+          colour = "white"
+        )
+      ) +
+      labs(
+        x = "Marker",
+        y = "Estimated Squared-Marker Effect"
+      ) +
+      facet_wrap(~trait, nrow = length(trait_selected), scales = "free_y")
+  } else if (num_chr > 1) {
+    marker_id <- colnames(marker)[1]
+    colnames(map)[1] <- marker_id
+    marker_info <- merge(map, marker, by = marker_id, sort = FALSE)
+    marker_info <- marker_info %>%
+      dplyr::group_by(chr) %>%
+      dplyr::summarise(chr_len = max(position)) %>%
+      dplyr::mutate(tot = cumsum(chr_len) - chr_len) %>%
+      dplyr::select(-chr_len) %>%
+      dplyr::left_join(marker_info, ., by = c("chr" = "chr")) %>%
+      dplyr::arrange(chr, position) %>%
+      dplyr::mutate(BPcum = position + tot) %>%
+      dplyr::relocate(marker, position, chr, tot, BPcum)
+    axisdf <- marker_info %>%
+      dplyr::group_by(chr) %>%
+      dplyr::summarize(center = (max(BPcum) + min(BPcum)) / 2)
+    mark_plot <- marker_info %>%
+      tidyr::gather(key = "trait", value = "value", -(1:5)) %>%
+      dplyr::filter(trait %in% trait_selected) %>%
+      ggplot(
+        aes(
+          x = BPcum,
+          y = value^2,
+          color = chr
+        )
+      ) +
+      {
+        if (type == "point") {
+          geom_point(alpha = alpha)
+        } else if (type == "line") {
+          geom_line(alpha = alpha)
+        }
+      } +
+      theme(
+        text = element_text(size = legend_size),
+        axis.ticks.x = element_blank(),
+        panel.background = element_rect(
+          fill = "white",
+          colour = "white"
+        )
+      ) +
+      labs(
+        x = "Chr",
+        y = "Estimated Squared-Marker Effect"
+      ) +
+      facet_wrap(~trait, nrow = length(trait_selected), scales = "free_y") +
+      scale_x_continuous(label = axisdf$chr, breaks = axisdf$center)
+  }
+  return(mark_plot)
+}

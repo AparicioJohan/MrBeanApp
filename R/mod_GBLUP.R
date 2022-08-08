@@ -63,6 +63,7 @@ mod_GBLUP_ui <- function(id) {
                 inputId = ns("genotypic"),
                 width = "100%",
                 label = with_red_star("Genotypic Data"),
+                multiple = TRUE,
                 accept = c(
                   "text/csv",
                   "text/comma-separated-values",
@@ -71,7 +72,7 @@ mod_GBLUP_ui <- function(id) {
                   ".tsv"
                 )
               ),
-              helpText("Numeric format (-1, 0, 1)"),
+              helpText("Numeric format (-1, 0, 1)."),
               prettyCheckbox(
                 inputId = ns("header_gen"),
                 label = "Header",
@@ -487,19 +488,55 @@ mod_GBLUP_server <- function(id) {
           ) %>%
             as.data.frame()
           file_gen <- input$genotypic
-          ext <- tools::file_ext(file_gen$datapath)
-          if (!ext %in% c("csv", "CSV")) {
-            stop("Only csv allowed in the genotypic data")
+          num_files <- length(file_gen$datapath)
+          if (num_files == 1) {
+            ext <- tools::file_ext(file_gen$datapath)
+            if (!ext %in% c("csv", "CSV")) {
+              stop("Only csv allowed in the genotypic data")
+            }
+            dt_genotypic <- data.table::fread(
+              file = file_gen$datapath,
+              header = input$header_gen,
+              sep = ","
+            ) %>%
+              as.data.frame()
+            dt_genetic_map <- NULL
+          } else if (num_files == 2) {
+            ext <- tools::file_ext(file_gen$datapath[[1]])
+            if (!ext %in% c("csv", "CSV")) {
+              stop("Only csv allowed in the genotypic data")
+            }
+            tmp_list <- list(
+              a = data.table::fread(
+                file = file_gen$datapath[[1]],
+                header = input$header_gen,
+                sep = ","
+              ) %>%
+                as.data.frame(),
+              b = data.table::fread(
+                file = file_gen$datapath[[2]],
+                header = input$header_gen,
+                sep = ","
+              ) %>%
+                as.data.frame()
+            )
+            dim_a <- ncol(tmp_list$a)
+            dim_b <- ncol(tmp_list$b)
+            if (dim_a > dim_b) {
+              dt_genotypic <- tmp_list$a
+              dt_genetic_map <- tmp_list$b
+            } else {
+              dt_genotypic <- tmp_list$b
+              dt_genetic_map <- tmp_list$a
+            }
+          } else {
+            stop("The maximun number of files should be two (marker data and
+                 genetic map.")
           }
-          dt_genotypic <- data.table::fread(
-            file = file_gen$datapath,
-            header = input$header_gen,
-            sep = ","
-          ) %>%
-            as.data.frame()
           data_imported <- list(
             dt_phenotypic = dt_phenotypic,
-            dt_genotypic = dt_genotypic
+            dt_genotypic = dt_genotypic,
+            dt_map = dt_genetic_map
           )
         },
         error = function(e) {
@@ -1558,42 +1595,26 @@ mod_GBLUP_server <- function(id) {
       req(modelo())
       req(input$trait_marker)
       trait_selected <- input$trait_marker
+      map <- data_read()[["dt_map"]]
       tryCatch(
         {
-          table_dt <- modelo()$markers$rrBLUP %>%
-            tidyr::gather(key = "trait", value = "value", -1) %>%
-            dplyr::filter(trait %in% trait_selected)
-          plot_markers <- table_dt %>%
-            ggplot(
-              aes(
-                x = marker,
-                y = value^2
-              )
-            ) +
-            geom_segment(
-              aes(
-                x = marker,
-                xend = marker,
-                y = 0,
-                yend = value^2
-              ),
-              alpha = input$alpha_mark
-            ) +
-            theme(
-              text = element_text(size = input$legend_size_mark),
-              axis.text.x = element_blank(),
-              axis.ticks.x = element_blank(),
-              panel.background = element_rect(
-                fill = "white",
-                colour = "white"
-              )
-            ) +
-            labs(
-              x = "Marker",
-              y = "Estimated Squared-Marker Effect"
-            ) +
-            facet_wrap(~trait, nrow = length(trait_selected), scales = "free_y")
-          print(plot_markers)
+          marker_info <- modelo()$markers$rrBLUP
+          if (is.null(map)) {
+            map <- data.frame(
+              marker = marker_info$marker,
+              position = seq_along(marker_info$marker),
+              chr = 1)
+          }
+          names(map) <- c("marker", "position", "chr")
+          map$chr <- as.factor(map$chr)
+          marker_plot(
+            marker = marker_info,
+            map = map,
+            trait_selected = trait_selected,
+            type = input$points_line,
+            legend_size = input$legend_size_mark,
+            alpha = input$alpha
+          )
         },
         error = function(e) {
           shinytoastr::toastr_error(
@@ -1637,20 +1658,38 @@ mod_GBLUP_server <- function(id) {
             type = 6,
             color = "#28a745"
           ),
+          hr(),
           fluidRow(
-            col_2(),
-            col_4(
+            col_1(),
+            col_3(
+              prettyRadioButtons(
+                inputId = ns("points_line"),
+                label = "Choose:", 
+                choices = c("Points" = "point", "Line" = "line"),
+                inline = TRUE, 
+                status = "danger",
+                fill = TRUE,
+                icon = icon("check"), 
+                bigger = TRUE,
+                animation = "jelly"
+              )
+            ),
+            col_3(
               sliderTextInput(
                 inputId = ns("legend_size_mark"), label = "Legend Size:",
                 choices = c(8:20),
-                grid = TRUE, selected = 15, width = "100%"
+                grid = TRUE,
+                selected = 15, 
+                width = "100%"
               )
             ),
-            col_4(
+            col_3(
               sliderTextInput(
-                inputId = ns("alpha_mark"), label = "Transparency:",
+                inputId = ns("alpha"), label = "Transparency",
                 choices = seq(0.1, 1, by = 0.1),
-                grid = TRUE, selected = 0.4, width = "100%"
+                grid = TRUE,
+                selected = 1, 
+                width = "100%"
               )
             )
           )
@@ -1731,12 +1770,18 @@ mod_GBLUP_server <- function(id) {
       "..." = rep(".", 4),
       marker_n = c(0, -1, 0, 1)
     )
+    example_map <- data.frame(
+      marker = c(paste("marker_", 1:4, sep = "")),
+      position = c(0, 0.66, 1, 1.5),
+      chr = c(1, 1, 1, 1)
+    )
     observe({
       showModal(
         modalDialog(
           size = "l",
           title = div(tags$h3("Help message", style = "color: red;")),
-          h4("Please, follow the format shown in the following example. Make sure to upload a CSV file!"),
+          h4("Please, follow the format shown in the following example.
+             Make sure to upload a CSV file!"),
           h6("Phenotypic Data"),
           renderTable(example_pheno,
             bordered = TRUE,
@@ -1750,6 +1795,14 @@ mod_GBLUP_server <- function(id) {
             align = "c",
             striped = TRUE,
             digits = 0
+          ),
+          hr(),
+          h6("Genetic Map (Opcional)"),
+          renderTable(example_map,
+                      bordered = TRUE,
+                      align = "c",
+                      striped = TRUE,
+                      digits = 2
           ),
           easyClose = FALSE
         )
