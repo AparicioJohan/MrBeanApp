@@ -227,7 +227,7 @@ mod_info_spats_server <- function(input, output, session, Model) {
     a <- round(sqrt(modelo()$psi[1]), 2)
     bs4ValueBox(
       value = a, subtitle = "Residual SD",
-      icon = shiny::icon("arrow-circle-down"),
+      icon = shiny::icon("arrow-circle-down", verify_fa = FALSE),
       color = "success", elevation = 3,
       footer = HTML("<center> Looking for low <center>")
     )
@@ -237,7 +237,7 @@ mod_info_spats_server <- function(input, output, session, Model) {
     a <- R.square(modelo())
     bs4ValueBox(
       value = a, subtitle = "R-Square",
-      icon = shiny::icon("arrow-circle-up"),
+      icon = shiny::icon("arrow-circle-up", verify_fa = FALSE),
       color = "danger", elevation = 3,
       footer = HTML("<center> 0 = Bad / 1 = Good  <center>")
     )
@@ -250,7 +250,7 @@ mod_info_spats_server <- function(input, output, session, Model) {
       cv <- CV.spats(m0)
       bs4ValueBox(
         value = paste0(cv, "%"), subtitle = "Coefficient of Variation",
-        icon = shiny::icon("arrow-circle-up"),
+        icon = shiny::icon("arrow-circle-up", verify_fa = FALSE),
         color = "warning", elevation = 3,
         footer = HTML("<center> Looking for low <center>")
       )

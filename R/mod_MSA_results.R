@@ -218,7 +218,7 @@ mod_MSA_results_server <- function(input, output, session, msa) {
   summary_msa <- reactive({
     req(msa$run())
     req(models())
-    inf <- msa_table(models(), msa$gen_ran())
+    inf <- msa_table(models(), msa$gen_ran(),  msa$rLimit())
     return(inf)
   })
 
@@ -461,7 +461,11 @@ mod_MSA_results_server <- function(input, output, session, msa) {
     msa$run()
     isolate({
       req(models())
-      effects <- table_outlier(models(), id = "Exp") %>% dplyr::select(-Index, -l, -u)
+      effects <- table_outlier(
+        models(),
+        id = "Exp",
+        k = msa$rLimit()
+      ) %>% dplyr::select(-Index, -l, -u)
       return(effects)
     })
   })
@@ -474,7 +478,13 @@ mod_MSA_results_server <- function(input, output, session, msa) {
         {
           data_extreme()
         },
-        option = list(pageLength = 5, scrollX = TRUE, columnDefs = list(list(className = "dt-center", targets = 0:ncol(data_extreme())))),
+        option = list(
+          pageLength = 5, 
+          scrollX = TRUE, 
+          columnDefs = list(
+            list(className = "dt-center", targets = 0:ncol(data_extreme()))
+          )
+        ),
         filter = "top",
         selection = "multiple"
       )
@@ -597,7 +607,7 @@ mod_MSA_results_server <- function(input, output, session, msa) {
       req(models())
 
       clean_data_SpATS <- function(models) {
-        data <- lapply(models, res_raw_data)
+        data <- lapply(models, res_raw_data, msa$rLimit())
         data <- data.table::data.table(plyr::ldply(data[], data.frame))
         return(data)
       }

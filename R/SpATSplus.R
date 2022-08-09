@@ -39,12 +39,12 @@ CV.spats <- function(Model) {
 #'
 #' @return a data.frame
 #' @noRd
-res_data <- function(Model) {
+res_data <- function(Model, k = 3) {
   dt <- Model$data
   VarE <- Model$psi[1]
   Data <- data.frame(Index = 1:length(residuals(Model)), Residuals = residuals(Model))
-  u <- +3 * sqrt(VarE)
-  l <- -3 * sqrt(VarE)
+  u <- +k * sqrt(VarE)
+  l <- -k * sqrt(VarE)
   Data$Classify <- NA
   Data$Classify[which(abs(Data$Residuals) >= u)] <- "Outlier"
   Data$Classify[which(abs(Data$Residuals) < u)] <- "Normal"
@@ -178,18 +178,39 @@ check_gen_SpATS <- function(gen, data, check_gen = c("ci", "st", "wa")) {
 }
 
 
-SpATS_mrbean <- function(data, response, genotype,
-                         col, row, segm, ncols, nrows, rep,
-                         fix_fact, ran_fact, gen_ran, covariate,
-                         clean_out = FALSE, iterations = 1, checks = NULL) {
+SpATS_mrbean <- function(data = NULL, 
+                         response = "",
+                         genotype = "",
+                         col = "", 
+                         row = "", 
+                         segm = FALSE,
+                         ncols = NULL,
+                         nrows = NULL,
+                         rep = "",
+                         fix_fact = "",
+                         ran_fact = "", 
+                         gen_ran = TRUE, 
+                         covariate = NULL,
+                         clean_out = FALSE, 
+                         iterations = 1,
+                         checks = NULL,
+                         k_clean_out = 3) {
   dt <- data
   dt[, genotype] <- as.factor(dt[, genotype])
   dt$col <- dt[, col]
   dt$row <- dt[, row]
   dt$col_f <- factor(dt[, col])
   dt$row_f <- factor(dt[, row])
-  ncols <- ifelse(is.null(ncols) | isFALSE(segm), length(unique(dt[, col])), ncols)
-  nrows <- ifelse(is.null(nrows) | isFALSE(segm), length(unique(dt[, row])), nrows)
+  ncols <- ifelse(
+    test = is.null(ncols) | isFALSE(segm),
+    yes = length(unique(dt[, col])), 
+    no = ncols
+  )
+  nrows <- ifelse(
+    test = is.null(nrows) | isFALSE(segm),
+    yes = length(unique(dt[, row])),
+    no = nrows
+  )
   for (i in 1:length(fix_fact)) {
     dt[, fix_fact[i]] <- as.factor(dt[, fix_fact[i]])
   }
@@ -199,18 +220,31 @@ SpATS_mrbean <- function(data, response, genotype,
   if (is.null(fix_fact) & is.null(covariate)) {
     Fijo <- as.formula(~NULL)
   } else if (!is.null(fix_fact) & is.null(covariate)) {
-    Fijo <- as.formula(paste("", paste(fix_fact, collapse = " + "), sep = " ~ "))
+    Fijo <- as.formula(
+      paste("", paste(fix_fact, collapse = " + "), sep = " ~ ")
+    )
   } else if (!is.null(fix_fact) & !is.null(covariate)) {
-    Fijo <- as.formula(paste("", paste(c(fix_fact, covariate), collapse = " + "), sep = " ~ "))
-  } else if (is.null(fix_fact) & !is.null(covariate)) Fijo <- as.formula(paste("", paste(covariate, collapse = " + "), sep = " ~ "))
-
+    Fijo <- as.formula(
+      paste("", paste(c(fix_fact, covariate), collapse = " + "), sep = " ~ ")
+    )
+  } else if (is.null(fix_fact) & !is.null(covariate)) {
+    Fijo <- as.formula(
+      paste("", paste(covariate, collapse = " + "), sep = " ~ ")
+    )
+  } 
   if (rep != "") {
     dt$rep <- as.factor(dt[, rep])
     if (nlevels(dt$rep) > 1) {
       if (is.null(ran_fact)) {
         Random <- as.formula(~ rep:col_f + rep:row_f)
       } else {
-        Random <- as.formula(paste("", paste(c(ran_fact, "rep:col_f", "rep:row_f"), collapse = " + "), sep = " ~ "))
+        Random <- as.formula(
+          paste(
+            "",
+            paste(c(ran_fact, "rep:col_f", "rep:row_f"), collapse = " + "), 
+            sep = " ~ "
+          )
+        )
       }
       if (is.null(fix_fact) & is.null(covariate)) {
         Fijo <- as.formula(~rep)
@@ -221,18 +255,29 @@ SpATS_mrbean <- function(data, response, genotype,
       if (is.null(ran_fact)) {
         Random <- as.formula(~ col_f + row_f)
       } else {
-        Random <- as.formula(paste("", paste(c(ran_fact, "col_f", "row_f"), collapse = " + "), sep = " ~ "))
+        Random <- as.formula(
+          paste(
+            "", 
+            paste(c(ran_fact, "col_f", "row_f"), collapse = " + "),
+            sep = " ~ "
+          )
+        )
       }
     }
   } else {
     if (is.null(ran_fact)) {
       Random <- as.formula(~ col_f + row_f)
     } else {
-      Random <- as.formula(paste("", paste(c(ran_fact, "col_f", "row_f"), collapse = " + "), sep = " ~ "))
+      Random <- as.formula(
+        paste(
+          "", 
+          paste(c(ran_fact, "col_f", "row_f"), collapse = " + "),
+          sep = " ~ "
+        )
+      )
     }
   }
-
-  if (!is.null(checks) & gen_ran == T) {
+  if (!is.null(checks) & gen_ran == TRUE) {
     dt <- check_gen_SpATS(gen = genotype, data = dt, check_gen = checks)
     if ("checks" %in% names(dt)) {
       if (is.null(fix_fact) & is.null(covariate) & rep == "") {
@@ -242,52 +287,69 @@ SpATS_mrbean <- function(data, response, genotype,
       }
     }
   }
-
-  Modelo <- try(SpATS(
-    response = response,
-    genotype = genotype, genotype.as.random = gen_ran,
-    fixed = Fijo,
-    spatial = ~ PSANOVA(col, row, nseg = c(ncols, nrows), degree = c(3, 3), nest.div = 2),
-    random = Random, data = dt,
-    control = list(tolerance = 1e-03, monitoring = 0)
-  ), silent = T)
-  tryCatch(
-    {
-      if (class(Modelo) == "try-error") stop("Error in the components of model")
-    },
-    error = function(e) {
-      shinytoastr::toastr_error(title = "Warning:", conditionMessage(e), position = "bottom-right", progressBar = TRUE)
-    }
+  Modelo <- try(
+    SpATS(
+      response = response,
+      genotype = genotype,
+      genotype.as.random = gen_ran,
+      fixed = Fijo,
+      spatial = ~ PSANOVA(
+        col,
+        row, 
+        nseg = c(ncols, nrows), 
+        degree = c(3, 3),
+        nest.div = 2
+      ),
+      random = Random, 
+      data = dt,
+      control = list(tolerance = 1e-03, monitoring = 0)
+    ), 
+    silent = TRUE
   )
+  if (class(Modelo) == "try-error"){
+    stop(attr(Modelo, "condition"))
+  } 
   if (class(Modelo) == "try-error") {
     return()
   }
-
   if (clean_out) {
-    resum_out <- msa_residuals(Modelo)
+    resum_out <- msa_residuals(Modelo, k_clean_out)
     if (resum_out > 0) {
       tmp_out <- 1
       counter <- 1
       while (tmp_out > 0 & counter <= iterations) {
-        c_datos <- res_raw_data(Modelo)
-        c_datos[, response] <- ifelse(c_datos$Classify == "Outlier", NA, c_datos[, response])
+        c_datos <- res_raw_data(Modelo, k_clean_out)
+        c_datos[, response] <- ifelse(
+          test = c_datos$Classify == "Outlier",
+          yes = NA,
+          no = c_datos[, response]
+        )
         c_datos <- c_datos %>% dplyr::select(-weights)
-        Modelo <- try(SpATS(
-          response = response,
-          genotype = genotype, genotype.as.random = gen_ran,
-          fixed = Fijo,
-          spatial = ~ PSANOVA(col, row, nseg = c(ncols, nrows), degree = c(3, 3), nest.div = 2),
-          random = Random, data = c_datos,
-          control = list(tolerance = 1e-03, monitoring = 0)
-        ), silent = T)
-        tmp_out <- msa_residuals(Modelo)
+        Modelo <- try(
+          SpATS(
+            response = response,
+            genotype = genotype, genotype.as.random = gen_ran,
+            fixed = Fijo,
+            spatial = ~ PSANOVA(
+              col,
+              row,
+              nseg = c(ncols, nrows),
+              degree = c(3, 3),
+              nest.div = 2
+            ),
+            random = Random,
+            data = c_datos,
+            control = list(tolerance = 1e-03, monitoring = 0)
+          ), 
+          silent = TRUE
+        )
+        tmp_out <- msa_residuals(Modelo, k_clean_out)
         if (iterations > 1) resum_out <- resum_out + tmp_out
         counter <- counter + 1
       }
     }
   }
-
-  Modelo
+  return(Modelo)  
 }
 
 
@@ -414,12 +476,12 @@ dup_check <- function(data, experiment, column, row) {
   lapply(tt, function(x) sum(duplicated(x[, c(column, row)])))
 }
 
-res_raw_data <- function(Model) {
+res_raw_data <- function(Model, k = 3) {
   dt <- Model$data
   VarE <- Model$psi[1]
   Data <- data.frame(Index = 1:length(residuals(Model)), Residuals = residuals(Model))
-  u <- +3 * sqrt(VarE)
-  l <- -3 * sqrt(VarE)
+  u <- +k * sqrt(VarE)
+  l <- -k * sqrt(VarE)
   Data$Classify <- NA
   Data$Classify[which(abs(Data$Residuals) >= u)] <- "Outlier"
   Data$Classify[which(abs(Data$Residuals) < u)] <- "Normal"
@@ -463,17 +525,17 @@ h_msa <- function(model) {
   }
 }
 
-msa_residuals <- function(model) {
-  value <- sum(res_data(model)$Classify == "Outlier", na.rm = T)
+msa_residuals <- function(model, k = 3) {
+  value <- sum(res_data(model, k)$Classify == "Outlier", na.rm = T)
   return(value)
 }
 
-msa_table <- function(models, gen_ran) {
+msa_table <- function(models, gen_ran, k = 3) {
   exp <- names(models)
   gv <- unlist(lapply(models, VarG_msa))
   ev <- unlist(lapply(models, VarE_msa))
   he <- unlist(lapply(models, h_msa))
-  out <- unlist(lapply(models, msa_residuals))
+  out <- unlist(lapply(models, msa_residuals, k))
   r2 <- unlist(lapply(models, R.square))
   cv <- unlist(lapply(models, CV.spats))
   summ <- data.frame(Experiment = exp, varG = gv, varE = ev, h2 = he, outliers = out, r2 = r2, cv = cv, row.names = NULL)
@@ -515,8 +577,8 @@ multi_msa_effects <- function(models) {
 }
 
 
-table_outlier <- function(models, id = "trait") {
-  dt <- lapply(models, res_data)
+table_outlier <- function(models, id = "trait", k = 3) {
+  dt <- lapply(models, res_data, k)
   dt <- data.table::data.table(plyr::ldply(dt[], data.frame, .id = id))
   dt <- dt[dt$Classify == "Outlier", ] %>% dplyr::mutate_if(is.numeric, round, 3)
   return(dt)

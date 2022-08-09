@@ -155,6 +155,27 @@ mod_MSA_ui <- function(id) {
                   choices = "", multiple = TRUE, selected = NULL
                 ),
                 hr(),
+                sliderInput(
+                  ns("k_clean_out"),
+                  label = tagList(
+                    "rLimit",
+                    icon = tooltip(
+                      icon("question-circle", verify_fa = FALSE),
+                      title = paste0(
+                        "A numerical value used for determining when a value is ",
+                        "considered an outlier. All observations with standardized ",
+                        "residuals exceeding rLimit will be marked as outliers. ",
+                        "3 by default."
+                      ),
+                      placement = "top"
+                    )
+                  ),
+                  min = 1,
+                  max =  4,
+                  value =  3,
+                  step = 0.1,
+                  width = "100%"
+                ),
                 awesomeCheckbox(
                   inputId = ns("outliers"),
                   label = "Remove Outliers",
@@ -461,10 +482,23 @@ mod_MSA_server <- function(input, output, session, data) {
           dplyr::filter(.data[[input$experiment]] %in% exp) %>%
           droplevels()
         models_list[[exp]] <- SpATS_mrbean(
-          dt_tmp, input$variable, input$genotype,
-          input$column, input$row, FALSE, NULL, NULL, input$replicate,
-          fixed, random, input$res_ran, input$covariate,
-          input$outliers, input$times, input$selected_checks
+          data = dt_tmp, 
+          response = input$variable,
+          genotype = input$genotype,
+          col = input$column, 
+          row = input$row, 
+          segm = FALSE,
+          ncols = NULL, 
+          nrows = NULL, 
+          rep = input$replicate,
+          fix_fact = fixed,
+          ran_fact = random,
+          gen_ran = input$res_ran, 
+          covariate = input$covariate,
+          clean_out = input$outliers,
+          iterations = input$times, 
+          checks = input$selected_checks,
+          k_clean_out = input$k_clean_out
         )
         prg$update(html = HTML(
           "<center>",
@@ -495,7 +529,8 @@ mod_MSA_server <- function(input, output, session, data) {
     modelo = Modelo,
     gen_ran = reactive(input$res_ran),
     run = reactive(input$run),
-    check_mod = reactive(input$Rlink)
+    check_mod = reactive(input$Rlink),
+    rLimit = reactive(input$k_clean_out)
   ))
 }
 

@@ -121,11 +121,16 @@ mod_residuals_spats_server <- function(input, output, session, Model) {
 
   data_out <- reactive({
     req(Model$Modelo())
-    res_data(Model$Modelo())
+    res_data(Model$Modelo(), k = Model$rLimit())
   })
 
   observeEvent(Model$Modelo()$data, {
-    updateSelectInput(session, inputId = "variable", choices = names(Model$Modelo()$data), selected = "YdHa_clean")
+    updateSelectInput(
+      session, 
+      inputId = "variable", 
+      choices = names(Model$Modelo()$data),
+      selected = "YdHa_clean"
+    )
   })
 
   output$field <- plotly::renderPlotly({
@@ -159,18 +164,30 @@ mod_residuals_spats_server <- function(input, output, session, Model) {
 
     req(input$variable)
     req(Model$Modelo())
-    res_compare(Model$Modelo(), variable = input$variable, factor = input$factor)
+    res_compare(
+      Model = Model$Modelo(), 
+      variable = input$variable,
+      factor = input$factor
+    )
   })
 
   output$Info <- DT::renderDataTable({
     req(Model$action())
     req(Model$Modelo())
     dt <- dplyr::mutate_if(data_out(), is.numeric, round, 1)[, -1]
-    DT::datatable(dt,
-      extensions = "Buttons", filter = "top", selection = "multiple",
+    DT::datatable(
+      dt,
+      extensions = "Buttons", 
+      filter = "top", 
+      selection = "multiple",
       options = list(
-        dom = "lfrtipB", scrollX = TRUE, pageLength = 2, lengthMenu = c(1:4, nrow(dt)),
-        columnnDefs = list(list(className = "dt-center", targets = 0:ncol(dt)))
+        dom = "lfrtipB",
+        scrollX = TRUE,
+        pageLength = 2,
+        lengthMenu = c(1:4, nrow(dt)),
+        columnnDefs = list(
+          list(className = "dt-center", targets = 0:ncol(dt))
+        )
       )
     )
   })
@@ -187,11 +204,18 @@ mod_residuals_spats_server <- function(input, output, session, Model) {
 
   output$OUT <- DT::renderDataTable({
     raw_dt <- data_res()
-    DT::datatable(raw_dt,
-      extensions = "Buttons", filter = "top", selection = "multiple",
+    DT::datatable(
+      raw_dt,
+      extensions = "Buttons", 
+      filter = "top", 
+      selection = "multiple",
       options = list(
-        scrollX = TRUE, pageLength = 2, lengthMenu = c(1:4, nrow(raw_dt)),
-        columnnDefs = list(list(className = "dt-center", targets = 0:ncol(raw_dt)))
+        scrollX = TRUE, 
+        pageLength = 2,
+        lengthMenu = c(1:4, nrow(raw_dt)),
+        columnnDefs = list(
+          list(className = "dt-center", targets = 0:ncol(raw_dt))
+        )
       )
     )
   })

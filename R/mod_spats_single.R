@@ -201,7 +201,10 @@ mod_spats_single_ui <- function(id) {
         width = 3,
         status = "success",
         solidHeader = FALSE,
-        title = tagList(icon = icon("sliders-h", verify_fa = FALSE), "Segments and Report"),
+        title = tagList(
+          icon = icon("sliders-h", verify_fa = FALSE), 
+          "Segments and Residuals"
+        ),
         collapsible = TRUE,
         rintrojs::introBox(
           materialSwitch(
@@ -217,26 +220,42 @@ mod_spats_single_ui <- function(id) {
           data.position = "bottom"
         ),
         hr(),
+        sliderInput(
+          ns("k_clean_out"),
+          label = tagList(
+            "rLimit",
+            icon = tooltip(
+              icon("question-circle", verify_fa = FALSE),
+              title = paste0(
+                "A numerical value used for determining when a value is ",
+                "considered an outlier. All observations with standardized ",
+                "residuals exceeding rLimit will be marked as outliers. ",
+                "3 by default."
+              ),
+              placement = "top"
+            )
+          ),
+          min = 1,
+          max =  4,
+          value =  3,
+          step = 0.1,
+          width = "100%"
+        ),
         awesomeCheckbox(
           inputId = ns("outliers"),
           label = "Remove Outliers",
           value = FALSE,
           status = "danger"
         ),
-        numericInput(
-          ns("times"),
-          "Number of Times to Check",
-          value = 1, min = 1, max = 3, step = 1,
-          width = "100%"
-        ),
-        hr(),
-        radioButtons(
-          "format",
-          "Report Format",
-          c("PDF", "HTML", "Word"),
-          inline = TRUE
-        ),
-        disabled(downloadButton("downloadReport"))
+        div(
+          id = ns("residuals"),
+          numericInput(
+            ns("times"),
+            "Number of Times to Check",
+            value = 1, min = 1, max = 3, step = 1,
+            width = "100%"
+          )
+        )
       )
     )
   )
@@ -366,7 +385,6 @@ mod_spats_single_server <- function(input, output, session, data) {
     shinyjs::enable("spatial")
     shinyjs::enable("tabBut")
     shinyjs::enable("coeff")
-    shinyjs::enable("downloadReport")
     shinyjs::enable("Rlink")
   }) %>%
     bindEvent(input$action)
@@ -378,7 +396,7 @@ mod_spats_single_server <- function(input, output, session, data) {
     bindEvent(input$able)
 
   observe({
-    toggle("times", anim = TRUE, time = 1, animType = "fade")
+    toggle("residuals", anim = TRUE, time = 1, animType = "fade")
   }) %>%
     bindEvent(input$outliers)
 
@@ -436,6 +454,29 @@ mod_spats_single_server <- function(input, output, session, data) {
           if (sum(is.na(dt$Response)) > 0.98 * length(dt$Response)) {
             stop("Missing data in the response")
           }
+          if (dupl >= 1) {
+            stop("Duplicated row & column coordinates")
+          }
+          Modelo_SpATS <- SpATS_mrbean(
+            data = data$data(),
+            response = input$variable,
+            genotype = input$genotipo,
+            col = input$column,
+            row = input$fila,
+            segm = input$able,
+            ncols = input$segcol,
+            nrows = input$segrow,
+            rep = input$replicate,
+            fix_fact = input$show_fixed,
+            ran_fact = input$show_random,
+            gen_ran = input$res_ran,
+            covariate = input$covariate,
+            clean_out = input$outliers,
+            iterations = input$times,
+            checks = input$selected, 
+            k_clean_out = input$k_clean_out
+          )
+          Modelo_SpATS
         },
         error = function(e) {
           shinytoastr::toastr_error(
@@ -446,46 +487,8 @@ mod_spats_single_server <- function(input, output, session, data) {
           )
         }
       )
-
-      if (dupl >= 1) { # Duplicated Row-Col
-        Modelo <- try(silent = T)
-        tryCatch(
-          {
-            if (inherits(Modelo, "try-error")) {
-              stop("Duplicated row & column coordinates")
-            }
-          },
-          error = function(e) {
-            shinytoastr::toastr_error(
-              title = "Warning:",
-              conditionMessage(e),
-              position =  "bottom-right",
-              progressBar = TRUE
-            )
-          }
-        )
-        return()
-      } else {
-        Modelo <- SpATS_mrbean(
-          data = data$data(),
-          response = input$variable,
-          genotype = input$genotipo,
-          col = input$column,
-          row = input$fila,
-          segm = input$able,
-          ncols = input$segcol,
-          nrows = input$segrow,
-          rep = input$replicate,
-          fix_fact = input$show_fixed,
-          ran_fact = input$show_random,
-          gen_ran = input$res_ran,
-          covariate = input$covariate,
-          clean_out = input$outliers,
-          iterations = input$times,
-          checks = input$selected
-        )
-        Modelo
-      }
+      if (!exists("Modelo_SpATS")) Modelo_SpATS <- NULL
+      return(Modelo_SpATS)
     },
     ignoreNULL = FALSE
   )
@@ -625,7 +628,8 @@ mod_spats_single_server <- function(input, output, session, data) {
       spatial = reactive(input$spatial),
       res_ran = reactive(input$res_ran),
       inf = reactive(input$inf),
-      Rlink = reactive(input$Rlink)
+      Rlink = reactive(input$Rlink),
+      rLimit = reactive(input$k_clean_out)
     )
   )
 }

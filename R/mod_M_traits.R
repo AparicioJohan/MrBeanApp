@@ -73,67 +73,98 @@ mod_M_traits_ui <- function(id) {
               )
             ),
             selectInput(inputId = ns("replicate"), label = "Replicate", choices = "", width = "100%"),
-            fluidRow(
-              column(
-                6,
-                selectizeInput(ns("show_fixed"),
-                  width = "100%",
-                  label = tagList("Fixed",
-                    icon = tooltip(icon("question-circle", verify_fa = FALSE),
-                      title = "Additional fixed factors.",
-                      placement = "top"
-                    )
+            materialSwitch(
+              ns("aditional_factors"),
+              label = "Aditional Components",
+              status = "success",
+              right = T,
+              width = "100%"
+            ),
+            div(
+              id = ns("components"),
+              fluidRow(
+                column(
+                  6,
+                  selectizeInput(ns("show_fixed"),
+                    width = "100%",
+                    label = tagList("Fixed",
+                      icon = tooltip(icon("question-circle", verify_fa = FALSE),
+                        title = "Additional fixed factors.",
+                        placement = "top"
+                      )
+                    ),
+                    choices = "", multiple = TRUE
                   ),
-                  choices = "", multiple = TRUE
+                  shinyjs::hidden(
+                    pickerInput(
+                      inputId = ns("fix_traits"),
+                      label = "Experiments",
+                      choices = "",
+                      multiple = T,
+                      options = list(
+                        size = 5
+                      )
+                    )
+                  )
                 ),
-                shinyjs::hidden(
-                  pickerInput(
-                    inputId = ns("fix_traits"),
-                    label = "Experiments",
-                    choices = "",
-                    multiple = T,
-                    options = list(
-                      size = 5
+                column(
+                  6,
+                  selectizeInput(ns("show_random"),
+                    width = "100%",
+                    label = tagList("Random",
+                      icon = tooltip(icon("question-circle", verify_fa = FALSE),
+                        title = "Additional random factors.",
+                        placement = "top"
+                      )
+                    ),
+                    choices = "", multiple = TRUE
+                  ),
+                  shinyjs::hidden(
+                    pickerInput(
+                      inputId = ns("ran_traits"),
+                      label = "Experiments",
+                      choices = "",
+                      multiple = T,
+                      options = list(
+                        size = 5
+                      )
                     )
                   )
                 )
               ),
-              column(
-                6,
-                selectizeInput(ns("show_random"),
-                  width = "100%",
-                  label = tagList("Random",
-                    icon = tooltip(icon("question-circle", verify_fa = FALSE),
-                      title = "Additional random factors.",
-                      placement = "top"
-                    )
-                  ),
-                  choices = "", multiple = TRUE
-                ),
-                shinyjs::hidden(
-                  pickerInput(
-                    inputId = ns("ran_traits"),
-                    label = "Experiments",
-                    choices = "",
-                    multiple = T,
-                    options = list(
-                      size = 5
-                    )
+              selectizeInput(ns("covariate"),
+                width = "100%",
+                label = tagList("Covariate",
+                  icon = tooltip(icon("question-circle", verify_fa = FALSE),
+                    title = "Additional covariate.",
+                    placement = "top"
                   )
-                )
+                ),
+                choices = "", multiple = TRUE, selected = NULL
               )
             ),
-            selectizeInput(ns("covariate"),
-              width = "100%",
-              label = tagList("Covariate",
-                icon = tooltip(icon("question-circle", verify_fa = FALSE),
-                  title = "Additional covariate.",
+            hr(),
+            sliderInput(
+              ns("k_clean_out"),
+              label = tagList(
+                "rLimit",
+                icon = tooltip(
+                  icon("question-circle", verify_fa = FALSE),
+                  title = paste0(
+                    "A numerical value used for determining when a value is ",
+                    "considered an outlier. All observations with standardized ",
+                    "residuals exceeding rLimit will be marked as outliers. ",
+                    "3 by default."
+                  ),
                   placement = "top"
                 )
               ),
-              choices = "", multiple = TRUE, selected = NULL
+              min = 1,
+              max =  4,
+              value =  3,
+              step = 0.1,
+              width = "100%"
             ),
-            hr(),
             awesomeCheckbox(
               inputId = ns("outliers"),
               label = "Remove Outliers",
@@ -330,7 +361,12 @@ mod_M_traits_ui <- function(id) {
 mod_M_traits_server <- function(input, output, session, data) {
   ns <- session$ns
 
-  observeEvent(!input$outliers, toggle("times", anim = TRUE, time = 1, animType = "fade"))
+  observeEvent(!input$outliers, 
+               toggle("times", anim = TRUE, time = 1, animType = "fade")
+               )
+  observeEvent(!input$aditional_factors,
+               toggle("components", anim = TRUE, time = 1, animType = "fade")
+               )
 
 
   observeEvent(data$data(), {
@@ -424,7 +460,8 @@ mod_M_traits_server <- function(input, output, session, data) {
             dt, var, input$genotype,
             input$column, input$row, FALSE, NULL, NULL, input$replicate,
             fixed, random, input$res_ran, input$covariate,
-            input$outliers, input$times, input$selected_checks
+            input$outliers, input$times, input$selected_checks,
+            k_clean_out = input$k_clean_out
           )
 
           if (class(Models[[var]]) == "try-error") {
@@ -463,7 +500,7 @@ mod_M_traits_server <- function(input, output, session, data) {
     isolate({
       req(Modelo())
       Models <- Modelo()
-      resum <- msa_table(Models, gen_ran = input$res_ran)
+      resum <- msa_table(Models, gen_ran = input$res_ran, input$k_clean_out)
       names(resum)[1] <- "Trait"
       dt <- resum %>% dplyr::mutate_if(is.numeric, round, 3)
       DT::datatable(dt,
@@ -579,7 +616,7 @@ mod_M_traits_server <- function(input, output, session, data) {
         need(ncol(bl) >= 3, "Only one trait fitted.")
       )
       Models <- Modelo()
-      resum <- msa_table(Models, gen_ran = input$res_ran)
+      resum <- msa_table(Models, gen_ran = input$res_ran, input$k_clean_out)
       names(resum)[1] <- "Trait"
       if (input$res_ran) {
         Heritability <- resum$h2
@@ -969,7 +1006,7 @@ mod_M_traits_server <- function(input, output, session, data) {
     input$check
     isolate({
       req(Modelo())
-      effects <- table_outlier(Modelo())
+      effects <- table_outlier(Modelo(), id = "trait", input$k_clean_out)
       return(effects)
     })
   })
@@ -982,7 +1019,13 @@ mod_M_traits_server <- function(input, output, session, data) {
         {
           data_extreme()
         },
-        option = list(pageLength = 5, scrollX = TRUE, columnDefs = list(list(className = "dt-center", targets = 0:ncol(data_extreme())))),
+        option = list(
+          pageLength = 5,
+          scrollX = TRUE,
+          columnDefs = list(
+            list(className = "dt-center", targets = 0:ncol(data_extreme()))
+          )
+        ),
         filter = "top",
         selection = "multiple"
       )
@@ -1023,7 +1066,7 @@ mod_M_traits_server <- function(input, output, session, data) {
     content = function(file) {
       req(Modelo())
       Models <- Modelo()
-      resum <- msa_table(Models, gen_ran = input$res_ran)
+      resum <- msa_table(Models, gen_ran = input$res_ran, k = input$k_clean_out)
       names(resum)[1] <- "Trait"
       dt <- resum %>% dplyr::mutate_if(is.numeric, round, 3)
       write.csv(dt, file, row.names = FALSE)
@@ -1068,7 +1111,7 @@ mod_M_traits_server <- function(input, output, session, data) {
           need(ncol(bl) >= 3, "Only one trait fitted.")
         )
         Models <- Modelo()
-        resum <- msa_table(Models, gen_ran = input$res_ran)
+        resum <- msa_table(Models, gen_ran = input$res_ran, input$k_clean_out)
         names(resum)[1] <- "Trait"
         if (input$res_ran) {
           Heritability <- resum$h2
@@ -1088,7 +1131,7 @@ mod_M_traits_server <- function(input, output, session, data) {
           need(ncol(bl) >= 3, "Only one trait fitted.")
         )
         Models <- Modelo()
-        resum <- msa_table(Models, gen_ran = input$res_ran)
+        resum <- msa_table(Models, gen_ran = input$res_ran, input$k_clean_out)
         names(resum)[1] <- "Trait"
         if (input$res_ran) {
           Heritability <- resum$h2
