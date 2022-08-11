@@ -9,6 +9,7 @@ marker_plot(
   map = NULL,
   trait_selected = "",
   type = "point",
+  point_size = 4,
   legend_size = 15,
   alpha = 1
 )
@@ -22,6 +23,8 @@ marker_plot(
 
 \item{type}{string selecting whether to use points or lines in the geom.
 (point by default).}
+
+\item{point_size}{numeric value to define the size of the points}
 
 \item{legend_size}{numeric value to define the size of the theme 
 (15 by default).}

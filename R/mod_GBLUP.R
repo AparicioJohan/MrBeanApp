@@ -1612,6 +1612,7 @@ mod_GBLUP_server <- function(id) {
             map = map,
             trait_selected = trait_selected,
             type = input$points_line,
+            point_size = input$point_size_mark,
             legend_size = input$legend_size_mark,
             alpha = input$alpha
           )
@@ -1660,8 +1661,7 @@ mod_GBLUP_server <- function(id) {
           ),
           hr(),
           fluidRow(
-            col_1(),
-            col_3(
+            col_2(
               prettyRadioButtons(
                 inputId = ns("points_line"),
                 label = "Choose:", 
@@ -1672,6 +1672,13 @@ mod_GBLUP_server <- function(id) {
                 icon = icon("check"), 
                 bigger = TRUE,
                 animation = "jelly"
+              )
+            ),
+            col_3(
+              sliderTextInput(
+                inputId = ns("point_size_mark"), label = "Point Size:",
+                choices = seq(0.5, 6, by = 0.1),
+                grid = TRUE, selected = 2, width = "100%"
               )
             ),
             col_3(

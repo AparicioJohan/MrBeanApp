@@ -287,6 +287,7 @@ adj_vanraden <- function(geno_matrix) {
 #' @param trait_selected vector with traits to plot
 #' @param type string selecting whether to use points or lines in the geom.
 #'  (point by default).
+#' @param point_size numeric value to define the size of the points
 #' @param legend_size numeric value to define the size of the theme 
 #' (15 by default).
 #' @param alpha numeric value between (0, 1) to define the alpha in the geom.
@@ -306,6 +307,7 @@ marker_plot <- function(marker = NULL,
                         map = NULL,
                         trait_selected = "",
                         type = "point",
+                        point_size = 4,
                         legend_size = 15,
                         alpha = 1) {
   lvls <- colnames(map)
@@ -334,7 +336,7 @@ marker_plot <- function(marker = NULL,
       ) +
       {
         if (type == "point") {
-          geom_point(alpha = alpha)
+          geom_point(size = point_size, alpha = alpha)
         } else if (type == "line") {
           geom_segment(
             aes(
@@ -389,7 +391,7 @@ marker_plot <- function(marker = NULL,
       ) +
       {
         if (type == "point") {
-          geom_point(alpha = alpha)
+          geom_point(size = point_size, alpha = alpha)
         } else if (type == "line") {
           geom_line(alpha = alpha)
         }
