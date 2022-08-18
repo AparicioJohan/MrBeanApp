@@ -11,45 +11,59 @@ mod_M_traits_ui <- function(id) {
   ns <- NS(id)
   tagList(
     HTML('<h1 style="font-weight: bold; color: #00a65a;">Spatial Analysis for Several Traits</h1>'),
-    # HTML('<h4 style="font-weight: bold; color: #00a65a;">Using SpATS</h4>'),
     fluidRow(
       column(
         width = 4,
         fluidRow(
           bs4Dash::box(
-            width = 12, status = "success", solidHeader = FALSE, title = tagList(icon = icon("cogs", verify_fa = FALSE), "Components"), # background = "light-blue"
+            width = 12, 
+            status = "success", 
+            solidHeader = FALSE, 
+            title = tagList(
+              icon = icon("cogs", verify_fa = FALSE),
+              "Components"
+            ), 
             selectInput(
               inputId = ns("variable"),
-              label = tagList("Response Variables",
-                icon = tooltip(icon("question-circle", verify_fa = FALSE),
+              label = tagList(
+                "Response Variables",
+                icon = tooltip(
+                  icon("question-circle", verify_fa = FALSE),
                   title = "The column with the continous response variable.
-                                                                          (More than one)",
+                  (More than one)",
                   placement = "top"
                 )
               ),
-              choices = "", width = "100%", multiple = T
+              choices = "", 
+              width = "100%",
+              multiple = TRUE
             ),
             selectInput(
               inputId = ns("genotype"),
               label = tagList("Genotype",
-                icon = tooltip(icon("question-circle", verify_fa = FALSE),
+                icon = tooltip(
+                  icon("question-circle", verify_fa = FALSE),
                   title = "The column with genotypes.",
                   placement = "top"
                 )
               ),
-              choices = "", width = "100%"
+              choices = "", 
+              width = "100%"
             ),
             awesomeCheckbox(
               inputId = ns("res_ran"),
               label = "Random Genotype",
-              value = TRUE, status = "danger"
+              value = TRUE, 
+              status = "danger"
             ),
             hr(),
             shinyjs::hidden(
               pickerInput(
                 inputId = ns("selected_checks"),
-                label = tagList("Checks",
-                  icon = tooltip(icon("question-circle", verify_fa = FALSE),
+                label = tagList(
+                  "Checks",
+                  icon = tooltip(
+                    icon("question-circle", verify_fa = FALSE),
                     title = "Select Checks",
                     placement = "top"
                   )
@@ -58,21 +72,37 @@ mod_M_traits_ui <- function(id) {
                 options = list(
                   `actions-box` = TRUE, size = 5, `live-search` = TRUE
                 ),
-                multiple = TRUE, width = "100%"
+                multiple = TRUE,
+                width = "100%"
               )
             ),
             hr(),
             fluidRow(
               column(
                 6,
-                selectInput(inputId = ns("column"), label = "Column", choices = "", width = "100%")
+                selectInput(
+                  inputId = ns("column"), 
+                  label = "Column", 
+                  choices = "",
+                  width = "100%"
+                )
               ),
               column(
                 6,
-                selectInput(inputId = ns("row"), label = "Row", choices = "", width = "100%")
+                selectInput(
+                  inputId = ns("row"), 
+                  label = "Row", 
+                  choices = "", 
+                  width = "100%"
+                )
               )
             ),
-            selectInput(inputId = ns("replicate"), label = "Replicate", choices = "", width = "100%"),
+            selectInput(
+              inputId = ns("replicate"), 
+              label = "Replicate",
+              choices = "",
+              width = "100%"
+            ),
             materialSwitch(
               ns("aditional_factors"),
               label = "Aditional Components",
@@ -85,15 +115,19 @@ mod_M_traits_ui <- function(id) {
               fluidRow(
                 column(
                   6,
-                  selectizeInput(ns("show_fixed"),
+                  selectizeInput(
+                    ns("show_fixed"),
                     width = "100%",
-                    label = tagList("Fixed",
-                      icon = tooltip(icon("question-circle", verify_fa = FALSE),
+                    label = tagList(
+                      "Fixed",
+                      icon = tooltip(
+                        icon("question-circle", verify_fa = FALSE),
                         title = "Additional fixed factors.",
                         placement = "top"
                       )
                     ),
-                    choices = "", multiple = TRUE
+                    choices = "", 
+                    multiple = TRUE
                   ),
                   shinyjs::hidden(
                     pickerInput(
@@ -109,15 +143,18 @@ mod_M_traits_ui <- function(id) {
                 ),
                 column(
                   6,
-                  selectizeInput(ns("show_random"),
+                  selectizeInput(
+                    ns("show_random"),
                     width = "100%",
                     label = tagList("Random",
-                      icon = tooltip(icon("question-circle", verify_fa = FALSE),
+                      icon = tooltip(
+                        icon("question-circle", verify_fa = FALSE),
                         title = "Additional random factors.",
                         placement = "top"
                       )
                     ),
-                    choices = "", multiple = TRUE
+                    choices = "", 
+                    multiple = TRUE
                   ),
                   shinyjs::hidden(
                     pickerInput(
@@ -132,15 +169,20 @@ mod_M_traits_ui <- function(id) {
                   )
                 )
               ),
-              selectizeInput(ns("covariate"),
+              selectizeInput(
+                ns("covariate"),
                 width = "100%",
-                label = tagList("Covariate",
-                  icon = tooltip(icon("question-circle", verify_fa = FALSE),
+                label = tagList(
+                  "Covariate",
+                  icon = tooltip(
+                    icon("question-circle", verify_fa = FALSE),
                     title = "Additional covariate.",
                     placement = "top"
                   )
                 ),
-                choices = "", multiple = TRUE, selected = NULL
+                choices = "", 
+                multiple = TRUE, 
+                selected = NULL
               )
             ),
             hr(),
@@ -168,13 +210,29 @@ mod_M_traits_ui <- function(id) {
             awesomeCheckbox(
               inputId = ns("outliers"),
               label = "Remove Outliers",
-              value = FALSE, status = "danger"
+              value = FALSE,
+              status = "danger"
             ),
-            numericInput(ns("times"), "Number of Times to Check", value = 1, min = 1, max = 3, step = 1, width = "100%"),
+            numericInput(
+              inputId = ns("times"), 
+              label = "Number of Times to Check", 
+              value = 1,
+              min = 1, 
+              max = 3, 
+              step = 1, 
+              width = "100%"
+            ),
             fluidRow(
               col_2(),
               col_8(
-                actionBttn(inputId = ns("check"), label = "Run Models", style = "jelly", color = "success", block = T, icon = icon("check"))
+                actionBttn(
+                  inputId = ns("check"), 
+                  label = "Run Models", 
+                  style = "jelly", 
+                  color = "success",
+                  block = TRUE, 
+                  icon = icon("check")
+                )
               ),
               col_2()
             )
@@ -191,61 +249,115 @@ mod_M_traits_ui <- function(id) {
                 12,
                 fluidRow(
                   bs4TabCard(
-                    width = 12, id = "multi_trait", maximizable = T, solidHeader = FALSE, closable = F,
-                    status = "success", side = "left", type = "tabs",
+                    width = 12,
+                    id = "multi_trait", 
+                    maximizable = TRUE,
+                    solidHeader = FALSE, 
+                    closable = F,
+                    status = "success", 
+                    side = "left",
+                    type = "tabs",
                     tabPanel(
                       title = "Spatial-Plot", active = T,
                       dropdown(
                         prettyRadioButtons(
-                          inputId = ns("typefile"), label = "Download Plot File Type", outline = TRUE, fill = FALSE, shape = "square", inline = TRUE,
+                          inputId = ns("typefile"), 
+                          label = "Download Plot File Type", 
+                          outline = TRUE, 
+                          fill = FALSE, 
+                          shape = "square",
+                          inline = TRUE,
                           choices = list(PNG = "png", PDF = "pdf"),
-                          icon = icon("check"), animation = "tada"
+                          icon = icon("check"),
+                          animation = "tada"
                         ),
                         conditionalPanel(
-                          condition = "input.typefile=='png'", ns = ns,
-                          sliderInput(inputId = ns("png.wid"), min = 200, max = 2000, value = 900, label = "Width pixels"),
-                          sliderInput(inputId = ns("png.hei"), min = 200, max = 2000, value = 600, label = "Height pixels")
+                          condition = "input.typefile=='png'", 
+                          ns = ns,
+                          sliderInput(
+                            inputId = ns("png.wid"),
+                            min = 200, 
+                            max = 2000, 
+                            value = 900,
+                            label = "Width pixels"
+                          ),
+                          sliderInput(
+                            inputId = ns("png.hei"),
+                            min = 200, 
+                            max = 2000,
+                            value = 600, 
+                            label = "Height pixels"
+                          )
                         ),
                         conditionalPanel(
-                          condition = "input.typefile=='pdf'", ns = ns,
-                          sliderInput(inputId = ns("pdf.wid"), min = 2, max = 20, value = 10, label = "Width"),
-                          sliderInput(inputId = ns("pdf.hei"), min = 2, max = 20, value = 8, label = "Height")
+                          condition = "input.typefile=='pdf'", 
+                          ns = ns,
+                          sliderInput(
+                            inputId = ns("pdf.wid"), 
+                            min = 2, 
+                            max = 20, 
+                            value = 10, 
+                            label = "Width"
+                          ),
+                          sliderInput(
+                            inputId = ns("pdf.hei"), 
+                            min = 2, 
+                            max = 20,
+                            value = 8, 
+                            label = "Height"
+                          )
                         ),
-                        downloadButton(ns("descargar"), "Download Plot",
+                        downloadButton(
+                          outputId = ns("descargar"),
+                          label = "Download Plot",
                           class = "btn-success",
                           style = " color: white ; background-color: #28a745"
-                        ), br(),
+                        ), 
+                        br(),
                         animate = shinyWidgets::animateOptions(
                           enter = shinyWidgets::animations$fading_entrances$fadeInLeftBig,
                           exit  = shinyWidgets::animations$fading_exits$fadeOutLeftBig
                         ),
-                        style = "unite", icon = icon("gear", verify_fa = FALSE),
-                        status = "warning", width = "300px"
+                        style = "unite", 
+                        icon = icon("gear", verify_fa = FALSE),
+                        status = "warning", 
+                        width = "300px"
                       ),
-                      shinycssloaders::withSpinner(plotOutput(ns("plot_spats")), type = 5, color = "#28a745"),
-                      materialSwitch(ns("tog_plot"), label = "Percentage", status = "success", value = FALSE),
+                      shinycssloaders::withSpinner(
+                        plotOutput(ns("plot_spats")), 
+                        type = 5, 
+                        color = "#28a745"
+                      ),
+                      materialSwitch(
+                        ns("tog_plot"),
+                        label = "Percentage",
+                        status = "success",
+                        value = FALSE
+                      ),
                       fluidRow(
                         col_3(),
                         col_4(
-                          selectInput(ns("selected"), label = HTML("<center> Trait </center>"), choices = "", width = "100%")
+                          selectInput(
+                            ns("selected"),
+                            label = HTML("<center> Trait </center>"), 
+                            choices = "",
+                            width = "100%"
+                          )
                         ),
                         col_3(
                           rep_br(1),
                           actionBttn(
                             inputId = ns("sum_mod"),
                             label = "summary",
-                            style = "unite", size = "sm", block = F,
-                            color = "warning", icon = icon("spinner")
+                            style = "unite",
+                            size = "sm",
+                            block = FALSE,
+                            color = "warning", 
+                            icon = icon("spinner")
                           )
                         ),
                         col_2()
                       ),
-                      # fluidRow(
-                      #   col_4(),
-                      #   col_4(
-                      #     selectInput(ns("selected"), label = HTML("<center> Trait </center>"), choices = "", width = "100%")),
-                      #   col_4()
-                      # ),
                       icon = icon("table-cells", verify_fa = FALSE)
                     ),
                     # tabPanel(title = "Corr-1",
@@ -256,32 +368,72 @@ mod_M_traits_ui <- function(id) {
                       title = "Correlations",
                       dropdown(
                         prettyRadioButtons(
-                          inputId = ns("type"), label = "Download Plot File Type", outline = TRUE, fill = FALSE, shape = "square", inline = TRUE,
+                          inputId = ns("type"), 
+                          label = "Download Plot File Type", 
+                          outline = TRUE, 
+                          fill = FALSE, 
+                          shape = "square", 
+                          inline = TRUE,
                           choices = list(PNG = "png", PDF = "pdf"),
                           icon = icon("check"), animation = "tada"
                         ),
                         conditionalPanel(
-                          condition = "input.type=='png'", ns = ns,
-                          sliderInput(inputId = ns("png.wid.c"), min = 200, max = 2000, value = 900, label = "Width pixels"),
-                          sliderInput(inputId = ns("png.hei.c"), min = 200, max = 2000, value = 600, label = "Height pixels")
+                          condition = "input.type=='png'",
+                          ns = ns,
+                          sliderInput(
+                            inputId = ns("png.wid.c"),
+                            min = 200,
+                            max = 2000,
+                            value = 900, 
+                            label = "Width pixels"
+                          ),
+                          sliderInput(
+                            inputId = ns("png.hei.c"),
+                            min = 200,
+                            max = 2000,
+                            value = 600, 
+                            label = "Height pixels"
+                          )
                         ),
                         conditionalPanel(
-                          condition = "input.type=='pdf'", ns = ns,
-                          sliderInput(inputId = ns("pdf.wid.c"), min = 2, max = 20, value = 10, label = "Width"),
-                          sliderInput(inputId = ns("pdf.hei.c"), min = 2, max = 20, value = 8, label = "Height")
+                          condition = "input.type=='pdf'",
+                          ns = ns,
+                          sliderInput(
+                            inputId = ns("pdf.wid.c"), 
+                            min = 2, 
+                            max = 20, 
+                            value = 10, 
+                            label = "Width"
+                          ),
+                          sliderInput(
+                            inputId = ns("pdf.hei.c"), 
+                            min = 2, 
+                            max = 20, 
+                            value = 8, 
+                            label = "Height"
+                          )
                         ),
-                        downloadButton(ns("descargar2"), "Download Plot",
+                        downloadButton(
+                          ns("descargar2"), 
+                          "Download Plot",
                           class = "btn-success",
                           style = " color: white ; background-color: #28a745"
-                        ), br(),
+                        ), 
+                        br(),
                         animate = shinyWidgets::animateOptions(
                           enter = shinyWidgets::animations$fading_entrances$fadeInLeftBig,
                           exit  = shinyWidgets::animations$fading_exits$fadeOutLeftBig
                         ),
-                        style = "unite", icon = icon("gear", verify_fa = FALSE),
-                        status = "warning", width = "300px"
+                        style = "unite", 
+                        icon = icon("gear", verify_fa = FALSE),
+                        status = "warning",
+                        width = "300px"
                       ),
-                      shinycssloaders::withSpinner(plotOutput(ns("corr")), type = 5, color = "#28a745"),
+                      shinycssloaders::withSpinner(
+                        plotOutput(ns("corr")), 
+                        type = 5, 
+                        color = "#28a745"
+                      ),
                       actionBttn(
                         inputId = ns("pca"),
                         label = "PCA",
@@ -304,7 +456,8 @@ mod_M_traits_ui <- function(id) {
                         DT::dataTableOutput(ns("summ")),
                         type = 5, color = "#28a745"
                       ),
-                      downloadButton(ns("downloadsummary"),
+                      downloadButton(
+                        ns("downloadsummary"),
                         "Download Table",
                         class = "btn-success",
                         style = " color: white ; background-color: #28a745; float:left"
@@ -314,12 +467,14 @@ mod_M_traits_ui <- function(id) {
                     tabPanel(
                       title = "Predictions",
                       DT::dataTableOutput(ns("effects")),
-                      downloadButton(ns("downloadeffects"),
+                      downloadButton(
+                        ns("downloadeffects"),
                         "Download Table",
                         class = "btn-success",
                         style = " color: white ; background-color: #28a745; float:left"
                       ),
-                      downloadButton(ns("spread_effects"),
+                      downloadButton(
+                        ns("spread_effects"),
                         "Spread Table",
                         class = "btn-danger",
                         style = " color: white ; background-color: #d9534f; float:left"
@@ -335,9 +490,15 @@ mod_M_traits_ui <- function(id) {
                 )
               ),
               bs4Dash::box(
-                width = 12, status = "success", solidHeader = FALSE,
-                title = tagList(icon = icon("sort-numeric-up", verify_fa = FALSE), "Predictions Plot"),
-                collapsible = T, maximizable = T,
+                width = 12, 
+                status = "success", 
+                solidHeader = FALSE,
+                title = tagList(
+                  icon = icon("sort-numeric-up", verify_fa = FALSE),
+                  "Predictions Plot"
+                ),
+                collapsible = TRUE,
+                maximizable = TRUE,
                 echarts4r::echarts4rOutput(ns("ranking"))
               )
             )
