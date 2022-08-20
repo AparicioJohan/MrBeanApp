@@ -16,13 +16,13 @@ mod_M_traits_ui <- function(id) {
         width = 4,
         fluidRow(
           bs4Dash::box(
-            width = 12, 
-            status = "success", 
-            solidHeader = FALSE, 
+            width = 12,
+            status = "success",
+            solidHeader = FALSE,
             title = tagList(
               icon = icon("cogs", verify_fa = FALSE),
               "Components"
-            ), 
+            ),
             selectInput(
               inputId = ns("variable"),
               label = tagList(
@@ -34,7 +34,7 @@ mod_M_traits_ui <- function(id) {
                   placement = "top"
                 )
               ),
-              choices = "", 
+              choices = "",
               width = "100%",
               multiple = TRUE
             ),
@@ -47,13 +47,13 @@ mod_M_traits_ui <- function(id) {
                   placement = "top"
                 )
               ),
-              choices = "", 
+              choices = "",
               width = "100%"
             ),
             awesomeCheckbox(
               inputId = ns("res_ran"),
               label = "Random Genotype",
-              value = TRUE, 
+              value = TRUE,
               status = "danger"
             ),
             hr(),
@@ -81,8 +81,8 @@ mod_M_traits_ui <- function(id) {
               column(
                 6,
                 selectInput(
-                  inputId = ns("column"), 
-                  label = "Column", 
+                  inputId = ns("column"),
+                  label = "Column",
                   choices = "",
                   width = "100%"
                 )
@@ -90,15 +90,15 @@ mod_M_traits_ui <- function(id) {
               column(
                 6,
                 selectInput(
-                  inputId = ns("row"), 
-                  label = "Row", 
-                  choices = "", 
+                  inputId = ns("row"),
+                  label = "Row",
+                  choices = "",
                   width = "100%"
                 )
               )
             ),
             selectInput(
-              inputId = ns("replicate"), 
+              inputId = ns("replicate"),
               label = "Replicate",
               choices = "",
               width = "100%"
@@ -126,7 +126,7 @@ mod_M_traits_ui <- function(id) {
                         placement = "top"
                       )
                     ),
-                    choices = "", 
+                    choices = "",
                     multiple = TRUE
                   ),
                   shinyjs::hidden(
@@ -153,7 +153,7 @@ mod_M_traits_ui <- function(id) {
                         placement = "top"
                       )
                     ),
-                    choices = "", 
+                    choices = "",
                     multiple = TRUE
                   ),
                   shinyjs::hidden(
@@ -180,8 +180,8 @@ mod_M_traits_ui <- function(id) {
                     placement = "top"
                   )
                 ),
-                choices = "", 
-                multiple = TRUE, 
+                choices = "",
+                multiple = TRUE,
                 selected = NULL
               )
             ),
@@ -202,8 +202,8 @@ mod_M_traits_ui <- function(id) {
                 )
               ),
               min = 1,
-              max =  4,
-              value =  3,
+              max = 4,
+              value = 3,
               step = 0.1,
               width = "100%"
             ),
@@ -214,23 +214,23 @@ mod_M_traits_ui <- function(id) {
               status = "danger"
             ),
             numericInput(
-              inputId = ns("times"), 
-              label = "Number of Times to Check", 
+              inputId = ns("times"),
+              label = "Number of Times to Check",
               value = 1,
-              min = 1, 
-              max = 3, 
-              step = 1, 
+              min = 1,
+              max = 3,
+              step = 1,
               width = "100%"
             ),
             fluidRow(
               col_2(),
               col_8(
                 actionBttn(
-                  inputId = ns("check"), 
-                  label = "Run Models", 
-                  style = "jelly", 
+                  inputId = ns("check"),
+                  label = "Run Models",
+                  style = "jelly",
                   color = "success",
-                  block = TRUE, 
+                  block = TRUE,
                   icon = icon("check")
                 )
               ),
@@ -250,21 +250,21 @@ mod_M_traits_ui <- function(id) {
                 fluidRow(
                   bs4TabCard(
                     width = 12,
-                    id = "multi_trait", 
+                    id = "multi_trait",
                     maximizable = TRUE,
-                    solidHeader = FALSE, 
+                    solidHeader = FALSE,
                     closable = F,
-                    status = "success", 
+                    status = "success",
                     side = "left",
                     type = "tabs",
                     tabPanel(
                       title = "Spatial-Plot", active = T,
                       dropdown(
                         prettyRadioButtons(
-                          inputId = ns("typefile"), 
-                          label = "Download Plot File Type", 
-                          outline = TRUE, 
-                          fill = FALSE, 
+                          inputId = ns("typefile"),
+                          label = "Download Plot File Type",
+                          outline = TRUE,
+                          fill = FALSE,
                           shape = "square",
                           inline = TRUE,
                           choices = list(PNG = "png", PDF = "pdf"),
@@ -272,38 +272,38 @@ mod_M_traits_ui <- function(id) {
                           animation = "tada"
                         ),
                         conditionalPanel(
-                          condition = "input.typefile=='png'", 
+                          condition = "input.typefile=='png'",
                           ns = ns,
                           sliderInput(
                             inputId = ns("png.wid"),
-                            min = 200, 
-                            max = 2000, 
+                            min = 200,
+                            max = 2000,
                             value = 900,
                             label = "Width pixels"
                           ),
                           sliderInput(
                             inputId = ns("png.hei"),
-                            min = 200, 
+                            min = 200,
                             max = 2000,
-                            value = 600, 
+                            value = 600,
                             label = "Height pixels"
                           )
                         ),
                         conditionalPanel(
-                          condition = "input.typefile=='pdf'", 
+                          condition = "input.typefile=='pdf'",
                           ns = ns,
                           sliderInput(
-                            inputId = ns("pdf.wid"), 
-                            min = 2, 
-                            max = 20, 
-                            value = 10, 
+                            inputId = ns("pdf.wid"),
+                            min = 2,
+                            max = 20,
+                            value = 10,
                             label = "Width"
                           ),
                           sliderInput(
-                            inputId = ns("pdf.hei"), 
-                            min = 2, 
+                            inputId = ns("pdf.hei"),
+                            min = 2,
                             max = 20,
-                            value = 8, 
+                            value = 8,
                             label = "Height"
                           )
                         ),
@@ -312,20 +312,20 @@ mod_M_traits_ui <- function(id) {
                           label = "Download Plot",
                           class = "btn-success",
                           style = " color: white ; background-color: #28a745"
-                        ), 
+                        ),
                         br(),
                         animate = shinyWidgets::animateOptions(
                           enter = shinyWidgets::animations$fading_entrances$fadeInLeftBig,
                           exit  = shinyWidgets::animations$fading_exits$fadeOutLeftBig
                         ),
-                        style = "unite", 
+                        style = "unite",
                         icon = icon("gear", verify_fa = FALSE),
-                        status = "warning", 
+                        status = "warning",
                         width = "300px"
                       ),
                       shinycssloaders::withSpinner(
-                        plotOutput(ns("plot_spats")), 
-                        type = 5, 
+                        plotOutput(ns("plot_spats")),
+                        type = 5,
                         color = "#28a745"
                       ),
                       materialSwitch(
@@ -339,7 +339,7 @@ mod_M_traits_ui <- function(id) {
                         col_4(
                           selectInput(
                             ns("selected"),
-                            label = HTML("<center> Trait </center>"), 
+                            label = HTML("<center> Trait </center>"),
                             choices = "",
                             width = "100%"
                           )
@@ -352,7 +352,7 @@ mod_M_traits_ui <- function(id) {
                             style = "unite",
                             size = "sm",
                             block = FALSE,
-                            color = "warning", 
+                            color = "warning",
                             icon = icon("spinner")
                           )
                         ),
@@ -360,19 +360,15 @@ mod_M_traits_ui <- function(id) {
                       ),
                       icon = icon("table-cells", verify_fa = FALSE)
                     ),
-                    # tabPanel(title = "Corr-1",
-                    #             echarts4r::echarts4rOutput(ns("correlation")),
-                    #             icon = icon("circle-arrow-right", verify_fa = FALSE)
-                    # ),
                     tabPanel(
                       title = "Correlations",
                       dropdown(
                         prettyRadioButtons(
-                          inputId = ns("type"), 
-                          label = "Download Plot File Type", 
-                          outline = TRUE, 
-                          fill = FALSE, 
-                          shape = "square", 
+                          inputId = ns("type"),
+                          label = "Download Plot File Type",
+                          outline = TRUE,
+                          fill = FALSE,
+                          shape = "square",
                           inline = TRUE,
                           choices = list(PNG = "png", PDF = "pdf"),
                           icon = icon("check"), animation = "tada"
@@ -384,14 +380,14 @@ mod_M_traits_ui <- function(id) {
                             inputId = ns("png.wid.c"),
                             min = 200,
                             max = 2000,
-                            value = 900, 
+                            value = 900,
                             label = "Width pixels"
                           ),
                           sliderInput(
                             inputId = ns("png.hei.c"),
                             min = 200,
                             max = 2000,
-                            value = 600, 
+                            value = 600,
                             label = "Height pixels"
                           )
                         ),
@@ -399,39 +395,39 @@ mod_M_traits_ui <- function(id) {
                           condition = "input.type=='pdf'",
                           ns = ns,
                           sliderInput(
-                            inputId = ns("pdf.wid.c"), 
-                            min = 2, 
-                            max = 20, 
-                            value = 10, 
+                            inputId = ns("pdf.wid.c"),
+                            min = 2,
+                            max = 20,
+                            value = 10,
                             label = "Width"
                           ),
                           sliderInput(
-                            inputId = ns("pdf.hei.c"), 
-                            min = 2, 
-                            max = 20, 
-                            value = 8, 
+                            inputId = ns("pdf.hei.c"),
+                            min = 2,
+                            max = 20,
+                            value = 8,
                             label = "Height"
                           )
                         ),
                         downloadButton(
-                          ns("descargar2"), 
+                          ns("descargar2"),
                           "Download Plot",
                           class = "btn-success",
                           style = " color: white ; background-color: #28a745"
-                        ), 
+                        ),
                         br(),
                         animate = shinyWidgets::animateOptions(
                           enter = shinyWidgets::animations$fading_entrances$fadeInLeftBig,
                           exit  = shinyWidgets::animations$fading_exits$fadeOutLeftBig
                         ),
-                        style = "unite", 
+                        style = "unite",
                         icon = icon("gear", verify_fa = FALSE),
                         status = "warning",
                         width = "300px"
                       ),
                       shinycssloaders::withSpinner(
-                        plotOutput(ns("corr")), 
-                        type = 5, 
+                        plotOutput(ns("corr")),
+                        type = 5,
                         color = "#28a745"
                       ),
                       actionBttn(
@@ -490,8 +486,8 @@ mod_M_traits_ui <- function(id) {
                 )
               ),
               bs4Dash::box(
-                width = 12, 
-                status = "success", 
+                width = 12,
+                status = "success",
                 solidHeader = FALSE,
                 title = tagList(
                   icon = icon("sort-numeric-up", verify_fa = FALSE),
@@ -502,13 +498,6 @@ mod_M_traits_ui <- function(id) {
                 echarts4r::echarts4rOutput(ns("ranking"))
               )
             )
-            # fluidRow(
-            #   bs4Dash::box(width = 12, title =  tagList(icon=icon("wrench"), "Factors"),status = "success", solidHeader = FALSE,collapsible = TRUE ,
-            #                shinycssloaders::withSpinner(
-            #                  DT::dataTableOutput(ns("summ")),type = 5,color = "#28a745"
-            #                )
-            #   )
-            # )
           )
         )
       )
@@ -522,36 +511,73 @@ mod_M_traits_ui <- function(id) {
 mod_M_traits_server <- function(input, output, session, data) {
   ns <- session$ns
 
-  observeEvent(!input$outliers, 
-               toggle("times", anim = TRUE, time = 1, animType = "fade")
-               )
-  observeEvent(!input$aditional_factors,
-               toggle("components", anim = TRUE, time = 1, animType = "fade")
-               )
-
+  observeEvent(
+    !input$outliers,
+    toggle("times", anim = TRUE, time = 1, animType = "fade")
+  )
+  observeEvent(
+    !input$aditional_factors,
+    toggle("components", anim = TRUE, time = 1, animType = "fade")
+  )
 
   observeEvent(data$data(), {
     req(data$data())
     dt <- data$data()
-    updateSelectInput(session, "variable", choices = names(dt), selected = "YdHa_clean")
-    updateSelectInput(session, "genotype", choices = names(dt), selected = "line")
-    updateSelectInput(session, "column", choices = names(dt), selected = "col")
-    updateSelectInput(session, "row", choices = names(dt), selected = "row")
-    updateSelectInput(session, "replicate", choices = names(dt), selected = "rep")
-    updateSelectInput(session, "show_fixed", choices = names(dt), selected = "NNNN")
-    updateSelectInput(session, "show_random", choices = names(dt), selected = "NNNN")
-    updateSelectInput(session, "covariate", choices = names(dt), selected = "NNNN")
+    updateSelectInput(
+      session, "variable",
+      choices = names(dt), selected = "YdHa_clean"
+    )
+    updateSelectInput(
+      session, "genotype",
+      choices = names(dt), selected = "line"
+    )
+    updateSelectInput(
+      session, "column",
+      choices = names(dt), selected = "col"
+    )
+    updateSelectInput(
+      session, "row",
+      choices = names(dt), selected = "row"
+    )
+    updateSelectInput(
+      session, "replicate",
+      choices = names(dt), selected = "rep"
+    )
+    updateSelectInput(
+      session, "show_fixed",
+      choices = names(dt), selected = "NNNN"
+    )
+    updateSelectInput(
+      session, "show_random",
+      choices = names(dt), selected = "NNNN"
+    )
+    updateSelectInput(
+      session, "covariate",
+      choices = names(dt), selected = "NNNN"
+    )
   })
 
   observe({
     toggle(id = "fix_traits", condition = !is.null(input$show_fixed))
     toggle(id = "ran_traits", condition = !is.null(input$show_random))
-    updatePickerInput(session, "fix_traits", choices = input$variable, selected = "NNNN")
-    updatePickerInput(session, "ran_traits", choices = input$variable, selected = "NNNN")
+    updatePickerInput(
+      session, "fix_traits",
+      choices = input$variable, selected = "NNNN"
+    )
+    updatePickerInput(
+      session, "ran_traits",
+      choices = input$variable, selected = "NNNN"
+    )
   })
 
   observe({
-    shinyjs::toggle(id = "selected_checks", anim = T, time = 1, animType = "fade", condition = input$genotype != "" & input$res_ran == TRUE)
+    shinyjs::toggle(
+      id = "selected_checks",
+      anim = T,
+      time = 1,
+      animType = "fade",
+      condition = input$genotype != "" & input$res_ran == TRUE
+    )
     req(input$genotype)
     req(data$data())
     req(input$genotype %in% names(data$data()))
@@ -574,72 +600,85 @@ mod_M_traits_server <- function(input, output, session, data) {
         need(input$column != "", " "),
         need(input$row != "", " ")
       )
-
       req(length(input$variable) >= 2)
       req(data$data())
       dt <- data$data()
       dupl <- sum(duplicated(dt[, c(input$column, input$row)]))
-
-      if (dupl >= 1) { # Duplicated Row-Col
-        Modelo <- try(silent = T)
-        tryCatch(
-          {
-            if (class(Modelo) == "try-error") stop("Duplicated row & column coordinates")
-          },
-          error = function(e) {
-            shinytoastr::toastr_error(title = "Warning:", conditionMessage(e), position = "bottom-right", progressBar = TRUE)
+      w$show()
+      tryCatch(
+        {
+          if (dupl >= 1) {
+            stop("Duplicated row & column coordinates")
           }
-        )
-        return()
-      } else {
-        w$show()
-        msgs <- paste("Fitting ", input$variable, "... ")
-        i <- 1
-        variables <- input$variable
-        Models <- list()
-        for (var in variables) {
-          fixed <- input$show_fixed
-          random <- input$show_random
-
-          if (!is.null(fixed)) {
-            if (!is.null(input$fix_traits) & var %in% input$fix_traits) {
-              fixed <- input$show_fixed
-            } else {
-              fixed <- NULL
+          msgs <- paste("Fitting ", input$variable, "... ")
+          i <- 1
+          variables <- input$variable
+          Models <- list()
+          for (var in variables) {
+            fixed <- input$show_fixed
+            random <- input$show_random
+            if (!is.null(fixed)) {
+              if (!is.null(input$fix_traits) & var %in% input$fix_traits) {
+                fixed <- input$show_fixed
+              } else {
+                fixed <- NULL
+              }
             }
-          }
-
-          if (!is.null(random)) {
-            if (!is.null(input$ran_traits) & var %in% input$ran_traits) {
-              random <- input$show_random
-            } else {
-              random <- NULL
+            if (!is.null(random)) {
+              if (!is.null(input$ran_traits) & var %in% input$ran_traits) {
+                random <- input$show_random
+              } else {
+                random <- NULL
+              }
             }
+            Models[[var]] <- try({
+                SpATS_mrbean(
+                  data = dt, 
+                  response = var, 
+                  genotype = input$genotype,
+                  col = input$column,
+                  row = input$row, 
+                  segm = FALSE, 
+                  ncols = NULL, 
+                  nrows = NULL, 
+                  rep = input$replicate,
+                  fix_fact = fixed, 
+                  ran_fact = random,
+                  gen_ran = input$res_ran, 
+                  covariate = input$covariate,
+                  clean_out = input$outliers,
+                  iterations = input$times, 
+                  checks = input$selected_checks,
+                  k_clean_out = input$k_clean_out
+                )
+              }, 
+              silent = TRUE
+            )
+            if (inherits(Models[[var]], "try-error")) {
+              Models[[var]] <- NULL
+            }
+            w$update(html = HTML(
+              "<center>",
+              '<div class="dots-loader"></div>',
+              "<br>", "<br>", "<br>",
+              '<h5 style="font-weight: bold; color: grey;">', msgs[i], "</h5>",
+              "</center>"
+            ))
+            i <- i + 1
           }
-
-          Models[[var]] <- SpATS_mrbean(
-            dt, var, input$genotype,
-            input$column, input$row, FALSE, NULL, NULL, input$replicate,
-            fixed, random, input$res_ran, input$covariate,
-            input$outliers, input$times, input$selected_checks,
-            k_clean_out = input$k_clean_out
+        },
+        error = function(e) {
+          shinytoastr::toastr_error(
+            title = "Warning:",
+            conditionMessage(e),
+            position =  "bottom-right",
+            progressBar = TRUE
           )
-
-          if (class(Models[[var]]) == "try-error") {
-            Models[[var]] <- NULL
-          }
-          w$update(html = HTML(
-            "<center>",
-            '<div class="dots-loader"></div>',
-            "<br>", "<br>", "<br>",
-            '<h5 style="font-weight: bold; color: grey;">', msgs[i], "</h5>",
-            "</center>"
-          ))
-          i <- i + 1
         }
-        w$hide()
-      }
-      Models
+      )
+      w$hide()
+      if (!exists("Models")) Models <- NULL
+      return(Models)
     })
   })
 
@@ -711,12 +750,15 @@ mod_M_traits_server <- function(input, output, session, data) {
   output$ranking <- echarts4r::renderEcharts4r({
     input$check
     req(input$selected)
+    req(Modelo())
     isolate({
       req(blups())
       req(input$selected)
       tmp_effects <- blups() %>%
         dplyr::group_by(Trait) %>%
-        dplyr::mutate(predicted.values = predicted.values - mean(predicted.values, na.rm = T)) %>%
+        dplyr::mutate(
+          predicted.values = predicted.values - mean(predicted.values, na.rm = T)
+        ) %>%
         dplyr::ungroup() %>%
         dplyr::filter(Trait %in% input$selected) %>%
         dplyr::mutate(
@@ -736,7 +778,11 @@ mod_M_traits_server <- function(input, output, session, data) {
         e_toolbox_feature(feature = "dataZoom") %>%
         e_legend(show = T, type = "scroll") %>%
         e_title(text = paste("Genotype Ranking: ", input$selected)) %>%
-        e_x_axis(axisLabel = list(interval = value, rotate = 75, fontSize = 8, margin = 8))
+        e_x_axis(
+          axisLabel = list(
+            interval = value, rotate = 75, fontSize = 8, margin = 8
+          )
+        )
       g8
     })
   })
@@ -770,6 +816,7 @@ mod_M_traits_server <- function(input, output, session, data) {
   output$corr <- renderPlot({
     input$check
     isolate({
+      req(Modelo())
       req(blups())
       bl <- blups()
       bl <- bl[, 1:3] %>% tidyr::spread(., "Trait", "predicted.values")
@@ -782,14 +829,19 @@ mod_M_traits_server <- function(input, output, session, data) {
       if (input$res_ran) {
         Heritability <- resum$h2
         names(Heritability) <- resum$Trait
-        ggCor(bl[, -1], colours = c("#db4437", "white", "#4285f4"), Diag = Heritability)
+        ggCor(
+          bl[, -1],
+          colours = c("#db4437", "white", "#4285f4"),
+          Diag = Heritability
+        )
       } else {
         ggCor(bl[, -1], colours = c("#db4437", "white", "#4285f4"))
       }
     })
   })
 
-  output$effects <- DT::renderDataTable(
+  output$effects <- DT::renderDataTable({
+    req(Modelo())
     if (is.null(blups())) {
       return()
     } else {
@@ -797,12 +849,18 @@ mod_M_traits_server <- function(input, output, session, data) {
         {
           blups()
         },
-        option = list(pageLength = 5, scrollX = TRUE, columnDefs = list(list(className = "dt-center", targets = 0:ncol(blups())))),
+        option = list(
+          pageLength = 5,
+          scrollX = TRUE,
+          columnDefs = list(
+            list(className = "dt-center", targets = 0:ncol(blups()))
+          )
+        ),
         filter = "top",
         selection = "multiple"
       )
     }
-  )
+  })
 
 
   # Single Summary
@@ -857,7 +915,12 @@ mod_M_traits_server <- function(input, output, session, data) {
 
       if (input$typep == "var") {
         res.pca.non <- prcomp(data, scale. = input$scale)
-        factoextra::fviz_pca_var(res.pca.non, col.var = "steelblue", repel = T, alpha.var = 0.2)
+        factoextra::fviz_pca_var(
+          res.pca.non,
+          col.var = "steelblue",
+          repel = T,
+          alpha.var = 0.2
+        )
       } else if (input$typep == "ind") {
         top <- as.numeric(input$number)
         req(top <= nrow(data))
@@ -869,7 +932,13 @@ mod_M_traits_server <- function(input, output, session, data) {
           dplyr::arrange(desc(Score)) %>%
           dplyr::top_n(top) %>%
           dplyr::pull(Genotypes)
-        factoextra::fviz_pca_ind(res.pca, repel = T, alpha.ind = 0.5, select.ind = list(name = gen), labelsize = 4)
+        factoextra::fviz_pca_ind(
+          res.pca,
+          repel = T,
+          alpha.ind = 0.5,
+          select.ind = list(name = gen),
+          labelsize = 4
+        )
       } else {
         geom.ind <- c("point", "text")
         geom.var <- c("arrow", "text")
@@ -879,7 +948,14 @@ mod_M_traits_server <- function(input, output, session, data) {
         if (!is.null(input$var_pca)) geom.var <- input$var_pca
         if (!is.null(input$invisible_pca)) invisible <- input$invisible_pca
 
-        factoextra::fviz_pca_biplot(res.pca, repel = F, alpha.ind = 0.5, geom.ind = geom.ind, geom.var = geom.var, invisible = invisible)
+        factoextra::fviz_pca_biplot(
+          res.pca,
+          repel = F,
+          alpha.ind = 0.5,
+          geom.ind = geom.ind,
+          geom.var = geom.var,
+          invisible = invisible
+        )
       }
     })
   })
@@ -887,18 +963,30 @@ mod_M_traits_server <- function(input, output, session, data) {
   observeEvent(input$pca,
     {
       showModal(modalDialog(
-        title = tagList(icon = icon("chart-pie"), "PCA"), size = "l", easyClose = T,
+        title = tagList(icon = icon("chart-pie"), "PCA"),
+        size = "l",
+        easyClose = T,
         prettyRadioButtons(
           inputId = ns("typep"),
           label = "Choose:",
-          choices = c("Biplot" = "bip", "Variables" = "var", "Individuals" = "ind"),
+          choices = c(
+            "Biplot" = "bip",
+            "Variables" = "var",
+            "Individuals" = "ind"
+          ),
           selected = "bip",
           inline = TRUE,
           status = "danger",
           fill = TRUE,
-          icon = icon("check"), animation = "jelly"
+          icon = icon("check"),
+          animation = "jelly"
         ),
-        shinycssloaders::withSpinner(plotOutput(ns("plot_pca")), type = 6, color = "#28a745"), icon = icon("circle-arrow-right", verify_fa = FALSE),
+        shinycssloaders::withSpinner(
+          plotOutput(ns("plot_pca")),
+          type = 6,
+          color = "#28a745"
+        ),
+        icon = icon("circle-arrow-right", verify_fa = FALSE),
         conditionalPanel(
           condition = "input.typep=='ind'", ns = ns,
           fluidRow(
@@ -993,12 +1081,15 @@ mod_M_traits_server <- function(input, output, session, data) {
     input$size_dendo
     input$size_line
     input$num_k
+    req(Modelo())
     isolate({
       req(blups())
       data <- blups()
       data <- data[, 1:3] %>% tidyr::spread(., "Trait", "predicted.values")
       corr <- cor(data[, -1], use = "pairwise.complete.obs")
-      validate(need(input$num_k < ncol(corr), "The number of clusters should be less"))
+      validate(
+        need(input$num_k < ncol(corr), "The number of clusters should be less")
+      )
       res <- factoextra::hcut(corr, k = input$num_k, stand = FALSE)
       dend <- factoextra::fviz_dend(res,
         rect = input$box,
@@ -1013,36 +1104,80 @@ mod_M_traits_server <- function(input, output, session, data) {
   observeEvent(input$dendo,
     {
       showModal(modalDialog(
-        title = "Dendogram", size = "l", easyClose = T,
+        title = "Dendogram", 
+        size = "l",
+        easyClose = T,
         dropdown(
           prettyRadioButtons(
-            inputId = ns("filetype3"), label = "Download Plot File Type", outline = TRUE, fill = FALSE, shape = "square", inline = TRUE,
+            inputId = ns("filetype3"), 
+            label = "Download Plot File Type",
+            outline = TRUE, 
+            fill = FALSE, 
+            shape = "square", 
+            inline = TRUE,
             choices = list(PNG = "png", PDF = "pdf"),
-            icon = icon("check"), animation = "tada"
+            icon = icon("check"), 
+            animation = "tada"
           ),
           conditionalPanel(
-            condition = "input.filetype3=='png'", ns = ns,
-            sliderInput(inputId = ns("png.wid.den"), min = 200, max = 2000, value = 900, label = "Width pixels"),
-            sliderInput(inputId = ns("png.hei.den"), min = 200, max = 2000, value = 600, label = "Height pixels")
+            condition = "input.filetype3=='png'", 
+            ns = ns,
+            sliderInput(
+              inputId = ns("png.wid.den"), 
+              min = 200, 
+              max = 2000, 
+              value = 900, 
+              label = "Width pixels"
+            ),
+            sliderInput(
+              inputId = ns("png.hei.den"), 
+              min = 200, 
+              max = 2000, 
+              value = 600, 
+              label = "Height pixels"
+            )
           ),
           conditionalPanel(
-            condition = "input.filetype3=='pdf'", ns = ns,
-            sliderInput(inputId = ns("pdf.wid.den"), min = 2, max = 20, value = 10, label = "Width"),
-            sliderInput(inputId = ns("pdf.hei.den"), min = 2, max = 20, value = 8, label = "Height")
+            condition = "input.filetype3=='pdf'", 
+            ns = ns,
+            sliderInput(
+              inputId = ns("pdf.wid.den"), 
+              min = 2, 
+              max = 20, 
+              value = 10, 
+              label = "Width"
+            ),
+            sliderInput(
+              inputId = ns("pdf.hei.den"), 
+              min = 2, 
+              max = 20, 
+              value = 8, 
+              label = "Height"
+            )
           ),
-          downloadButton(ns("descargar3"), "Download Plot",
+          downloadButton(
+            ns("descargar3"), 
+            "Download Plot",
             class = "btn-success",
             style = " color: white ; background-color: #28a745"
-          ), br(),
+          ), 
+          br(),
           animate = shinyWidgets::animateOptions(
             enter = shinyWidgets::animations$fading_entrances$fadeInLeftBig,
             exit  = shinyWidgets::animations$fading_exits$fadeOutLeftBig
           ),
-          style = "unite", icon = icon("gear", verify_fa = FALSE),
+          style = "unite", 
+          icon = icon("gear", verify_fa = FALSE),
           tooltip = tooltipOptions(title = "Click to Download!"),
-          status = "warning", width = "300px"
+          status = "warning", 
+          width = "300px"
         ),
-        shinycssloaders::withSpinner(plotOutput(ns("plot_dend")), type = 6, color = "#28a745"), icon = icon("circle-arrow-right", verify_fa = FALSE),
+        shinycssloaders::withSpinner(
+          plotOutput(ns("plot_dend")), 
+          type = 6,
+          color = "#28a745"
+        ), 
+        icon = icon("circle-arrow-right", verify_fa = FALSE),
         br(),
         strong("Configuration plot:"),
         fluidRow(
@@ -1071,11 +1206,6 @@ mod_M_traits_server <- function(input, output, session, data) {
         ),
         fluidRow(
           col_4(
-            # sliderTextInput(
-            #   inputId = ns("num_k"), label = "Clusters:",
-            #   choices = c(2,3,4,5),
-            #   grid = TRUE, selected = 2, width = "100%"
-            # )
             sliderInput(
               inputId = ns("num_k"),
               label = "Clusters:",
@@ -1084,11 +1214,6 @@ mod_M_traits_server <- function(input, output, session, data) {
             )
           ),
           col_4(
-            # sliderTextInput(
-            #   inputId = ns("size_dendo"), label = "Letter size:",
-            #   choices = c(0.2,0.4,0.6,0.8,1,1.5,2,2.5),
-            #   grid = TRUE, selected = 1, width = "100%"
-            # )
             sliderInput(
               inputId = ns("size_dendo"),
               label = "Letter size:",
@@ -1097,11 +1222,6 @@ mod_M_traits_server <- function(input, output, session, data) {
             )
           ),
           col_4(
-            # sliderTextInput(
-            #   inputId = ns("size_line"), label = "Line size:",
-            #   choices = c(0.2,0.4,0.6,0.8,1,1.5,2,2.5),
-            #   grid = TRUE, selected = 0.8, width = "100%"
-            # )
             sliderInput(
               inputId = ns("size_line"),
               label = "Line size:",
@@ -1129,7 +1249,9 @@ mod_M_traits_server <- function(input, output, session, data) {
         data <- blups()
         data <- data[, 1:3] %>% tidyr::spread(., "Trait", "predicted.values")
         corr <- cor(data[, -1], use = "pairwise.complete.obs")
-        validate(need(input$num_k < ncol(corr), "The number of clusters should be less"))
+        validate(
+          need(input$num_k < ncol(corr), "The number of clusters should be less")
+        )
         res <- factoextra::hcut(corr, k = input$num_k, stand = FALSE)
         dend <- factoextra::fviz_dend(res,
           rect = input$box,
@@ -1145,7 +1267,9 @@ mod_M_traits_server <- function(input, output, session, data) {
         data <- blups()
         data <- data[, 1:3] %>% tidyr::spread(., "Trait", "predicted.values")
         corr <- cor(data[, -1], use = "pairwise.complete.obs")
-        validate(need(input$num_k < ncol(corr), "The number of clusters should be less"))
+        validate(
+          need(input$num_k < ncol(corr), "The number of clusters should be less")
+        )
         res <- factoextra::hcut(corr, k = input$num_k, stand = FALSE)
         dend <- factoextra::fviz_dend(res,
           rect = input$box,
@@ -1213,7 +1337,9 @@ mod_M_traits_server <- function(input, output, session, data) {
     },
     content = function(file) {
       req(blups())
-      datos <- data.frame(blups()[, 1:3] %>% tidyr::spread(., "Trait", "predicted.values"))
+      datos <- data.frame(
+        blups()[, 1:3] %>% tidyr::spread(., "Trait", "predicted.values")
+      )
       write.csv(datos, file, row.names = FALSE)
     }
   )
@@ -1245,12 +1371,26 @@ mod_M_traits_server <- function(input, output, session, data) {
       if (input$typefile == "png") {
         png(file, width = input$png.wid, height = input$png.hei)
         spaTrend <- ifelse(input$tog_plot == TRUE, "percentage", "raw")
-        plot(Modelo()[[input$selected]], spaTrend = spaTrend, cex.lab = 1.5, cex.main = 2, cex.axis = 1.5, axis.args = list(cex.axis = 1.2))
+        plot(
+          Modelo()[[input$selected]], 
+          spaTrend = spaTrend,
+          cex.lab = 1.5, 
+          cex.main = 2, 
+          cex.axis = 1.5, 
+          axis.args = list(cex.axis = 1.2)
+        )
         dev.off()
       } else {
         pdf(file, width = input$pdf.wid, height = input$pdf.hei)
         spaTrend <- ifelse(input$tog_plot == TRUE, "percentage", "raw")
-        plot(Modelo()[[input$selected]], spaTrend = spaTrend, cex.lab = 1.5, cex.main = 2, cex.axis = 1.5, axis.args = list(cex.axis = 1.2))
+        plot(
+          Modelo()[[input$selected]],
+          spaTrend = spaTrend,
+          cex.lab = 1.5, 
+          cex.main = 2,
+          cex.axis = 1.5, 
+          axis.args = list(cex.axis = 1.2)
+        )
         dev.off()
       }
     }
@@ -1277,7 +1417,11 @@ mod_M_traits_server <- function(input, output, session, data) {
         if (input$res_ran) {
           Heritability <- resum$h2
           names(Heritability) <- resum$Trait
-          g1 <- ggCor(bl[, -1], colours = c("#db4437", "white", "#4285f4"), Diag = Heritability)
+          g1 <- ggCor(
+            bl[, -1], 
+            colours = c("#db4437", "white", "#4285f4"),
+            Diag = Heritability
+          )
           print(g1)
         } else {
           g1 <- ggCor(bl[, -1], colours = c("#db4437", "white", "#4285f4"))
@@ -1297,7 +1441,11 @@ mod_M_traits_server <- function(input, output, session, data) {
         if (input$res_ran) {
           Heritability <- resum$h2
           names(Heritability) <- resum$Trait
-          g1 <- ggCor(bl[, -1], colours = c("#db4437", "white", "#4285f4"), Diag = Heritability)
+          g1 <- ggCor(
+            bl[, -1], 
+            colours = c("#db4437", "white", "#4285f4"),
+            Diag = Heritability
+          )
           print(g1)
         } else {
           g1 <- ggCor(bl[, -1], colours = c("#db4437", "white", "#4285f4"))
