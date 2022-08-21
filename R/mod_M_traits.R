@@ -655,7 +655,14 @@ mod_M_traits_server <- function(input, output, session, data) {
               silent = TRUE
             )
             if (inherits(Models[[var]], "try-error")) {
+              message_to_send <- Models[[var]]
               Models[[var]] <- NULL
+              shinytoastr::toastr_error(
+                message = message_to_send,
+                title = paste0("Error in trait '", var, "':"),
+                position =  "bottom-full-width",
+                progressBar = TRUE
+              )
             }
             w$update(html = HTML(
               "<center>",
@@ -671,7 +678,7 @@ mod_M_traits_server <- function(input, output, session, data) {
           shinytoastr::toastr_error(
             title = "Warning:",
             conditionMessage(e),
-            position =  "bottom-right",
+            position =  "bottom-full-width",
             progressBar = TRUE
           )
         }
@@ -704,9 +711,12 @@ mod_M_traits_server <- function(input, output, session, data) {
       names(resum)[1] <- "Trait"
       dt <- resum %>% dplyr::mutate_if(is.numeric, round, 3)
       DT::datatable(dt,
-        extensions = "Buttons", filter = "top", selection = "multiple",
+        extensions = "Buttons", 
+        filter = "top", 
+        selection = "multiple",
         options = list(
-          pageLength = 5, scrollX = TRUE,
+          pageLength = 5,
+          scrollX = TRUE,
           columnDefs = list(list(className = "dt-center", targets = 0:ncol(dt)))
         )
       )
@@ -874,10 +884,13 @@ mod_M_traits_server <- function(input, output, session, data) {
 
   observeEvent(input$sum_mod, {
     showModal(modalDialog(
-      title = "Summary", size = "l", easyClose = T,
+      title = "Summary", 
+      size = "l", 
+      easyClose = T,
       shinycssloaders::withSpinner(
         verbatimTextOutput(ns("summary2")),
-        type = 5, color = "#28a745"
+        type = 5,
+        color = "#28a745"
       )
     ))
   })
