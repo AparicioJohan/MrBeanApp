@@ -28,8 +28,11 @@ mod_MSA_results_ui <- function(id) {
                     width = 12,
                     status = "success",
                     solidHeader = FALSE,
-                    maximizable = T,
-                    title = tagList(icon = icon("info-circle", verify_fa = FALSE), "Variance Component Estimates"),
+                    maximizable = TRUE,
+                    title = tagList(
+                      icon = icon("info-circle", verify_fa = FALSE),
+                      "Variance Component Estimates"
+                    ),
                     echarts4r::echarts4rOutput(ns("comparison"))
                   )
                 )
@@ -43,29 +46,66 @@ mod_MSA_results_ui <- function(id) {
                 id = ns("summ"),
                 fluidRow(
                   bs4TabCard(
-                    width = 12, id = "tabcards", maximizable = T, solidHeader = FALSE, closable = F,
-                    status = "success", side = "left", type = "tabs",
+                    width = 12, 
+                    id = "tabcards", 
+                    maximizable = TRUE, 
+                    solidHeader = FALSE, 
+                    closable = FALSE,
+                    status = "success",
+                    side = "left",
+                    type = "tabs",
                     tabPanel(
                       title = "Correlation",
                       icon = icon("circle-arrow-right", verify_fa = FALSE),
-                      # echarts4r::echarts4rOutput(ns("correlation")),
                       dropdown(
                         prettyRadioButtons(
-                          inputId = ns("type"), label = "Download Plot File Type", outline = TRUE, fill = FALSE, shape = "square", inline = TRUE,
+                          inputId = ns("type"), 
+                          label = "Download Plot File Type", 
+                          outline = TRUE,
+                          fill = FALSE, 
+                          shape = "square", 
+                          inline = TRUE,
                           choices = list(PNG = "png", PDF = "pdf"),
-                          icon = icon("check"), animation = "tada"
+                          icon = icon("check"), 
+                          animation = "tada"
                         ),
                         conditionalPanel(
                           condition = "input.type=='png'", ns = ns,
-                          sliderInput(inputId = ns("png.wid.c"), min = 200, max = 2000, value = 900, label = "Width pixels"),
-                          sliderInput(inputId = ns("png.hei.c"), min = 200, max = 2000, value = 600, label = "Height pixels")
+                          sliderInput(
+                            inputId = ns("png.wid.c"), 
+                            min = 200, 
+                            max = 2000,
+                            value = 900,
+                            label = "Width pixels"
+                          ),
+                          sliderInput(
+                            inputId = ns("png.hei.c"), 
+                            min = 200, 
+                            max = 2000,
+                            value = 600,
+                            label = "Height pixels"
+                          )
                         ),
                         conditionalPanel(
                           condition = "input.type=='pdf'", ns = ns,
-                          sliderInput(inputId = ns("pdf.wid.c"), min = 2, max = 20, value = 10, label = "Width"),
-                          sliderInput(inputId = ns("pdf.hei.c"), min = 2, max = 20, value = 8, label = "Height")
+                          sliderInput(
+                            inputId = ns("pdf.wid.c"),
+                            min = 2, 
+                            max = 20, 
+                            value = 10, 
+                            label = "Width"
+                          ),
+                          sliderInput(
+                            inputId = ns("pdf.hei.c"),
+                            min = 2, 
+                            max = 20, 
+                            value = 8, 
+                            label = "Height"
+                          )
                         ),
-                        downloadButton(ns("descargar2"), "Download Plot",
+                        downloadButton(
+                          ns("descargar2"), 
+                          "Download Plot",
                           class = "btn-success",
                           style = " color: white ; background-color: #28a745"
                         ), br(),
@@ -73,52 +113,59 @@ mod_MSA_results_ui <- function(id) {
                           enter = shinyWidgets::animations$fading_entrances$fadeInLeftBig,
                           exit  = shinyWidgets::animations$fading_exits$fadeOutLeftBig
                         ),
-                        style = "unite", icon = icon("gear", verify_fa = FALSE),
-                        status = "warning", width = "300px"
+                        style = "unite", 
+                        icon = icon("gear", verify_fa = FALSE),
+                        status = "warning",
+                        width = "300px"
                       ),
-                      shinycssloaders::withSpinner(plotOutput(ns("corr")), type = 5, color = "#28a745")
-                      # icon = icon("circle-arrow-right", verify_fa = FALSE)
+                      shinycssloaders::withSpinner(
+                        plotOutput(ns("corr")), 
+                        type = 5, 
+                        color = "#28a745"
+                      )
                     ),
                     tabPanel(
                       title = "Summary",
                       icon = icon("info-circle", verify_fa = FALSE),
                       shinycssloaders::withSpinner(
                         DT::dataTableOutput(ns("table")),
-                        type = 5, color = "#28a745"
+                        type = 5, 
+                        color = "#28a745"
                       ),
-                      downloadButton(ns("downloadsummary"),
+                      downloadButton(
+                        ns("downloadsummary"),
                         "Download Table",
                         class = "btn-success",
-                        style = " color: white ; background-color: #28a745; float:left"
+                        style = "color: white ; background-color: #28a745; float:left"
                       )
-                      # icon = icon("circle-arrow-right", verify_fa = FALSE)
                     ),
                     tabPanel(
                       title = "Predictions",
                       icon = icon("table"),
                       DT::dataTableOutput(ns("effects")),
-                      downloadButton(ns("downloadeffects"),
+                      downloadButton(
+                        ns("downloadeffects"),
                         "Download Table",
                         class = "btn-success",
                         style = " color: white ; background-color: #28a745; float:left"
                       ),
-                      downloadButton(ns("spread_effects"),
+                      downloadButton(
+                        ns("spread_effects"),
                         "Spread Table",
                         class = "btn-danger",
                         style = " color: white ; background-color: #d9534f; float:left"
                       )
-                      # icon = icon("circle-arrow-right", verify_fa = FALSE)
                     ),
                     tabPanel(
                       title = "Potential Outliers",
                       icon = icon("exclamation-triangle", verify_fa = FALSE),
                       DT::dataTableOutput(ns("extrem")),
-                      downloadButton(ns("downloadDTclean"),
+                      downloadButton(
+                        ns("downloadDTclean"),
                         "Download Data-Cleaned",
                         class = "btn-success",
                         style = " color: white ; background-color: #28a745; float:left"
                       )
-                      # icon = icon("circle-arrow-right", verify_fa = FALSE)
                     )
                   )
                 )
@@ -141,21 +188,53 @@ mod_MSA_results_ui <- function(id) {
                 title = tagList(icon = icon("braille"), "Spatial Trend"),
                 dropdown(
                   prettyRadioButtons(
-                    inputId = ns("typefile"), label = "Download Plot File Type", outline = TRUE, fill = FALSE, shape = "square", inline = TRUE,
+                    inputId = ns("typefile"), 
+                    label = "Download Plot File Type", 
+                    outline = TRUE,
+                    fill = FALSE,
+                    shape = "square",
+                    inline = TRUE,
                     choices = list(PNG = "png", PDF = "pdf"),
-                    icon = icon("check"), animation = "tada"
+                    icon = icon("check"),
+                    animation = "tada"
                   ),
                   conditionalPanel(
                     condition = "input.typefile=='png'", ns = ns,
-                    sliderInput(inputId = ns("png.wid"), min = 200, max = 2000, value = 900, label = "Width pixels"),
-                    sliderInput(inputId = ns("png.hei"), min = 200, max = 2000, value = 600, label = "Height pixels")
+                    sliderInput(
+                      inputId = ns("png.wid"),
+                      min = 200, 
+                      max = 2000, 
+                      value = 900, 
+                      label = "Width pixels"
+                    ),
+                    sliderInput(
+                      inputId = ns("png.hei"),
+                      min = 200, 
+                      max = 2000, 
+                      value = 600, 
+                      label = "Height pixels"
+                    )
                   ),
                   conditionalPanel(
                     condition = "input.typefile=='pdf'", ns = ns,
-                    sliderInput(inputId = ns("pdf.wid"), min = 2, max = 20, value = 10, label = "Width"),
-                    sliderInput(inputId = ns("pdf.hei"), min = 2, max = 20, value = 8, label = "Height")
+                    sliderInput(
+                      inputId = ns("pdf.wid"),
+                      min = 2, 
+                      max = 20, 
+                      value = 10, 
+                      label = "Width"
+                    ),
+                    sliderInput(
+                      inputId = ns("pdf.hei"),
+                      min = 2, 
+                      max = 20, 
+                      value = 8, 
+                      label = "Height"
+                    )
                   ),
-                  downloadButton(ns("descargar"), "Download Plot",
+                  downloadButton(
+                    ns("descargar"), 
+                    "Download Plot",
                     class = "btn-success",
                     style = " color: white ; background-color: #28a745"
                   ), br(),
@@ -163,32 +242,57 @@ mod_MSA_results_ui <- function(id) {
                     enter = shinyWidgets::animations$fading_entrances$fadeInLeftBig,
                     exit  = shinyWidgets::animations$fading_exits$fadeOutLeftBig
                   ),
-                  style = "unite", icon = icon("gear", verify_fa = FALSE),
-                  status = "warning", width = "300px"
+                  style = "unite", 
+                  icon = icon("gear", verify_fa = FALSE),
+                  status = "warning",
+                  width = "300px"
                 ),
-                shinycssloaders::withSpinner(plotOutput(ns("plot_spats")), type = 5, color = "#28a745"),
-                materialSwitch(ns("tog_plot"), label = "Percentage", status = "success", value = FALSE),
+                shinycssloaders::withSpinner(
+                  plotOutput(ns("plot_spats")), 
+                  type = 5, 
+                  color = "#28a745"
+                ),
+                materialSwitch(
+                  ns("tog_plot"), 
+                  label = "Percentage",
+                  status = "success", 
+                  value = FALSE
+                ),
                 fluidRow(
                   col_3(),
                   col_4(
-                    selectInput(ns("selected"), label = HTML("<center> Experiment </center>"), choices = "", width = "100%")
+                    selectInput(
+                      ns("selected"), 
+                      label = HTML("<center> Experiment </center>"),
+                      choices = "",
+                      width = "100%"
+                    )
                   ),
                   col_3(
                     rep_br(1),
                     actionBttn(
                       inputId = ns("sum_mod"),
                       label = "summary",
-                      style = "unite", size = "sm", block = F,
-                      color = "warning", icon = icon("spinner")
+                      style = "unite", 
+                      size = "sm", 
+                      block = F,
+                      color = "warning",
+                      icon = icon("spinner")
                     )
                   ),
                   col_2()
                 )
               ),
               bs4Dash::box(
-                width = 12, status = "success", solidHeader = FALSE,
-                title = tagList(icon = icon("sort-numeric-up", verify_fa = FALSE), "Predictions Plot"),
-                collapsible = T, maximizable = T,
+                width = 12, 
+                status = "success",
+                solidHeader = FALSE,
+                title = tagList(
+                  icon = icon("sort-numeric-up", verify_fa = FALSE),
+                  "Predictions Plot"
+                ),
+                collapsible = T, 
+                maximizable = T,
                 echarts4r::echarts4rOutput(ns("ranking"))
               )
             )
@@ -238,7 +342,13 @@ mod_MSA_results_server <- function(input, output, session, msa) {
         {
           summary_msa()
         },
-        option = list(pageLength = 5, scrollX = TRUE, columnDefs = list(list(className = "dt-center", targets = 0:ncol(summary_msa())))),
+        option = list(
+          pageLength = 5,
+          scrollX = TRUE, 
+          columnDefs = list(
+            list(className = "dt-center", targets = 0:ncol(summary_msa()))
+          )
+        ),
         filter = "top",
         selection = "multiple"
       )
@@ -268,7 +378,13 @@ mod_MSA_results_server <- function(input, output, session, msa) {
         {
           blups()
         },
-        option = list(pageLength = 5, scrollX = TRUE, columnDefs = list(list(className = "dt-center", targets = 0:ncol(blups())))),
+        option = list(
+          pageLength = 5,
+          scrollX = TRUE,
+          columnDefs = list(
+            list(className = "dt-center", targets = 0:ncol(blups()))
+          )
+        ),
         filter = "top",
         selection = "multiple"
       )

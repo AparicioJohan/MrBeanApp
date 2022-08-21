@@ -11,44 +11,58 @@ mod_MSA_ui <- function(id) {
   ns <- NS(id)
   tagList(
     HTML('<h1 style="font-weight: bold; color: #00a65a;">Spatial Analysis for Several Sites</h1>'),
-    # HTML('<h4 style="font-weight: bold; color: #00a65a;">SpATS</h4>'),
     fluidRow(
       column(
         width = 3,
         fluidRow(
           bs4Dash::box(
-            width = 12, status = "success", solidHeader = FALSE, title = tagList(icon = icon("cogs", verify_fa = FALSE), "Configuration"), # background = "light-blue"
+            width = 12,
+            status = "success", 
+            solidHeader = FALSE, 
+            title = tagList(
+              icon = icon("cogs", verify_fa = FALSE),
+              "Configuration"
+            ), 
             selectInput(
               inputId = ns("variable"),
-              label = tagList("Response Variable",
-                icon = tooltip(icon("question-circle", verify_fa = FALSE),
+              label = tagList(
+                "Response Variable",
+                icon = tooltip(
+                  icon("question-circle", verify_fa = FALSE),
                   title = "The column with the continous response variable.",
                   placement = "top"
                 )
               ),
-              choices = "", width = "100%"
+              choices = "",
+              width = "100%"
             ),
             selectInput(
               inputId = ns("genotype"),
-              label = tagList("Genotype",
-                icon = tooltip(icon("question-circle", verify_fa = FALSE),
+              label = tagList(
+                "Genotype",
+                icon = tooltip(
+                  icon("question-circle", verify_fa = FALSE),
                   title = "The column with genotypes.",
                   placement = "top"
                 )
               ),
-              choices = "", width = "100%"
+              choices = "",
+              width = "100%"
             ),
             awesomeCheckbox(
               inputId = ns("res_ran"),
               label = "Random Genotype",
-              value = TRUE, status = "danger"
+              value = TRUE, 
+              status = "danger"
             ),
             hr(),
             shinyjs::hidden(
               pickerInput(
                 inputId = ns("selected_checks"),
-                label = tagList("Checks",
-                  icon = tooltip(icon("question-circle", verify_fa = FALSE),
+                label = tagList(
+                  "Checks",
+                  icon = tooltip(
+                    icon("question-circle", verify_fa = FALSE),
                     title = "Select Checks",
                     placement = "top"
                   )
@@ -57,31 +71,52 @@ mod_MSA_ui <- function(id) {
                 options = list(
                   `actions-box` = TRUE, size = 5, `live-search` = TRUE
                 ),
-                multiple = TRUE, width = "100%"
+                multiple = TRUE, 
+                width = "100%"
               )
             ),
             hr(),
             selectInput(
               inputId = ns("experiment"),
-              label = tagList("Experiment",
-                icon = tooltip(icon("question-circle", verify_fa = FALSE),
+              label = tagList(
+                "Experiment",
+                icon = tooltip(
+                  icon("question-circle", verify_fa = FALSE),
                   title = "Select the variable with Experiment-ID",
                   placement = "top"
                 )
               ),
-              choices = "", width = "100%"
+              choices = "",
+              width = "100%"
             ),
             fluidRow(
               column(
                 6,
-                selectInput(inputId = ns("column"), label = "Column", choices = "", width = "100%")
+                selectInput(
+                  inputId = ns("column"), 
+                  label = "Column",
+                  choices = "",
+                  width = "100%"
+                )
               ),
               column(
                 6,
-                selectInput(inputId = ns("row"), label = "Row", choices = "", width = "100%")
+                selectInput(
+                  inputId = ns("row"), 
+                  label = "Row",
+                  choices = "", 
+                  width = "100%"
+                )
               )
             ),
-            actionBttn(inputId = ns("check"), label = "Check!", style = "jelly", color = "success", block = T, icon = icon("check"))
+            actionBttn(
+              inputId = ns("check"), 
+              label = "Check!", 
+              style = "jelly",
+              color = "success", 
+              block = T, 
+              icon = icon("check")
+            )
           )
         )
       ),
@@ -92,28 +127,48 @@ mod_MSA_ui <- function(id) {
             id = ns("only"),
             fluidRow(
               bs4Dash::box(
-                width = 12, title = tagList(icon = icon("wrench"), "Additional Components"), status = "success", solidHeader = FALSE, collapsible = TRUE,
+                width = 12,
+                title = tagList(
+                  icon = icon("wrench"), "Additional Components"
+                ), 
+                status = "success", 
+                solidHeader = FALSE, 
+                collapsible = TRUE,
                 actionBttn(
-                  inputId = ns("tabBut"), icon = icon("sliders-h", verify_fa = FALSE), size = "xs",
-                  label = "Info About the Experiments", style = "unite", color = "warning", block = T
+                  inputId = ns("tabBut"),
+                  icon = icon("sliders-h", verify_fa = FALSE),
+                  size = "xs",
+                  label = "Info About the Experiments", 
+                  style = "unite", 
+                  color = "warning", 
+                  block = TRUE
                 ),
-                selectInput(inputId = ns("replicate"), label = "Replicate", choices = "", width = "100%"),
-                selectizeInput(ns("show_fixed"),
+                selectInput(
+                  inputId = ns("replicate"), 
+                  label = "Replicate", 
+                  choices = "", 
+                  width = "100%"
+                ),
+                selectizeInput(
+                  ns("show_fixed"),
                   width = "100%",
-                  label = tagList("Fixed",
-                    icon = tooltip(icon("question-circle", verify_fa = FALSE),
+                  label = tagList(
+                    "Fixed",
+                    icon = tooltip(
+                      icon("question-circle", verify_fa = FALSE),
                       title = "Additional fixed factors.",
                       placement = "top"
                     )
                   ),
-                  choices = "", multiple = TRUE
+                  choices = "", 
+                  multiple = TRUE
                 ),
                 shinyjs::hidden(
                   pickerInput(
                     inputId = ns("fix_traits"),
                     label = "Experiments",
                     choices = "",
-                    multiple = T,
+                    multiple = TRUE,
                     width = "100%",
                     options = list(
                       `actions-box` = TRUE,
@@ -121,15 +176,19 @@ mod_MSA_ui <- function(id) {
                     )
                   )
                 ),
-                selectizeInput(ns("show_random"),
+                selectizeInput(
+                  ns("show_random"),
                   width = "100%",
-                  label = tagList("Random",
-                    icon = tooltip(icon("question-circle", verify_fa = FALSE),
+                  label = tagList(
+                    "Random",
+                    icon = tooltip(
+                      icon("question-circle", verify_fa = FALSE),
                       title = "Additional random factors.",
                       placement = "top"
                     )
                   ),
-                  choices = "", multiple = TRUE
+                  choices = "", 
+                  multiple = TRUE
                 ),
                 shinyjs::hidden(
                   pickerInput(
@@ -144,15 +203,20 @@ mod_MSA_ui <- function(id) {
                     )
                   )
                 ),
-                selectizeInput(ns("covariate"),
+                selectizeInput(
+                  ns("covariate"),
                   width = "100%",
-                  label = tagList("Covariate",
-                    icon = tooltip(icon("question-circle", verify_fa = FALSE),
+                  label = tagList(
+                    "Covariate",
+                    icon = tooltip(
+                      icon("question-circle", verify_fa = FALSE),
                       title = "Additional covariate.",
                       placement = "top"
                     )
                   ),
-                  choices = "", multiple = TRUE, selected = NULL
+                  choices = "",
+                  multiple = TRUE,
+                  selected = NULL
                 ),
                 hr(),
                 sliderInput(
@@ -181,8 +245,23 @@ mod_MSA_ui <- function(id) {
                   label = "Remove Outliers",
                   value = FALSE, status = "danger"
                 ),
-                numericInput(ns("times"), "Number of Times to Check", value = 1, min = 1, max = 3, step = 1, width = "100%"),
-                actionBttn(inputId = ns("continue"), label = "Continue?", style = "jelly", color = "success", block = T, icon = icon("exclamation-circle", verify_fa = FALSE))
+                numericInput(
+                  ns("times"), 
+                  "Number of Times to Check", 
+                  value = 1,
+                  min = 1,
+                  max = 3, 
+                  step = 1,
+                  width = "100%"
+                ),
+                actionBttn(
+                  inputId = ns("continue"),
+                  label = "Continue?",
+                  style = "jelly", 
+                  color = "success",
+                  block = T, 
+                  icon = icon("exclamation-circle", verify_fa = FALSE)
+                )
               )
             )
           )
@@ -196,8 +275,13 @@ mod_MSA_ui <- function(id) {
             fluidRow(
               bs4Dash::box(
                 width = 12,
-                title = tagList(icon = icon("pagelines"), "Genotypes Statistics"), maximizable = T,
-                status = "success", solidHeader = FALSE, collapsible = TRUE,
+                title = tagList(
+                  icon = icon("pagelines"), "Genotypes Statistics"
+                ), 
+                maximizable = T,
+                status = "success", 
+                solidHeader = FALSE, 
+                collapsible = TRUE,
                 prettySwitch(
                   inputId = ns("swicht"),
                   label = "Shared Genotypes",
@@ -206,15 +290,23 @@ mod_MSA_ui <- function(id) {
                   value = F
                 ),
                 echarts4r::echarts4rOutput(ns("nGen")),
-                actionLink(inputId = ns("conectivity"), label = "See Conectivity", icon = icon("arrow-right"), style = "color: #28a745"),
+                actionLink(
+                  inputId = ns("conectivity"), 
+                  label = "See Conectivity", 
+                  icon = icon("arrow-right"),
+                  style = "color: #28a745"
+                ),
                 fluidRow(
                   col_4(),
                   col_4(
                     actionBttn(
                       inputId = ns("run"),
                       label = "Run Models",
-                      style = "unite", size = "sm", block = T,
-                      color = "warning", icon = icon("spinner")
+                      style = "unite",
+                      size = "sm",
+                      block = T,
+                      color = "warning", 
+                      icon = icon("spinner")
                     )
                   ),
                   col_4()
@@ -242,16 +334,31 @@ mod_MSA_ui <- function(id) {
 mod_MSA_server <- function(input, output, session, data) {
   ns <- session$ns
 
-  observeEvent(!input$outliers, toggle("times", anim = TRUE, time = 1, animType = "fade"))
+  observeEvent(
+    !input$outliers,
+    toggle("times", anim = TRUE, time = 1, animType = "fade")
+  )
 
   observeEvent(data$data(), {
     dt <- data$data()
-    updateSelectInput(session, "variable", choices = names(dt), selected = "YdHa_clean")
-    updateSelectInput(session, "genotype", choices = names(dt), selected = "line")
-    updateSelectInput(session, "experiment", choices = names(dt), selected = "dataset")
-    updateSelectInput(session, "column", choices = names(dt), selected = "col")
-    updateSelectInput(session, "row", choices = names(dt), selected = "row")
-    updateSelectInput(session, "replicate", choices = names(dt), selected = "rep")
+    updateSelectInput(
+      session, "variable", choices = names(dt), selected = "YdHa_clean"
+    )
+    updateSelectInput(
+      session, "genotype", choices = names(dt), selected = "line"
+    )
+    updateSelectInput(
+      session, "experiment", choices = names(dt), selected = "dataset"
+    )
+    updateSelectInput(
+      session, "column", choices = names(dt), selected = "col"
+    )
+    updateSelectInput(
+      session, "row", choices = names(dt), selected = "row"
+    )
+    updateSelectInput(
+      session, "replicate", choices = names(dt), selected = "rep"
+    )
   })
 
   # fix and random factors for specific locations
@@ -262,12 +369,28 @@ mod_MSA_server <- function(input, output, session, data) {
     req(data$data())
     req(input$experiment %in% names(data$data()))
     dt <- data$data()
-    updatePickerInput(session, "fix_traits", choices = unique(dt[, input$experiment]), selected = "NNNN")
-    updatePickerInput(session, "ran_traits", choices = unique(dt[, input$experiment]), selected = "NNNN")
+    updatePickerInput(
+      session, 
+      "fix_traits",
+      choices = unique(dt[, input$experiment]), 
+      selected = "NNNN"
+    )
+    updatePickerInput(
+      session, 
+      "ran_traits",
+      choices = unique(dt[, input$experiment]), 
+      selected = "NNNN"
+    )
   })
 
   observe({
-    shinyjs::toggle(id = "selected_checks", anim = T, time = 1, animType = "fade", condition = input$genotype != "" & input$res_ran == TRUE)
+    shinyjs::toggle(
+      id = "selected_checks", 
+      anim = TRUE, 
+      time = 1,
+      animType = "fade", 
+      condition = input$genotype != "" & input$res_ran == TRUE
+    )
     req(input$genotype)
     req(data$data())
     req(input$genotype %in% names(data$data()))
@@ -285,7 +408,14 @@ mod_MSA_server <- function(input, output, session, data) {
     {
       req(data$data())
       w$show()
-      inf <- check_spats(data$data(), input$variable, input$genotype, input$experiment, input$column, input$row)
+      inf <- check_spats(
+        data$data(), 
+        input$variable, 
+        input$genotype, 
+        input$experiment, 
+        input$column, 
+        input$row
+      )
       w$hide()
       return(inf)
     },
@@ -294,7 +424,13 @@ mod_MSA_server <- function(input, output, session, data) {
 
   observeEvent(info_check(), {
     dt <- data$data()
-    vars <- c(input$variable, input$genotype, input$experiment, input$column, input$row)
+    vars <- c(
+      input$variable,
+      input$genotype,
+      input$experiment,
+      input$column, 
+      input$row
+    )
     nNew <- names(dt)[!names(dt) %in% vars]
     updateSelectInput(session, "show_fixed", choices = nNew, selected = "NNNN")
     updateSelectInput(session, "show_random", choices = nNew, selected = "NNNN")
@@ -317,7 +453,13 @@ mod_MSA_server <- function(input, output, session, data) {
         {
           info_check()
         },
-        option = list(pageLength = 10, scrollX = TRUE, columnDefs = list(list(className = "dt-center", targets = 0:ncol(info_check())))),
+        option = list(
+          pageLength = 10, 
+          scrollX = TRUE, 
+          columnDefs = list(
+            list(className = "dt-center", targets = 0:ncol(info_check()))
+          )
+        ),
         filter = "top",
         selection = "multiple"
       )
@@ -326,7 +468,9 @@ mod_MSA_server <- function(input, output, session, data) {
 
   observeEvent(input$tabBut, {
     showModal(modalDialog(
-      title = "Info-Experiments", size = "l", easyClose = T,
+      title = "Info-Experiments",
+      size = "l", 
+      easyClose = TRUE,
       DT::dataTableOutput(ns("table"))
     ))
   })
@@ -337,19 +481,25 @@ mod_MSA_server <- function(input, output, session, data) {
       exp <- names(info_check())[1]
       w$show()
       inf <- info_check() %>%
-        dplyr::filter(percentage <= 0.6 & length(ncol) >= 2 & length(nrow) >= 2) %>%
+        dplyr::filter(
+          percentage <= 0.6 & length(ncol) >= 2 & length(nrow) >= 2) %>%
         dplyr::pull(.data[[exp]])
       w$hide()
       return(inf)
     },
-    ignoreNULL = T
+    ignoreNULL = TRUE
   )
 
   shared <- eventReactive(input$continue,
     {
       req(data$data())
       w$show()
-      inf <- gen_share(data$data(), input$genotype, input$experiment, input$variable)
+      inf <- gen_share(
+        data$data(), 
+        input$genotype, 
+        input$experiment,
+        input$variable
+      )
       w$hide()
       return(inf)
     },
@@ -384,9 +534,21 @@ mod_MSA_server <- function(input, output, session, data) {
     } else {
       DT::datatable(
         {
-          checkConection(data = data$data(), genotype = input$genotype, trial = input$experiment, response = input$variable, all = T)
+          checkConection(
+            data = data$data(), 
+            genotype = input$genotype,
+            trial = input$experiment, 
+            response = input$variable,
+            all = TRUE
+          )
         },
-        option = list(pageLength = 10, scrollX = TRUE, columnDefs = list(list(className = "dt-center", targets = 0:ncol(info_check())))),
+        option = list(
+          pageLength = 10, 
+          scrollX = TRUE,
+          columnDefs = list(
+            list(className = "dt-center", targets = 0:ncol(info_check()))
+          )
+        ),
         filter = "top",
         selection = "multiple"
       )
@@ -447,7 +609,12 @@ mod_MSA_server <- function(input, output, session, data) {
       dt[, input$experiment] <- as.factor(dt[, input$experiment])
 
       if (nrow(dt) == 0) {
-        shinytoastr::toastr_error(title = "Warning:", "Duplicated row and columns", position = "bottom-right", progressBar = TRUE)
+        shinytoastr::toastr_error(
+          title = "Warning:", 
+          "Duplicated row and columns", 
+          position = "bottom-right",
+          progressBar = TRUE
+        )
         prg$hide()
         return()
       }
@@ -481,7 +648,8 @@ mod_MSA_server <- function(input, output, session, data) {
         dt_tmp <- dt %>%
           dplyr::filter(.data[[input$experiment]] %in% exp) %>%
           droplevels()
-        models_list[[exp]] <- SpATS_mrbean(
+        models_list[[exp]] <- try({
+          SpATS_mrbean(
           data = dt_tmp, 
           response = input$variable,
           genotype = input$genotype,
@@ -499,7 +667,18 @@ mod_MSA_server <- function(input, output, session, data) {
           iterations = input$times, 
           checks = input$selected_checks,
           k_clean_out = input$k_clean_out
+        )}, silent = TRUE
         )
+        if (inherits(models_list[[exp]], "try-error")) {
+          message_to_send <- models_list[[exp]]
+          models_list[[exp]] <- NULL
+          shinytoastr::toastr_error(
+            message = message_to_send,
+            title = paste0("Error in Exp '", exp, "':"),
+            position =  "bottom-full-width",
+            progressBar = TRUE
+          )
+        }
         prg$update(html = HTML(
           "<center>",
           '<div class="dots-loader"></div>',
@@ -518,7 +697,6 @@ mod_MSA_server <- function(input, output, session, data) {
 
   observeEvent(input$run, {
     if (!is.null(Modelo())) {
-      # print(Modelo())
       show(id = "Rlink", anim = TRUE, animType = "slide")
     } else {
       hide(id = "Rlink", anim = TRUE, animType = "slide")
