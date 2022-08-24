@@ -28,9 +28,9 @@ app_ui <- function(request) {
           opacity = 0.8
         ),
         status = "white",
-        fixed = F,
-        HTML("<script type='text/javascript' src='https://cdnjs.buymeacoffee.com/1.0.0/button.prod.min.js' data-name='bmc-button' data-slug='mrbean' data-color='#FFFFFF' data-emoji=''  data-font='Cookie' data-text='Buy MrBean a coffee' data-outline-color='#000' data-font-color='#000' data-coffee-color='#fd0' ></script>"),
-        "Web Application for Spatial Analysis!",
+        fixed = TRUE,
+        # HTML("<script type='text/javascript' src='https://cdnjs.buymeacoffee.com/1.0.0/button.prod.min.js' data-name='bmc-button' data-slug='mrbean' data-color='#FFFFFF' data-emoji=''  data-font='Cookie' data-text='Buy MrBean a coffee' data-outline-color='#000' data-font-color='#000' data-coffee-color='#fd0' ></script>"),
+        "Web Application for Data Analysis!",
         rightUi = bs4DropdownMenu(
           type = "messages",
           badgeStatus = "danger",
@@ -47,7 +47,7 @@ app_ui <- function(request) {
         skin = "light",
         status = "success",
         elevation = 3,
-        fixed = F,
+        fixed = TRUE,
         bs4SidebarMenu(
           id = "tabs",
           bs4SidebarHeader("Menu"),
@@ -452,7 +452,7 @@ app_ui <- function(request) {
         col_4()
       ),
       footer = bs4DashFooter(
-        fixed = F,
+        fixed = TRUE,
         left = tagList(
           "v.2.0.9",
           HTML("&nbsp; &nbsp; &nbsp; &nbsp;"),
@@ -461,7 +461,10 @@ app_ui <- function(request) {
             target = "_blank", "J.Aparicio@cgiar.org"
           )
         ),
-        right = "2022"
+        right = tagList(
+          "Alliance Bioversity International - CIAT 2022",
+          HTML("&nbsp; &nbsp; &nbsp; &nbsp;") 
+        )
       )
     )
   )
