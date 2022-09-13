@@ -108,7 +108,7 @@ mod_import_dt_ui <- function(id) {
                   inputId = ns("sep"),
                   label = "Cell separation character:",
                   choices = list(
-                    Tab = "\t", 
+                    Tab = "\t",
                     Comma = ",",
                     Semicolon = ";",
                     "Space" = " "
@@ -522,7 +522,6 @@ mod_import_dt_server <- function(input, output, session) {
     )
     w$hide()
     if (!exists("list_trials")) list_trials <- NULL
-    print(dim(list_trials))
     return(list_trials$trialName)
   })
 
