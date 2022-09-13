@@ -21,7 +21,14 @@ qbmsbrapi <- function(url = "https://bms.ciat.cgiar.org/ibpworkbench/controller/
     return()
   }
 
-  bmsbase <- QBMS::set_qbms_config(url = url, path = path, time_out = time_out, no_auth = no_auth, engine = engine)
+  bmsbase <- QBMS::set_qbms_config(
+    url = url,
+    path = path,
+    time_out = time_out, 
+    no_auth = no_auth,
+    engine = engine,
+    page_size = 5000
+  )
 
   if (!no_auth) {
     if (is.null(username) | username == "") {
@@ -110,6 +117,13 @@ dataqbms <- function(studies = NULL, dt_studies = NULL) {
   }
 
   mult_dt <- lapply(studies, trial_study, dt_studies = dt_studies)
-  mult_dt <- dplyr::bind_rows(mult_dt)
+  names(mult_dt) <- dt_studies$trial
+  mult_dt <- data.table::rbindlist(
+    l = mult_dt,
+    fill = TRUE,
+    idcol = "trial"
+  ) %>% 
+    as.data.frame()
+  
   return(mult_dt)
 }

@@ -41,7 +41,9 @@ mod_import_dt_ui <- function(id) {
           condition = "input.Id004==2",
           ns = ns,
           bs4Dash::box(
-            title = tagList(shiny::icon("file-upload", verify_fa = FALSE), "Import Data"),
+            title = tagList(
+              shiny::icon("file-upload", verify_fa = FALSE), "Import Data"
+            ),
             solidHeader = FALSE,
             width = 12,
             status = "success",
@@ -105,7 +107,12 @@ mod_import_dt_ui <- function(id) {
                 selectInput(
                   inputId = ns("sep"),
                   label = "Cell separation character:",
-                  choices = list(Tab = "\t", Comma = ",", Semicolon = ";", "Space" = " "),
+                  choices = list(
+                    Tab = "\t", 
+                    Comma = ",",
+                    Semicolon = ";",
+                    "Space" = " "
+                  ),
                   selected = ";",
                   width = "100%"
                 ),
@@ -176,7 +183,9 @@ mod_import_dt_ui <- function(id) {
           width = 4,
           fluidRow(
             bs4Dash::box(
-              title = tagList(shiny::icon("question-circle", verify_fa = FALSE), "Help"),
+              title = tagList(
+                shiny::icon("question-circle", verify_fa = FALSE), "Help"
+              ),
               solidHeader = FALSE,
               width = 12,
               status = "success",
@@ -256,7 +265,8 @@ mod_import_dt_ui <- function(id) {
                 icon = icon("sync", verify_fa = FALSE)
               ),
               strong(
-                a("Can't Log In?",
+                a(
+                  "Can't Log In?",
                   href = "http://bms.ciat.cgiar.org:48080/ibpworkbench/controller/auth/login"
                 )
               )
@@ -286,25 +296,37 @@ mod_import_dt_ui <- function(id) {
                 choices = "",
                 width = "100%"
               ),
-              selectInput(
+              pickerInput(
                 inputId = ns("trial"),
                 label = tagList(
                   "Which trial?",
-                  tags$a(icon("exclamation-circle", verify_fa = FALSE))
+                  icon = tooltip(
+                    icon("question-circle", verify_fa = FALSE),
+                    title = "Trials to select. Can be more than one.",
+                    placement = "top"
+                  )
                 ),
-                choices = "",
-                width = "100%",
-                multiple = T
+                choices = NULL,
+                options = list(
+                  `actions-box` = TRUE, size = 5, `live-search` = TRUE
+                ),
+                multiple = TRUE, width = "100%"
               ),
-              selectInput(
+              pickerInput(
                 inputId = ns("study"),
                 label = tagList(
                   "Which study?",
-                  tags$a(icon("exclamation-circle", verify_fa = FALSE))
+                  icon = tooltip(
+                    icon("question-circle", verify_fa = FALSE),
+                    title = "Studies to select. Can be more than one.",
+                    placement = "top"
+                  )
                 ),
-                choices = "",
-                width = "100%",
-                multiple = T
+                choices = NULL,
+                options = list(
+                  `actions-box` = TRUE, size = 5, `live-search` = TRUE
+                ),
+                multiple = TRUE, width = "100%"
               ),
               fluidRow(
                 col_3(),
@@ -500,6 +522,7 @@ mod_import_dt_server <- function(input, output, session) {
     )
     w$hide()
     if (!exists("list_trials")) list_trials <- NULL
+    print(dim(list_trials))
     return(list_trials$trialName)
   })
 
@@ -509,14 +532,7 @@ mod_import_dt_server <- function(input, output, session) {
     } else {
       options <- trials()
     }
-    suppressWarnings(
-      updateSelectInput(
-        session,
-        inputId = "trial",
-        choices = options,
-        selected = "NNNNN"
-      )
-    )
+    updatePickerInput(session, inputId = "trial", choices = options)
   }) %>%
     bindEvent(input$program, ignoreInit = TRUE)
 
@@ -554,13 +570,7 @@ mod_import_dt_server <- function(input, output, session) {
     } else {
       options <- studies()[[2]]
     }
-    suppressWarnings(
-      updateSelectInput(session,
-        inputId = "study",
-        choices = options,
-        selected = "NNNNN"
-      )
-    )
+    updatePickerInput(session, inputId = "study", choices = options)
   }) %>%
     bindEvent(input$trial, ignoreInit = TRUE)
 
