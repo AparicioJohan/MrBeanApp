@@ -34,8 +34,8 @@ mod_distribution_ui <- function(id) {
               width = "100%"
             ),
             sliderInput(
-              ns("bindwidth"),
-              label = "Bindwidth",
+              ns("binwidth"),
+              label = "Binwidth",
               min = 3,
               max =  150,
               value =  30,
@@ -246,7 +246,7 @@ mod_distribution_server <- function(input, output, session, data) {
             aes(y = ..density..),
             alpha = input$alphagg,
             na.rm = TRUE,
-            bins = input$bindwidth
+            bins = input$binwidth
           ) +
           theme_bw() +
           geom_density(alpha = input$alphagD, na.rm = TRUE)
@@ -265,7 +265,7 @@ mod_distribution_server <- function(input, output, session, data) {
             alpha = input$alphagg,
             position = "identity",
             na.rm = TRUE,
-            bins = input$bindwidth
+            bins = input$binwidth
           ) +
           theme_bw() +
           geom_density(alpha = input$alphagD, na.rm = TRUE)
@@ -301,7 +301,7 @@ mod_distribution_server <- function(input, output, session, data) {
               aes(y = ..density..),
               alpha = input$alphagg,
               na.rm = TRUE,
-              bins = input$bindwidth
+              bins = input$binwidth
             ) +
             theme_bw() +
             geom_density(alpha = input$alphagD, na.rm = TRUE)
@@ -320,7 +320,7 @@ mod_distribution_server <- function(input, output, session, data) {
               alpha = input$alphagg,
               position = "identity",
               na.rm = TRUE,
-              bins = input$bindwidth
+              bins = input$binwidth
             ) +
             theme_bw() +
             geom_density(alpha = input$alphagD, na.rm = TRUE)
