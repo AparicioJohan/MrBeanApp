@@ -1,5 +1,7 @@
 # MrBean 2.0.9
 
+* LSD for single-site spatial analysis with SpATS.
+
 * Module GBLUP implemented.
   * Added a plot and a table with variance components estimates. 
   * Added the estimation of genomic heritability or marker-based heritability.

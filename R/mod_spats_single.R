@@ -173,6 +173,9 @@ mod_spats_single_ui <- function(id) {
               style = "display:rigth"
             )
           ),
+          disabled( 
+            actionButton(ns("LSD"), "LSD")
+          ),
           br(), hr(),
           disabled(
             actionButton(ns("tabBut"), "View BLUPs/BLUEs")
@@ -384,6 +387,7 @@ mod_spats_single_server <- function(input, output, session, data) {
     shinyjs::enable("inf")
     shinyjs::enable("spatial")
     shinyjs::enable("tabBut")
+    shinyjs::enable("LSD")
     shinyjs::enable("coeff")
     shinyjs::enable("Rlink")
   }) %>%
@@ -619,6 +623,61 @@ mod_spats_single_server <- function(input, output, session, data) {
       write.csv(blup(), file, row.names = FALSE)
     }
   )
+  
+
+  # LSD ---------------------------------------------------------------------
+
+  
+  lsd <- reactive({
+    validate(
+      need(input$variable != "", " "),
+      need(input$genotipo != "", " "),
+      need(input$column != "", " "),
+      need(input$fila != "", " ")
+    )
+    req(Modelo())
+    lsd <- LSD(model = Modelo(), data.frame = TRUE)
+    lsd
+  })
+  
+  output$lsd_table <- DT::renderDataTable(
+    if (input$action == 0) {
+      return()
+    } else {
+      req(lsd())
+      DT::datatable(
+        {
+          lsd() %>%
+            dplyr::mutate_if(is.numeric, round, 3)
+        },
+        option = list(
+          scrollX = TRUE,
+          dom = 't'
+        )
+      )
+    }
+  )
+  
+  observeEvent(input$LSD, {
+    showModal(
+      modalDialog(
+        title = "LSD",
+        size = "l",
+        easyClose = T,
+        shinycssloaders::withSpinner(
+          DT::dataTableOutput(ns("lsd_table")),
+          type = 6,
+          color = "#28a745"
+        ),
+        if(input$res_ran) {
+          strong("Genotype should be fixed.")
+        },
+        footer = tagList(
+          modalButton("Cancel")
+        )
+      )
+    )
+  })
 
   return(
     list(

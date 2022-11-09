@@ -143,6 +143,65 @@ res_hist <- function(data_out) {
   plotly::ggplotly(p)
 }
 
+#' LSD SpATS
+#'
+#' @param model an object of class SpATS as produced by SpATS()
+#' @param alpha Level of risk for the test (0.05 by default)
+#' @param data.frame whether return only the LSD value or a complete summary
+#'  FALSE by default
+#'
+#' @return data.frame or a lsd value depending on the data.frame argument
+#' @export
+#'
+#' @examples
+#' # library(SpATS)
+#' # data(wheatdata)
+#' # wheatdata$R <- as.factor(wheatdata$row)
+#' # wheatdata$C <- as.factor(wheatdata$col)
+#' #
+#' # m1 <- SpATS(
+#' #  response = "yield",
+#' #  spatial = ~ PSANOVA(col, row, nseg = c(10, 20), nest.div = 2),
+#' #  genotype = "geno",
+#' #  genotype.as.random = FALSE,
+#' #  fixed = ~ colcode + rowcode,
+#' #  random = ~ R + C,
+#' #  data = wheatdata,
+#' #  control = list(tolerance = 1e-03)
+#' # )
+#' # LSD(m1, data.frame = TRUE)
+LSD <- function(model, alpha = 0.05, data.frame = FALSE) {
+  gen_fixed <- !model$model$geno$as.random
+  if (gen_fixed) {
+    response <- model$model$response
+    mean_resp <- mean(model$data[, response], na.rm = TRUE)
+    var_E <- model$psi[1]
+    n_obs <- model$nobs
+    df <- n_obs - sum(model$eff.dim)
+    n_reps <- model$terms$geno$geno_dim
+    names(n_reps) <- model$terms$geno$geno_names
+    ns <- median(n_reps)
+    t_value <- qt(p = 1 - (alpha / 2), df = df)
+    lsd <- t_value * sqrt(var_E * (1 / ns + 1 / ns))
+    if (data.frame) {
+      DT <- data.frame(
+        var_E = var_E,
+        Df = df,
+        Mean = mean_resp,
+        t_value = t_value, 
+        alpha = alpha, 
+        LSD = lsd
+      )
+      return(DT)
+    } else {
+      return(lsd)
+    }
+  } else {
+    message("Genotype should be fixed.")
+    return()
+  }
+}
+
 res_compare <- function(Model, variable, factor) {
   data <- Model$data
   data$Residuals <- residuals(Model)
