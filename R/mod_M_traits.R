@@ -105,7 +105,7 @@ mod_M_traits_ui <- function(id) {
             ),
             materialSwitch(
               ns("aditional_factors"),
-              label = "Aditional Components",
+              label = "Additional Components",
               status = "success",
               right = T,
               width = "100%"
@@ -439,7 +439,7 @@ mod_M_traits_ui <- function(id) {
                       ),
                       actionBttn(
                         inputId = ns("dendo"),
-                        label = "Dendogram",
+                        label = "Dendrogram",
                         style = "minimal",
                         color = "success",
                         icon = icon("check")
@@ -1085,7 +1085,7 @@ mod_M_traits_server <- function(input, output, session, data) {
 
 
 
-  # Dendogram ---------------------------------------------------------------
+  # Dendrogram ---------------------------------------------------------------
 
   output$plot_dend <- renderPlot({
     input$dendo
@@ -1117,7 +1117,7 @@ mod_M_traits_server <- function(input, output, session, data) {
   observeEvent(input$dendo,
     {
       showModal(modalDialog(
-        title = "Dendogram", 
+        title = "Dendrogram", 
         size = "l",
         easyClose = T,
         dropdown(
@@ -1250,10 +1250,10 @@ mod_M_traits_server <- function(input, output, session, data) {
   )
 
 
-  # Download Dendogram
+  # Download Dendrogram
   output$descargar3 <- downloadHandler(
     filename = function() {
-      paste("dendogram", input$filetype3, sep = ".")
+      paste("dendrogram", input$filetype3, sep = ".")
     },
     content = function(file) {
       if (input$filetype3 == "png") {

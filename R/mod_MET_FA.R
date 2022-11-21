@@ -34,7 +34,7 @@ mod_MET_FA_ui <- function(id) {
                   # fluidRow(
                   #   col_3(),
                   #   col_6(
-                  #     actionBttn(inputId = ns("dendo"),label = "Dendogram",style = "jelly",color = "warning",block = T, icon = icon("check") )
+                  #     actionBttn(inputId = ns("dendo"),label = "Dendrogram",style = "jelly",color = "warning",block = T, icon = icon("check") )
                   #   ),
                   #   col_3()
                   # )

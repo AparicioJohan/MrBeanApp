@@ -8,7 +8,7 @@
   * Added a plot for checking the accuracy of the model by trait. (Observed values vs Predicted values).
   * Added action button for downloading a summary of the analysis.
   * Added a corrPlot with the genetic correlations among traits.
-  * Added a dendogram and a Principal Components Analysis (PCA) for the GEBVs.
+  * Added a dendrogram and a Principal Components Analysis (PCA) for the GEBVs.
   * Added a table with predicted.values, GEBVs, standard.errors and reliabilities for each of the genotypes and each of the traits.
   * Added a plot for comparing the GEBVs against the reliability.
   * Added action button for downloading table with predictions and GEBVs.
