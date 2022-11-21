@@ -18,11 +18,11 @@ GBLUPs(
 \item{geno_matrix}{data.frame with first column identifying the genotype names
 and the rest containing marker information in format (-1, 0 , 1).}
 
+\item{genotype}{string with the genotype name}
+
 \item{traits}{vector with the traits to be analyzed}
 
 \item{method}{"GBLUP", "rrBLUP" or "mix" ("mix" in progress)}
-
-\item{genoype}{string with the genotype name}
 }
 \value{
 List with GBLUPs, variance components and marker effects.

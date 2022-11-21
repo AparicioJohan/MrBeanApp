@@ -3,12 +3,14 @@
 #' @param pheno_data data.frame with phenotypic data
 #' @param geno_matrix data.frame with first column identifying the genotype names
 #'  and the rest containing marker information in format (-1, 0 , 1).
-#' @param genoype string with the genotype name
+#' @param genotype string with the genotype name
 #' @param traits vector with the traits to be analyzed
 #' @param method "GBLUP", "rrBLUP" or "mix" ("mix" in progress)
 #'
 #' @return List with GBLUPs, variance components and marker effects.
 #'  list(results, var_comp, markers)
+#'  
+#' @importFrom stats cor reformulate dt
 #'
 #' @export
 #'
@@ -89,7 +91,7 @@ GBLUPs <- function(pheno_data = NULL,
     K <- sommer::A.mat(geno_matrix)
     colnames(K) <- rownames(K) <- rownames(geno_matrix)
     for (var in traits) {
-      equation <- reformulate("1", response = var)
+      equation <- stats::reformulate("1", response = var)
       GBLUP <- sommer::mmer(
         equation,
         random = ~ sommer::vsr(level, Gu = K),
@@ -121,7 +123,7 @@ GBLUPs <- function(pheno_data = NULL,
       gblups_results[, "GEBVs"] <- coefficients
       gblups_results[, "standard.error"] <- sqrt(PEV)
       gblups_results[, "reliability"] <- 1 - PEV / c(var_g)
-      corr <- cor(
+      corr <- stats::cor(
         x = gblups_results$observed,
         y = gblups_results$predicted.value, 
         use = "pairwise.complete.obs"
@@ -148,7 +150,7 @@ GBLUPs <- function(pheno_data = NULL,
     )
     for (var in traits) {
       trn_geno_matrix <- geno_matrix[gen_in_common[[var]], ]
-      equation <- reformulate("1", response = var)
+      equation <- stats::reformulate("1", response = var)
       rrBLUP <- sommer::mmer(
         equation,
         random = ~ sommer::vsr(list(trn_geno_matrix), buildGu = FALSE),
@@ -204,7 +206,7 @@ GBLUPs <- function(pheno_data = NULL,
       var_markers <- t(M) %*% MMT_inv %*% (var_g) %*% t(MMT_inv) %*% M
       se_markers <- sqrt(diag(var_markers))
       t_stat_from_g <- markers / se_markers
-      pval_GBLUP <- dt(t_stat_from_g, df = n - k - 1)
+      pval_GBLUP <- stats::dt(t_stat_from_g, df = n - k - 1)
       
       id <- names(gblup)
       intercept <- mixGBLUP$Beta$Estimate
@@ -409,7 +411,7 @@ marker_plot <- function(marker = NULL,
         y = "Estimated Squared-Marker Effect"
       ) +
       facet_wrap(~trait, nrow = length(trait_selected), scales = "free_y") +
-      scale_x_continuous(label = axisdf$chr, breaks = axisdf$center)
+      scale_x_continuous(labels = axisdf$chr, breaks = axisdf$center)
   }
   return(mark_plot)
 }

@@ -211,7 +211,7 @@ mod_MET_FA_server <- function(input, output, session, model) {
     isolate({
       req(input$geno_filter2)
       mod <- model$model()$mod
-      scoreChart(mod, x = "Comp1", y = "Comp2", gen = input$geno_filter2)
+      scoreChart(mod, x = "Comp1", y = "Comp2", gen_selected = input$geno_filter2)
     })
   })
 
