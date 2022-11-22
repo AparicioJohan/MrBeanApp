@@ -82,7 +82,7 @@ mod_MET_results_ui <- function(id) {
                   fluidRow(
                     col_3(),
                     col_6(
-                      actionBttn(inputId = ns("dendo"), label = "Dendogram", style = "jelly", color = "warning", block = T, icon = icon("check"))
+                      actionBttn(inputId = ns("dendo"), label = "Dendrogram", style = "jelly", color = "warning", block = T, icon = icon("check"))
                     ),
                     col_3()
                   )
@@ -567,7 +567,7 @@ mod_MET_results_server <- function(input, output, session, model) {
   observeEvent(input$dendo,
     {
       showModal(modalDialog(
-        title = "Dendogram", size = "l", easyClose = T,
+        title = "Dendrogram", size = "l", easyClose = T,
         dropdown(
           prettyRadioButtons(
             inputId = ns("filetype3"), label = "Download Plot File Type", outline = TRUE, fill = FALSE, shape = "square", inline = TRUE,
@@ -653,10 +653,10 @@ mod_MET_results_server <- function(input, output, session, model) {
   )
 
 
-  # Download Dendogram
+  # Download Dendrogram
   output$descargar3 <- downloadHandler(
     filename = function() {
-      paste("dendogram", input$filetype3, sep = ".")
+      paste("dendrogram", input$filetype3, sep = ".")
     },
     content = function(file) {
       if (input$filetype3 == "png") {

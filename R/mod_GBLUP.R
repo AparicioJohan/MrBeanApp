@@ -311,7 +311,7 @@ mod_GBLUP_ui <- function(id) {
                       inputId = ns("dendo"),
                       icon = icon("check", verify_fa = FALSE),
                       size = "sm",
-                      label = "Dendogram",
+                      label = "Dendrogram",
                       style = "unite",
                       color = "warning",
                       block = TRUE
@@ -1011,7 +1011,7 @@ mod_GBLUP_server <- function(id) {
           },
           error = function(e) {
             shinytoastr::toastr_error(
-              title = "Error in Dendogram:",
+              title = "Error in Dendrogram:",
               conditionMessage(e),
               position = "bottom-full-width",
               showMethod = "slideDown",
@@ -1026,7 +1026,7 @@ mod_GBLUP_server <- function(id) {
     observeEvent(input$dendo,
       {
         showModal(modalDialog(
-          title = "Dendogram", size = "l", easyClose = T,
+          title = "Dendrogram", size = "l", easyClose = T,
           dropdown(
             prettyRadioButtons(
               inputId = ns("filetype3"),
@@ -1140,7 +1140,7 @@ mod_GBLUP_server <- function(id) {
 
     output$descargar3 <- downloadHandler(
       filename = function() {
-        paste("dendogram", input$filetype3, sep = ".")
+        paste("dendrogram", input$filetype3, sep = ".")
       },
       content = function(file) {
         req(modelo())
@@ -1175,7 +1175,7 @@ mod_GBLUP_server <- function(id) {
           },
           error = function(e) {
             shinytoastr::toastr_error(
-              title = "Error in Dendogram:",
+              title = "Error in Dendrogram:",
               conditionMessage(e),
               position = "bottom-full-width",
               showMethod = "slideDown",
