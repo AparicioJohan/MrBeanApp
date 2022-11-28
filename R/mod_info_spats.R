@@ -121,14 +121,15 @@ mod_info_spats_server <- function(input, output, session, Model) {
       va <- round(sqrt(modelo()$var.comp), 2)
       Comp <- data.frame(Component = c(names(modelo()$var.comp), "Residual"), Standard_deviation = c(va, VarE))
       v <- as.character(Comp[order(Comp$Standard_deviation, decreasing = FALSE), 1])
-      g1 <- ggplot(Comp, aes(x = Component, Standard_deviation)) +
-        geom_bar(position = "dodge", stat = "identity") +
-        xlab("") +
-        ggtitle("Components") +
-        theme_bw(base_size = 15) +
-        theme(axis.text.x = element_text(angle = 90, hjust = 1, vjust = 0.5)) +
-        scale_x_discrete(limits = v) +
-        ylab("Standard Deviation")
+      g1 <- ggplot2::ggplot(Comp, ggplot2::aes(x = Component, Standard_deviation)) +
+        ggplot2::geom_bar(position = "dodge", stat = "identity") +
+        ggplot2::xlab("") +
+        ggplot2::ggtitle("Components") +
+        ggplot2::theme_bw(base_size = 15) +
+        ggplot2::theme(
+          axis.text.x = ggplot2::element_text(angle = 90, hjust = 1, vjust = 0.5)) +
+        ggplot2::scale_x_discrete(limits = v) +
+        ggplot2::ylab("Standard Deviation")
       plotly::ggplotly(g1)
     })
   })
@@ -187,7 +188,7 @@ mod_info_spats_server <- function(input, output, session, Model) {
       paste("varcomp_SpATS", ".csv", sep = "")
     },
     content = function(file) {
-      write.csv(variances(), file, row.names = FALSE)
+      utils::write.csv(variances(), file, row.names = FALSE)
     }
   )
 
@@ -265,15 +266,15 @@ mod_info_spats_server <- function(input, output, session, Model) {
     },
     content = function(file) {
       if (input$typefile == "png") {
-        png(file, width = input$png.wid, height = input$png.hei)
+        grDevices::png(file, width = input$png.wid, height = input$png.hei)
         spaTrend <- ifelse(input$tog_plot == TRUE, "percentage", "raw")
         plot(modelo(), spaTrend = spaTrend, cex.lab = 1.5, cex.main = 2, cex.axis = 1.5, axis.args = list(cex.axis = 1.2))
-        dev.off()
+        grDevices::dev.off()
       } else {
-        pdf(file, width = input$pdf.wid, height = input$pdf.hei)
+        grDevices::pdf(file, width = input$pdf.wid, height = input$pdf.hei)
         spaTrend <- ifelse(input$tog_plot == TRUE, "percentage", "raw")
         plot(modelo(), spaTrend = spaTrend, cex.lab = 1.5, cex.main = 2, cex.axis = 1.5, axis.args = list(cex.axis = 1.2))
-        dev.off()
+        grDevices::dev.off()
       }
     }
   )

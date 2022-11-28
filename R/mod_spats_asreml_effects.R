@@ -120,16 +120,19 @@ mod_spats_asreml_effects_server <- function(input, output, session, model) {
     isolate({
       BLUPS <- BLUPS()
 
-      q <- ggplot(BLUPS, aes(x = gen, y = predicted.value))
+      q <- ggplot2::ggplot(BLUPS, ggplot2::aes(x = gen, y = predicted.value))
       v <- as.character(BLUPS[order(BLUPS[, "predicted.value"], decreasing = TRUE), 1])
 
       p <- q +
-        geom_point(size = 1) +
-        geom_errorbar(aes(ymax = upper, ymin = lower)) +
-        theme_bw() +
-        geom_hline(yintercept = mean(BLUPS[, "predicted.value"]), linetype = 2, color = "red") +
-        theme(axis.title.x = element_blank(), axis.text.x = element_blank(), axis.ticks.x = element_blank()) +
-        scale_x_discrete(limits = v)
+        ggplot2::geom_point(size = 1) +
+        ggplot2::geom_errorbar(ggplot2::aes(ymax = upper, ymin = lower)) +
+        ggplot2::theme_bw() +
+        ggplot2::geom_hline(yintercept = mean(BLUPS[, "predicted.value"]), linetype = 2, color = "red") +
+        ggplot2::theme(
+          axis.title.x = ggplot2::element_blank(), 
+          axis.text.x = ggplot2::element_blank(), 
+          axis.ticks.x = ggplot2::element_blank()) +
+        ggplot2::scale_x_discrete(limits = v)
       isolate(plotly::ggplotly(p))
     })
   })
@@ -150,20 +153,20 @@ mod_spats_asreml_effects_server <- function(input, output, session, model) {
       paste("effects_ASReml_Model_mrbean", ".csv", sep = "")
     },
     content = function(file) {
-      write.csv(BLUPS(), file, row.names = FALSE)
+      utils::write.csv(BLUPS(), file, row.names = FALSE)
     }
   )
 
   output$hist <- plotly::renderPlotly({
     BLUPS <- BLUPS()
-    hi <- hist(BLUPS[, "predicted.value"], plot = FALSE)
+    hi <- graphics::hist(BLUPS[, "predicted.value"], plot = FALSE)
     br <- hi$breaks
     label <- names(BLUPS)[2]
-    k <- ggplot(BLUPS, aes_string("predicted.value")) +
-      geom_histogram(breaks = c(br)) +
-      theme_bw() +
-      ggtitle(paste0("Histogram of Genotype Predictions")) +
-      xlab("")
+    k <- ggplot2::ggplot(BLUPS, ggplot2::aes_string("predicted.value")) +
+      ggplot2::geom_histogram(breaks = c(br)) +
+      ggplot2::theme_bw() +
+      ggplot2::ggtitle(paste0("Histogram of Genotype Predictions")) +
+      ggplot2::xlab("")
     isolate(plotly::ggplotly(k))
   })
 }

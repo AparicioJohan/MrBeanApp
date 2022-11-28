@@ -598,7 +598,7 @@ mod_spats_asreml_server <- function(input, output, session, data) {
       colnames(gfit) <- c("MODEL", "n.VC", "logL", "AIC", "BIC", "herit-PEV", "herit-VC", "A-opt", "D-opt")
       gfit <- data.frame(gfit)
       gfit %>%
-        dplyr::select(MODEL, everything()) %>%
+        dplyr::select(MODEL, dplyr::everything()) %>%
         kableExtra::kable(escape = F, align = "c") %>%
         kableExtra::kable_styling(c("hover", "responsive", "condensed"), full_width = T, position = "center")
     })
@@ -619,14 +619,14 @@ mod_spats_asreml_server <- function(input, output, session, data) {
       req(modelo())
       model <- modelo()$mod
       # DATA <- data.frame(model$mf)
-      # DATA$residuals <- residuals(model, spatial =  ifelse(input$swicht2, "plot", "trend"))
+      # DATA$residuals <-stats::residuals(model, spatial =  ifelse(input$swicht2, "plot", "trend"))
       # DATA$col <- as.numeric(DATA$col)
       # DATA$row <- as.numeric(DATA$row)
       # ic <- which(names(DATA)=="col")
       # ir <- which(names(DATA)=="row")
       # ix <- which(names(DATA)=="residuals")
       # DATA <- geoR::as.geodata(DATA, coords.col = c(ic,ir),  data.col = ix)
-      # par(mfrow=c(1,2))
+      # graphics::par(mfrow=c(1,2))
       # var1 = geoR::variog(DATA, max.dist=1000)
       # plot(var1)
       # env.var = geoR::variog.mc.env(DATA, obj.v=var1, nsim=100)
@@ -659,13 +659,13 @@ mod_spats_asreml_server <- function(input, output, session, data) {
     },
     content = function(file) {
       if (input$typefile == "png") {
-        png(file, width = input$png.wid, height = input$png.hei)
+        grDevices::png(file, width = input$png.wid, height = input$png.hei)
         spatial.ASReml(modelo()$mod, col = "col", row = "row", response = "resp", genotype = "gen")
-        dev.off()
+        grDevices::dev.off()
       } else {
-        pdf(file, width = input$pdf.wid, height = input$pdf.hei)
+        grDevices::pdf(file, width = input$pdf.wid, height = input$pdf.hei)
         spatial.ASReml(modelo()$mod, col = "col", row = "row", response = "resp", genotype = "gen")
-        dev.off()
+        grDevices::dev.off()
       }
     }
   )

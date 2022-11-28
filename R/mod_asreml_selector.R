@@ -398,10 +398,10 @@ mod_asreml_selector_server <- function(input, output, session, data) {
     isolate({
       req(modelo())
       dt <- modelo()$parms
-      g1 <- dt %>% ggplot(aes(x = MODEL, y = .data[[input$criteria]])) +
-        geom_line() +
-        geom_point() +
-        theme_bw()
+      g1 <- dt %>% ggplot2::ggplot(ggplot2::aes(x = MODEL, y = .data[[input$criteria]])) +
+        ggplot2::geom_line() +
+        ggplot2::geom_point() +
+        ggplot2::theme_bw()
       plotly::ggplotly(g1)
     })
   })

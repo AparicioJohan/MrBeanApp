@@ -249,7 +249,7 @@ mod_residuals_spats_server <- function(input, output, session, Model) {
     content = function(file) {
       req(input$OUT_rows_selected)
       datos <- data.frame(selecByhand())
-      write.csv(datos, file, row.names = FALSE)
+      utils::write.csv(datos, file, row.names = FALSE)
     }
   )
 

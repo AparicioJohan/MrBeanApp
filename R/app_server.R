@@ -6,7 +6,6 @@
 #' @noRd
 app_server <- function(input, output, session) {
   sever::sever()
-
   # Home
   callModule(mod_home_module1_server, "home_module1_ui_1")
 

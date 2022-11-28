@@ -575,7 +575,7 @@ mod_MSA_server <- function(input, output, session, data) {
       paste("Conectivity", ".csv", sep = "")
     },
     content = function(file) {
-      write.csv(checkConection(
+      utils::write.csv(checkConection(
         data = data$data(),
         genotype = input$genotype,
         trial = input$experiment,

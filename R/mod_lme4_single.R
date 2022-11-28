@@ -219,7 +219,7 @@ mod_lme4_single_server <- function(input, output, session, data) {
         if (sum(is.na(dt$Response)) > 0.9 * length(dt$Response)) stop("Missing data in the response")
       },
       error = function(e) {
-        toastr_error(title = "Warning:", conditionMessage(e), position = "bottom-right", progressBar = TRUE)
+        shinytoastr::toastr_error(title = "Warning:", conditionMessage(e), position = "bottom-right", progressBar = TRUE)
       }
     )
     validate(need(sum(is.na(dt$Response)) < 0.9 * length(dt$Response), "Check the formula"))
@@ -393,7 +393,7 @@ mod_lme4_single_server <- function(input, output, session, data) {
 
   output$anovamix <- DT::renderDataTable({
     req(alpha())
-    nfixed <- nrow(anova(alpha()))
+    nfixed <- nrow(stats::anova(alpha()))
     if (input$run == 0) {
       return()
     } else if (nfixed < 1) {
@@ -401,9 +401,9 @@ mod_lme4_single_server <- function(input, output, session, data) {
     } else {
       isolate({
         if (class(alpha()) == "lm") {
-          k <- suppressWarnings((broom.mixed::tidy(anova(alpha()))))
+          k <- suppressWarnings((broom.mixed::tidy(stats::anova(alpha()))))
         } else {
-          k <- suppressWarnings((broom.mixed::tidy(anova(alpha(), ddf = "Kenward-Roger", type = 1))))
+          k <- suppressWarnings((broom.mixed::tidy(lmerTest::ranova(alpha(), ddf = "Kenward-Roger", type = 1))))
         }
         DT::datatable(
           {
@@ -492,7 +492,7 @@ mod_lme4_single_server <- function(input, output, session, data) {
     },
     content = function(file) {
       BLUPS <- blup_mix()
-      write.csv(BLUPS, file, row.names = FALSE)
+      utils::write.csv(BLUPS, file, row.names = FALSE)
     }
   )
 
@@ -568,7 +568,7 @@ mod_lme4_single_server <- function(input, output, session, data) {
       paste("multp_comparisons_mrbean", ".csv", sep = "")
     },
     content = function(file) {
-      write.csv(differences(), file, row.names = FALSE)
+      utils::write.csv(differences(), file, row.names = FALSE)
     }
   )
 

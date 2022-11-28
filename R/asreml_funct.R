@@ -145,6 +145,9 @@ conv_null <- function(x) {
 spatial.aud <- function(data = NULL, gen = NULL, check = NULL, block = NULL, row = NULL, col = NULL,
                         covariate = NULL, nugget = FALSE, resp = NULL,
                         type.gen = "random", model = NULL) {
+  if (!requireNamespace("asreml", quietly = TRUE)) {
+    stop("The package asreml is not loaded.")
+  }
   asreml::asreml.options(trace = FALSE)
   n <- nrow(data)
   if (n == 0) {
@@ -315,10 +318,10 @@ spatial.aud <- function(data = NULL, gen = NULL, check = NULL, block = NULL, row
       sol.ic <- NULL
       sol.ri <- NULL
       sol.rc <- NULL
-      pvals.ii <- predict(mod.ii, classify = "gen", vcov = TRUE)
-      pvals.ic <- predict(mod.ic, classify = "gen", vcov = TRUE)
-      pvals.ri <- predict(mod.ri, classify = "gen", vcov = TRUE)
-      pvals.rc <- predict(mod.rc, classify = "gen", vcov = TRUE)
+      pvals.ii <- asreml::predict.asreml(mod.ii, classify = "gen", vcov = TRUE)
+      pvals.ic <- asreml::predict.asreml(mod.ic, classify = "gen", vcov = TRUE)
+      pvals.ri <- asreml::predict.asreml(mod.ri, classify = "gen", vcov = TRUE)
+      pvals.rc <- asreml::predict.asreml(mod.rc, classify = "gen", vcov = TRUE)
     }
     if (type.gen == "random") {
       sol.ii <- summary(mod.ii, coef = TRUE)$coef.random
@@ -326,16 +329,16 @@ spatial.aud <- function(data = NULL, gen = NULL, check = NULL, block = NULL, row
       sol.ri <- summary(mod.ri, coef = TRUE)$coef.random
       sol.rc <- summary(mod.rc, coef = TRUE)$coef.random
       if (is.null(check)) { # No separation of checks
-        pvals.ii <- predict(mod.ii, classify = "gen", vcov = TRUE)
-        pvals.ic <- predict(mod.ic, classify = "gen", vcov = TRUE)
-        pvals.ri <- predict(mod.ri, classify = "gen", vcov = TRUE)
-        pvals.rc <- predict(mod.rc, classify = "gen", vcov = TRUE)
+        pvals.ii <- asreml::predict.asreml(mod.ii, classify = "gen", vcov = TRUE)
+        pvals.ic <- asreml::predict.asreml(mod.ic, classify = "gen", vcov = TRUE)
+        pvals.ri <- asreml::predict.asreml(mod.ri, classify = "gen", vcov = TRUE)
+        pvals.rc <- asreml::predict.asreml(mod.rc, classify = "gen", vcov = TRUE)
       }
       if (!is.null(check)) { # With separation of checks
-        pvals.ii <- predict(mod.ii, classify = "check:gen", vcov = TRUE)
-        pvals.ic <- predict(mod.ic, classify = "check:gen", vcov = TRUE)
-        pvals.ri <- predict(mod.ri, classify = "check:gen", vcov = TRUE)
-        pvals.rc <- predict(mod.rc, classify = "check:gen", vcov = TRUE)
+        pvals.ii <- asreml::predict.asreml(mod.ii, classify = "check:gen", vcov = TRUE)
+        pvals.ic <- asreml::predict.asreml(mod.ic, classify = "check:gen", vcov = TRUE)
+        pvals.ri <- asreml::predict.asreml(mod.ri, classify = "check:gen", vcov = TRUE)
+        pvals.rc <- asreml::predict.asreml(mod.rc, classify = "check:gen", vcov = TRUE)
       }
     }
 
@@ -455,7 +458,7 @@ spatial.aud <- function(data = NULL, gen = NULL, check = NULL, block = NULL, row
       mod <- mod.rc
     }
     if (type.gen == "fixed") {
-      preds <- predict(mod, classify = "gen", vcov = TRUE)
+      preds <- asreml::predict.asreml(mod, classify = "gen", vcov = TRUE)
       pvals <- preds$pvals
       vcov <- as.matrix(preds$vcov)
       sel <- matrix(1, ncol = 1, nrow = length(pvals$predicted.value))
@@ -465,7 +468,7 @@ spatial.aud <- function(data = NULL, gen = NULL, check = NULL, block = NULL, row
     }
     if (type.gen == "random") {
       if (is.null(check)) { # No separation of checks
-        preds <- predict(mod, classify = "gen", vcov = TRUE)
+        preds <- asreml::predict.asreml(mod, classify = "gen", vcov = TRUE)
         pvals <- preds$pvals
         vcov <- as.matrix(preds$vcov)
         sel <- matrix(1, ncol = 1, nrow = length(pvals$predicted.value))
@@ -474,7 +477,7 @@ spatial.aud <- function(data = NULL, gen = NULL, check = NULL, block = NULL, row
         pvals$weight[sel == 1] <- diag(solve(vcov))
       }
       if (!is.null(check)) { # With separation of checks
-        preds <- predict(mod, classify = "check:gen", vcov = TRUE)
+        preds <- asreml::predict.asreml(mod, classify = "check:gen", vcov = TRUE)
         pvals <- preds$pvals
         vcov <- as.matrix(preds$vcov)
         sel <- matrix(1, ncol = 1, nrow = length(pvals$predicted.value))
@@ -510,7 +513,7 @@ augment.SpATS <-
 
     trait <- response
     response <- Datos[, response]
-    residuals <- residuals(x)
+    residuals <-stats::residuals(x)
     fitted <- fitted(x)
 
     columns <- seq(min(x.coord), max(x.coord), by = min(diff(sort(unique(x.coord)))))
@@ -522,7 +525,7 @@ augment.SpATS <-
     if (is.null(main)) main <- paste("Trait: ", trait, sep = "")
 
     if (length(grep("units", x$call)) != 0) {
-      residuals_plot <- residuals(x, spatial = "plot")
+      residuals_plot <-stats::residuals(x, spatial = "plot")
       data.table::setkeyv(xy.coord, c("rows", "columns"))
       ONE <- rep(1, length(x.coord))
       df <- data.table::data.table(
@@ -536,11 +539,11 @@ augment.SpATS <-
       df <- df[xy.coord]
       df <- df[order(df$columns, df$rows), ]
 
-      colors <- topo.colors(100)
+      colors <- grDevices::topo.colors(100)
 
       main.legends <- c("Raw data", "Fitted data", "Residuals-Trend", "Residuals-Plot")
       if (all.in.one) {
-        op <- par(mfrow = c(1, 4), oma = c(ifelse(annotated, 12, 2), 1, 3, 2), mar = c(2.7, 4, 2.5, 2.5), mgp = c(1.7, 0.5, 0))
+        op <- graphics::par(mfrow = c(1, 4), oma = c(ifelse(annotated, 12, 2), 1, 3, 2), mar = c(2.7, 4, 2.5, 2.5), mgp = c(1.7, 0.5, 0))
       } else {
         if (!is.null(main)) {
           main.legends <- rep(main, length(main.legends))
@@ -552,8 +555,8 @@ augment.SpATS <-
       fields::image.plot(columns, rows, t(matrix(df$fitted, ncol = length(columns), nrow = length(rows))), main = main.legends[2], col = colors, xlab = xlab, ylab = ylab, zlim = range, graphics.reset = TRUE, ...)
       fields::image.plot(columns, rows, t(matrix(df$residuals, ncol = length(columns), nrow = length(rows))), main = main.legends[3], col = colors, xlab = xlab, ylab = ylab, graphics.reset = TRUE, ...)
       fields::image.plot(columns, rows, t(matrix(df$residuals_plot, ncol = length(columns), nrow = length(rows))), main = main.legends[4], col = colors, xlab = xlab, ylab = ylab, graphics.reset = TRUE, ...)
-      title("")
-      mtext(main, cex = 1.5, outer = TRUE, side = 3)
+     graphics::title("")
+      graphics::mtext(main, cex = 1.5, outer = TRUE, side = 3)
     } else {
       data.table::setkeyv(xy.coord, c("rows", "columns"))
       ONE <- rep(1, length(x.coord))
@@ -567,11 +570,11 @@ augment.SpATS <-
       df <- df[xy.coord]
       df <- df[order(df$columns, df$rows), ]
 
-      colors <- topo.colors(100)
+      colors <- grDevices::topo.colors(100)
 
       main.legends <- c("Raw data", "Fitted data", "Residuals")
       if (all.in.one) {
-        op <- par(mfrow = c(1, 3), oma = c(ifelse(annotated, 12, 2), 1, 3, 2), mar = c(2.7, 4, 2.5, 2.5), mgp = c(1.7, 0.5, 0))
+        op <- graphics::par(mfrow = c(1, 3), oma = c(ifelse(annotated, 12, 2), 1, 3, 2), mar = c(2.7, 4, 2.5, 2.5), mgp = c(1.7, 0.5, 0))
       } else {
         if (!is.null(main)) {
           main.legends <- rep(main, length(main.legends))
@@ -582,8 +585,8 @@ augment.SpATS <-
       fields::image.plot(columns, rows, t(matrix(df$response, ncol = length(columns), nrow = length(rows))), main = main.legends[1], col = colors, xlab = xlab, ylab = ylab, zlim = range, graphics.reset = TRUE, ...)
       fields::image.plot(columns, rows, t(matrix(df$fitted, ncol = length(columns), nrow = length(rows))), main = main.legends[2], col = colors, xlab = xlab, ylab = ylab, zlim = range, graphics.reset = TRUE, ...)
       fields::image.plot(columns, rows, t(matrix(df$residuals, ncol = length(columns), nrow = length(rows))), main = main.legends[3], col = colors, xlab = xlab, ylab = ylab, graphics.reset = TRUE, ...)
-      title("")
-      mtext(main, cex = 1.5, outer = TRUE, side = 3)
+     graphics::title("")
+      graphics::mtext(main, cex = 1.5, outer = TRUE, side = 3)
     }
   }
 
@@ -628,7 +631,7 @@ fill.asreml <- function(x, rows = NULL, ranges = NULL, by, extra) {
       x <- x[order(x[, rows], x[, ranges]), ]
       roro <- x[, which(colnames(x) == rows)]
       raro <- x[, which(colnames(x) == ranges)]
-      bybo <- na.omit(unique(x[, by]))
+      bybo <- stats::na.omit(unique(x[, by]))
       ro1 <- seq(min(roro, na.rm = TRUE), max(roro, na.rm = TRUE))
       ra1 <- seq(min(raro, na.rm = TRUE), max(raro, na.rm = TRUE))
       needed <- expand.grid(ro1, ra1)
@@ -661,7 +664,7 @@ fill.asreml <- function(x, rows = NULL, ranges = NULL, by, extra) {
           pextra <- extra[u]
           pox <- table(newf[, c(rows, ranges, pextra)])
           leve <- dim(pox)[3]
-          levelnames <- na.omit(unique(newf[, pextra]))
+          levelnames <- stats::na.omit(unique(newf[, pextra]))
           for (o in 1:leve) {
             init1 <- which(apply(
               as.matrix(pox[, , o]),
@@ -715,7 +718,7 @@ fill.asreml <- function(x, rows = NULL, ranges = NULL, by, extra) {
         pextra <- extra[u]
         pox <- table(newf[, c(rows, ranges, pextra)])
         leve <- dim(pox)[3]
-        levelnames <- na.omit(unique(newf[, pextra]))
+        levelnames <- stats::na.omit(unique(newf[, pextra]))
         for (o in 1:leve) {
           init1 <- which(apply(
             as.matrix(pox[, , o]),
@@ -833,7 +836,8 @@ prediction_augment <- function(model, gen = "gen") {
 # New Spatial Plot Asreml -------------------------------------------------
 
 spatial.ASReml <-
-  function(x = NULL, col = "col", row = "row", genotype, response, all.in.one = TRUE, main = NULL, annotated = FALSE, depict.missing = FALSE, ...) {
+  function(x = NULL, col = "col", row = "row", genotype, response, all.in.one = TRUE, 
+    main = NULL, annotated = FALSE, depict.missing = FALSE, ...) {
     if (is.null(x)) {
       return()
     }
@@ -846,7 +850,7 @@ spatial.ASReml <-
 
     trait <- response
     response <- Datos[, response]
-    residuals <- residuals(x)
+    residuals <-stats::residuals(x)
     fitted <- fitted(x)
 
     columns <- seq(min(x.coord), max(x.coord), by = min(diff(sort(unique(x.coord)))))
@@ -858,7 +862,7 @@ spatial.ASReml <-
     if (is.null(main)) main <- paste("Trait: ", trait, sep = "")
 
     if (length(grep("units", x$call)) != 0) {
-      residuals_plot <- residuals(x, spatial = "plot")
+      residuals_plot <-stats::residuals(x, spatial = "plot")
       data.table::setkeyv(xy.coord, c("rows", "columns"))
       ONE <- rep(1, length(x.coord))
       df <- data.table::data.table(
@@ -894,11 +898,11 @@ spatial.ASReml <-
       # environment
       df <- df %>% dplyr::mutate(environment = round(fitted - mean(fitted, na.rm = T) - effect, 2))
 
-      colors <- topo.colors(100)
+      colors <- grDevices::topo.colors(100)
 
       main.legends <- c("Raw data", "Fitted data", "Residuals-Trend", "Env", "Genotype", "Histogram")
       if (all.in.one) {
-        op <- par(mfrow = c(2, 3), oma = c(ifelse(annotated, 12, 2), 1, 3, 2), mar = c(2.7, 4, 2.5, 2.5), mgp = c(1.7, 0.5, 0))
+        op <- graphics::par(mfrow = c(2, 3), oma = c(ifelse(annotated, 12, 2), 1, 3, 2), mar = c(2.7, 4, 2.5, 2.5), mgp = c(1.7, 0.5, 0))
       } else {
         if (!is.null(main)) {
           main.legends <- rep(main, length(main.legends))
@@ -913,9 +917,9 @@ spatial.ASReml <-
       # fields::image.plot(columns, rows, t(matrix(df$residuals_plot, ncol = length(columns), nrow = length(rows))), main = main.legends[4], col = colors, xlab = xlab, ylab = ylab, graphics.reset = TRUE, ...)
       fields::image.plot(columns, rows, t(matrix(df$environment, ncol = length(columns), nrow = length(rows))), main = main.legends[4], col = colors, xlab = xlab, ylab = ylab, graphics.reset = TRUE, ...)
       fields::image.plot(columns, rows, t(matrix(df$effect, ncol = length(columns), nrow = length(rows))), main = main.legends[5], col = colors, xlab = xlab, ylab = ylab, graphics.reset = TRUE)
-      suppressWarnings(hist(geno.pred$effect, main = main.legends[6], xlab = main.legends[5], ...))
-      title("")
-      mtext(main, cex = 1.5, outer = TRUE, side = 3)
+      suppressWarnings(graphics::hist(geno.pred$effect, main = main.legends[6], xlab = main.legends[5], ...))
+     graphics::title("")
+      graphics::mtext(main, cex = 1.5, outer = TRUE, side = 3)
     } else {
       data.table::setkeyv(xy.coord, c("rows", "columns"))
       ONE <- rep(1, length(x.coord))
@@ -951,11 +955,11 @@ spatial.ASReml <-
       # environment
       df <- df %>% dplyr::mutate(environment = round(fitted - mean(fitted, na.rm = T) - effect, 2))
 
-      colors <- topo.colors(100)
+      colors <- grDevices::topo.colors(100)
 
       main.legends <- c("Raw data", "Fitted data", "Residuals", "Env", "Genotype", "Histogram")
       if (all.in.one) {
-        op <- par(mfrow = c(2, 3), oma = c(ifelse(annotated, 12, 2), 1, 3, 2), mar = c(2.7, 4, 2.5, 2.5), mgp = c(1.7, 0.5, 0))
+        op <- graphics::par(mfrow = c(2, 3), oma = c(ifelse(annotated, 12, 2), 1, 3, 2), mar = c(2.7, 4, 2.5, 2.5), mgp = c(1.7, 0.5, 0))
       } else {
         if (!is.null(main)) {
           main.legends <- rep(main, length(main.legends))
@@ -969,8 +973,8 @@ spatial.ASReml <-
       fields::image.plot(columns, rows, t(matrix(df$residuals, ncol = length(columns), nrow = length(rows))), main = main.legends[3], col = colors, xlab = xlab, ylab = ylab, graphics.reset = TRUE, ...)
       fields::image.plot(columns, rows, t(matrix(df$environment, ncol = length(columns), nrow = length(rows))), main = main.legends[4], col = colors, xlab = xlab, ylab = ylab, graphics.reset = TRUE, ...)
       fields::image.plot(columns, rows, t(matrix(df$effect, ncol = length(columns), nrow = length(rows))), main = main.legends[5], col = colors, xlab = xlab, ylab = ylab, graphics.reset = TRUE)
-      suppressWarnings(hist(geno.pred$effect, main = main.legends[6], xlab = main.legends[5], ...))
-      title("")
-      mtext(main, cex = 1.5, outer = TRUE, side = 3)
+      suppressWarnings(graphics::hist(geno.pred$effect, main = main.legends[6], xlab = main.legends[5], ...))
+     graphics::title("")
+      graphics::mtext(main, cex = 1.5, outer = TRUE, side = 3)
     }
   }

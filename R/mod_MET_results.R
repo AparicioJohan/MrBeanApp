@@ -295,17 +295,17 @@ mod_MET_results_server <- function(input, output, session, model) {
     },
     content = function(file) {
       if (input$filetype == "png") {
-        png(file, width = input$png.wid.corr, height = input$png.hei.corr)
+        grDevices::png(file, width = input$png.wid.corr, height = input$png.hei.corr)
         req(model$model())
         m <- model$model()
         print(covariance_asreml(round(m$corrM, 2), corr = T, size = input$size_corr))
-        dev.off()
+        grDevices::dev.off()
       } else {
-        pdf(file, width = input$pdf.wid.corr, height = input$pdf.hei.corr)
+        grDevices::pdf(file, width = input$pdf.wid.corr, height = input$pdf.hei.corr)
         req(model$model())
         m <- model$model()
         print(covariance_asreml(round(m$corrM, 2), corr = T, size = input$size_corr))
-        dev.off()
+        grDevices::dev.off()
       }
     }
   )
@@ -318,7 +318,7 @@ mod_MET_results_server <- function(input, output, session, model) {
     content = function(file) {
       req(model$model())
       m <- model$model()
-      write.csv(m$corrM, file, row.names = TRUE)
+      utils::write.csv(m$corrM, file, row.names = TRUE)
     }
   )
 
@@ -340,17 +340,17 @@ mod_MET_results_server <- function(input, output, session, model) {
     },
     content = function(file) {
       if (input$filetype2 == "png") {
-        png(file, width = input$png.wid.cov, height = input$png.hei.cov)
+        grDevices::png(file, width = input$png.wid.cov, height = input$png.hei.cov)
         req(model$model())
         m <- model$model()
         print(covariance_asreml(round(m$vcovM, 2), corr = F, size = input$size_gmat))
-        dev.off()
+        grDevices::dev.off()
       } else {
-        pdf(file, width = input$pdf.wid.cov, height = input$pdf.hei.cov)
+        grDevices::pdf(file, width = input$pdf.wid.cov, height = input$pdf.hei.cov)
         req(model$model())
         m <- model$model()
         print(covariance_asreml(round(m$vcovM, 2), corr = F, size = input$size_gmat))
-        dev.off()
+        grDevices::dev.off()
       }
     }
   )
@@ -363,7 +363,7 @@ mod_MET_results_server <- function(input, output, session, model) {
     content = function(file) {
       req(model$model())
       m <- model$model()
-      write.csv(m$vcovM, file, row.names = TRUE)
+      utils::write.csv(m$vcovM, file, row.names = TRUE)
     }
   )
 
@@ -422,7 +422,7 @@ mod_MET_results_server <- function(input, output, session, model) {
       paste("predictions_2stage_ASReml_mrbean", ".csv", sep = "")
     },
     content = function(file) {
-      write.csv(model$model()$predictions, file, row.names = FALSE)
+      utils::write.csv(model$model()$predictions, file, row.names = FALSE)
     }
   )
 
@@ -434,7 +434,7 @@ mod_MET_results_server <- function(input, output, session, model) {
       req(model$model())
       # bl <- model$model()$predictions %>% dplyr::select(-status) %>% group_by(gen) %>% dplyr::summarise(Overall = mean(predicted.value, na.rm = T))
       bl <- model$model()$overall %>% dplyr::select(-status)
-      write.csv(bl, file, row.names = FALSE)
+      utils::write.csv(bl, file, row.names = FALSE)
     }
   )
 
@@ -660,7 +660,7 @@ mod_MET_results_server <- function(input, output, session, model) {
     },
     content = function(file) {
       if (input$filetype3 == "png") {
-        png(file, width = input$png.wid.den, height = input$png.hei.den)
+        grDevices::png(file, width = input$png.wid.den, height = input$png.hei.den)
         req(model$model())
         m <- model$model()
         corr <- m$corrM
@@ -673,9 +673,9 @@ mod_MET_results_server <- function(input, output, session, model) {
           horiz = input$horiz
         )
         print(dend)
-        dev.off()
+        grDevices::dev.off()
       } else {
-        pdf(file, width = input$pdf.wid.den, height = input$pdf.hei.den)
+        grDevices::pdf(file, width = input$pdf.wid.den, height = input$pdf.hei.den)
         req(model$model())
         m <- model$model()
         corr <- m$corrM
@@ -688,7 +688,7 @@ mod_MET_results_server <- function(input, output, session, model) {
           horiz = input$horiz
         )
         print(dend)
-        dev.off()
+        grDevices::dev.off()
       }
     }
   )
@@ -712,10 +712,10 @@ mod_MET_results_server <- function(input, output, session, model) {
         tidyr::spread(., "trial", "predicted.value") %>%
         tibble::column_to_rownames("gen")
 
-      res.pca <- prcomp(data, scale. = T)
+      res.pca <- stats::prcomp(data, scale. = T)
 
       if (input$type == "var") {
-        res.pca.non <- prcomp(data, scale. = input$scale)
+        res.pca.non <- stats::prcomp(data, scale. = input$scale)
         factoextra::fviz_pca_var(res.pca.non, col.var = "steelblue", repel = T, alpha.var = 0.2)
       } else if (input$type == "ind") {
         top <- as.numeric(input$number)
@@ -725,7 +725,7 @@ mod_MET_results_server <- function(input, output, session, model) {
           tibble::rownames_to_column("Genotypes")
         fa12_scores$Score <- sqrt(fa12_scores$PC1^2 + fa12_scores$PC2^2)
         gen <- fa12_scores %>%
-          dplyr::arrange(desc(Score)) %>%
+          dplyr::arrange(dplyr::desc(Score)) %>%
           dplyr::top_n(top) %>%
           dplyr::pull(Genotypes)
         factoextra::fviz_pca_ind(res.pca, repel = T, alpha.ind = 0.5, select.ind = list(name = gen), labelsize = 4)

@@ -108,19 +108,19 @@ mod_descrip_boxplot_server <- function(id, data, plot = 2) {
 
           } else {
             dt[, input$variablex] <- as.factor(dt[, input$variablex])
-            gra <- ggplot(
+            gra <- ggplot2::ggplot(
               dt,
-              aes_string(
+              ggplot2::aes_string(
                 x = input$variablex,
                 y = input$variabley,
                 fill = input$factor2
               )
             ) +
-              geom_boxplot() +
-              theme_bw() +
-              ggtitle("Boxplot") +
-              facet_wrap(~ .data[[input$factor2]], scales = "free_x") +
-              theme(axis.text.x = element_text(angle = 90, hjust = 1))
+              ggplot2::geom_boxplot() +
+              ggplot2::theme_bw() +
+              ggplot2::ggtitle("Boxplot") +
+              ggplot2::facet_wrap(~ .data[[input$factor2]], scales = "free_x") +
+              ggplot2::theme(axis.text.x = ggplot2::element_text(angle = 90, hjust = 1))
           }
           plotly::ggplotly(gra)
         })
@@ -132,18 +132,18 @@ mod_descrip_boxplot_server <- function(id, data, plot = 2) {
 
           } else {
             dt[, input$variablex] <- as.factor(dt[, input$variablex])
-            gra <- ggplot(
+            gra <- ggplot2::ggplot(
               dt,
-              aes_string(
+              ggplot2::aes_string(
                 x = input$variablex,
                 y = input$variabley,
                 fill = input$variablex
               )
             ) +
-              geom_boxplot() +
-              theme_bw() +
-              ggtitle("Boxplot") +
-              theme(axis.text.x = element_text(angle = 90, hjust = 1))
+              ggplot2::geom_boxplot() +
+              ggplot2::theme_bw() +
+              ggplot2::ggtitle("Boxplot") +
+              ggplot2::theme(axis.text.x = ggplot2::element_text(angle = 90, hjust = 1))
           }
           plotly::ggplotly(gra)
         })

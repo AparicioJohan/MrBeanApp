@@ -616,15 +616,15 @@ mod_MSA_results_server <- function(input, output, session, msa) {
     },
     content = function(file) {
       if (input$typefile == "png") {
-        png(file, width = input$png.wid, height = input$png.hei)
+        grDevices::png(file, width = input$png.wid, height = input$png.hei)
         spaTrend <- ifelse(input$tog_plot == TRUE, "percentage", "raw")
         plot(models()[[input$selected]], spaTrend = spaTrend, cex.lab = 1.5, cex.main = 2, cex.axis = 1.5, axis.args = list(cex.axis = 1.2))
-        dev.off()
+        grDevices::dev.off()
       } else {
-        pdf(file, width = input$pdf.wid, height = input$pdf.hei)
+        grDevices::pdf(file, width = input$pdf.wid, height = input$pdf.hei)
         spaTrend <- ifelse(input$tog_plot == TRUE, "percentage", "raw")
         plot(models()[[input$selected]], spaTrend = spaTrend, cex.lab = 1.5, cex.main = 2, cex.axis = 1.5, axis.args = list(cex.axis = 1.2))
-        dev.off()
+        grDevices::dev.off()
       }
     }
   )
@@ -638,7 +638,7 @@ mod_MSA_results_server <- function(input, output, session, msa) {
     content = function(file) {
       req(blups())
       datos <- data.frame(blups())
-      write.csv(datos, file, row.names = FALSE)
+      utils::write.csv(datos, file, row.names = FALSE)
     }
   )
 
@@ -649,7 +649,7 @@ mod_MSA_results_server <- function(input, output, session, msa) {
     content = function(file) {
       req(blups())
       datos <- data.frame(blups()[, 1:3] %>% tidyr::spread(., "Experiment", "predicted.values"))
-      write.csv(datos, file, row.names = FALSE)
+      utils::write.csv(datos, file, row.names = FALSE)
     }
   )
 
@@ -662,7 +662,7 @@ mod_MSA_results_server <- function(input, output, session, msa) {
     content = function(file) {
       req(summary_msa())
       datos <- data.frame(summary_msa())
-      write.csv(datos, file, row.names = FALSE)
+      utils::write.csv(datos, file, row.names = FALSE)
     }
   )
 
@@ -675,7 +675,7 @@ mod_MSA_results_server <- function(input, output, session, msa) {
     },
     content = function(file) {
       if (input$type == "png") {
-        png(file, width = input$png.wid.c, height = input$png.hei.c)
+        grDevices::png(file, width = input$png.wid.c, height = input$png.hei.c)
         req(blups())
         bl <- blups()
         bl <- bl[, 1:3] %>% tidyr::spread(., "Experiment", "predicted.values")
@@ -690,9 +690,9 @@ mod_MSA_results_server <- function(input, output, session, msa) {
           g1 <- ggCor(bl[, -1], colours = c("#db4437", "white", "#4285f4"))
           print(g1)
         }
-        dev.off()
+        grDevices::dev.off()
       } else {
-        pdf(file, width = input$pdf.wid.c, height = input$pdf.hei.c)
+        grDevices::pdf(file, width = input$pdf.wid.c, height = input$pdf.hei.c)
         req(blups())
         bl <- blups()
         bl <- bl[, 1:3] %>% tidyr::spread(., "Experiment", "predicted.values")
@@ -707,7 +707,7 @@ mod_MSA_results_server <- function(input, output, session, msa) {
           g1 <- ggCor(bl[, -1], colours = c("#db4437", "white", "#4285f4"))
           print(g1)
         }
-        dev.off()
+        grDevices::dev.off()
       }
     }
   )
@@ -729,7 +729,7 @@ mod_MSA_results_server <- function(input, output, session, msa) {
       }
       datos <- clean_data_SpATS(models = models())
 
-      write.csv(datos, file, row.names = FALSE)
+      utils::write.csv(datos, file, row.names = FALSE)
     }
   )
 }

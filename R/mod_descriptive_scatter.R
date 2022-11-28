@@ -106,16 +106,16 @@ mod_descrip_scatter_server <- function(id, data, plot = 1) {
           dt <- data$data()
           dt[, input$factor2] <- as.factor(dt[, input$factor2])
           if (plot == 1) {
-            gra <- ggplot(
+            gra <- ggplot2::ggplot(
               dt,
-              aes_string(
+              ggplot2::aes_string(
                 x = input$variablex,
                 y = input$variabley,
                 color = input$factor2
               )
             ) +
-              geom_point() +
-              theme_bw()
+              ggplot2::geom_point() +
+              ggplot2::theme_bw()
           } else {}
           plotly::ggplotly(gra)
         })
@@ -124,15 +124,15 @@ mod_descrip_scatter_server <- function(id, data, plot = 1) {
           dt <- data$data()
           dt[, input$factor2] <- as.factor(dt[, input$factor2])
           if (plot == 1) {
-            gra <- ggplot(
+            gra <- ggplot2::ggplot(
               dt,
-              aes_string(
+              ggplot2::aes_string(
                 x = input$variablex,
                 y = input$variabley
               )
             ) +
-              geom_point() +
-              theme_bw()
+              ggplot2::geom_point() +
+              ggplot2::theme_bw()
           } else {}
           plotly::ggplotly(gra)
         })
@@ -154,7 +154,7 @@ mod_descrip_scatter_server <- function(id, data, plot = 1) {
           req(is.numeric(x))
           req(is.numeric(y))
           C <- round(cor(x, y, use = "pairwise.complete.obs"), 3)
-          P <- round(cor.test(x, y)$p.value, 3)
+          P <- round(stats::cor.test(x, y)$p.value, 3)
           Corr <- paste("Correlation =", C, "/ p.value =", P)
           return(
             tagList(

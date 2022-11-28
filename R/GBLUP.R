@@ -169,7 +169,7 @@ GBLUPs <- function(pheno_data = NULL,
     rrblups_results <- rrblups_results %>%
       dplyr::mutate(
         phenotypic = ifelse(!is.na(level), TRUE, FALSE),
-        level = rownames(.)
+        level = rownames(.) # it was a dot .
       ) %>%
       dplyr::relocate(level, phenotypic)
   } else {
@@ -224,7 +224,7 @@ GBLUPs <- function(pheno_data = NULL,
     mix_gblups_results <- mix_gblups_results %>%
       dplyr::mutate(
         phenotypic = ifelse(!is.na(level), TRUE, FALSE),
-        level = rownames(.)
+        level = rownames(.) # it was a dot .
       ) %>%
       dplyr::relocate(level, phenotypic)
     var_comp_mix <- merge(shared, var_comp_mix, by = "trait")
@@ -330,18 +330,18 @@ marker_plot <- function(marker = NULL,
       tidyr::gather(key = "trait", value = "value", -1) %>%
       dplyr::filter(trait %in% trait_selected)
     mark_plot <- table_dt %>%
-      ggplot(
-        aes(
+      ggplot2::ggplot(
+        ggplot2::aes(
           x = marker,
           y = value^2
         )
       ) +
       {
         if (type == "point") {
-          geom_point(size = point_size, alpha = alpha)
+          ggplot2::geom_point(size = point_size, alpha = alpha)
         } else if (type == "line") {
-          geom_segment(
-            aes(
+          ggplot2::geom_segment(
+            ggplot2::aes(
               x = marker,
               xend = marker,
               y = 0,
@@ -351,20 +351,20 @@ marker_plot <- function(marker = NULL,
           )
         }
       } +
-      theme(
-        text = element_text(size = legend_size),
-        axis.text.x = element_blank(),
-        axis.ticks.x = element_blank(),
-        panel.background = element_rect(
+      ggplot2::theme(
+        text = ggplot2::element_text(size = legend_size),
+        axis.text.x = ggplot2::element_blank(),
+        axis.ticks.x = ggplot2::element_blank(),
+        panel.background = ggplot2::element_rect(
           fill = "white",
           colour = "white"
         )
       ) +
-      labs(
+      ggplot2::labs(
         x = "Marker",
         y = "Estimated Squared-Marker Effect"
       ) +
-      facet_wrap(~trait, nrow = length(trait_selected), scales = "free_y")
+      ggplot2::facet_wrap(~trait, nrow = length(trait_selected), scales = "free_y")
   } else if (num_chr > 1) {
     marker_id <- colnames(marker)[1]
     colnames(map)[1] <- marker_id
@@ -384,8 +384,8 @@ marker_plot <- function(marker = NULL,
     mark_plot <- marker_info %>%
       tidyr::gather(key = "trait", value = "value", -(1:5)) %>%
       dplyr::filter(trait %in% trait_selected) %>%
-      ggplot(
-        aes(
+      ggplot2::ggplot(
+        ggplot2::aes(
           x = BPcum,
           y = value^2,
           color = chr
@@ -393,25 +393,25 @@ marker_plot <- function(marker = NULL,
       ) +
       {
         if (type == "point") {
-          geom_point(size = point_size, alpha = alpha)
+          ggplot2::geom_point(size = point_size, alpha = alpha)
         } else if (type == "line") {
-          geom_line(alpha = alpha)
+          ggplot2::geom_line(alpha = alpha)
         }
       } +
-      theme(
-        text = element_text(size = legend_size),
-        axis.ticks.x = element_blank(),
-        panel.background = element_rect(
+      ggplot2::theme(
+        text = ggplot2::element_text(size = legend_size),
+        axis.ticks.x = ggplot2::element_blank(),
+        panel.background = ggplot2::element_rect(
           fill = "white",
           colour = "white"
         )
       ) +
-      labs(
+      ggplot2::labs(
         x = "Chr",
         y = "Estimated Squared-Marker Effect"
       ) +
-      facet_wrap(~trait, nrow = length(trait_selected), scales = "free_y") +
-      scale_x_continuous(labels = axisdf$chr, breaks = axisdf$center)
+      ggplot2::facet_wrap(~trait, nrow = length(trait_selected), scales = "free_y") +
+      ggplot2::scale_x_continuous(labels = axisdf$chr, breaks = axisdf$center)
   }
   return(mark_plot)
 }

@@ -419,7 +419,7 @@ mod_MET_FA_server <- function(input, output, session, model) {
     },
     content = function(file) {
       if (input$filetype == "png") {
-        png(file, width = input$png.wid.corr, height = input$png.hei.corr)
+        grDevices::png(file, width = input$png.wid.corr, height = input$png.hei.corr)
         req(model$model())
         req(length(grep("fa", model$model()$mod$call)) != 0)
         validate(need(input$geno_filter, message = "Please select at least one genotype."))
@@ -427,9 +427,9 @@ mod_MET_FA_server <- function(input, output, session, model) {
         gen <- input$geno_filter
         p <- latent_regress(mod, gen, input$scale, input$text_lab, input$size_text, input$alpha_text, input$alpha_p)
         print(p)
-        dev.off()
+        grDevices::dev.off()
       } else {
-        pdf(file, width = input$pdf.wid.corr, height = input$pdf.hei.corr)
+        grDevices::pdf(file, width = input$pdf.wid.corr, height = input$pdf.hei.corr)
         req(model$model())
         req(length(grep("fa", model$model()$mod$call)) != 0)
         validate(need(input$geno_filter, message = "Please select at least one genotype."))
@@ -437,7 +437,7 @@ mod_MET_FA_server <- function(input, output, session, model) {
         gen <- input$geno_filter
         p <- latent_regress(mod, gen, input$scale, input$text_lab, input$size_text, input$alpha_text, input$alpha_p)
         print(p)
-        dev.off()
+        grDevices::dev.off()
       }
     }
   )
@@ -458,7 +458,7 @@ mod_MET_FA_server <- function(input, output, session, model) {
       paste("FA_loadings_scores_mrbean", ".csv", sep = "")
     },
     content = function(file) {
-      write.csv(fa_components(), file, row.names = FALSE)
+      utils::write.csv(fa_components(), file, row.names = FALSE)
     }
   )
 
@@ -473,7 +473,7 @@ mod_MET_FA_server <- function(input, output, session, model) {
       ASM <- fa.asreml(model, trunc.char = NULL)
       ASM <- ASM$blups[[1]]$scores
       names(ASM)[c(1, 2, 4)] <- c("score", "component", "score_rotated")
-      write.csv(ASM, file, row.names = FALSE)
+      utils::write.csv(ASM, file, row.names = FALSE)
     }
   )
 
@@ -491,7 +491,7 @@ mod_MET_FA_server <- function(input, output, session, model) {
         as.data.frame() %>%
         tibble::rownames_to_column(var = "site")
       ASM$psi <- psi
-      write.csv(ASM, file, row.names = F)
+      utils::write.csv(ASM, file, row.names = F)
     }
   )
 }

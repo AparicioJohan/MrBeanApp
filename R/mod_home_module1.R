@@ -86,7 +86,7 @@ mod_home_module1_ui <- function(id) {
           actionLink(
             inputId = ns("toAwesome3"),
             label = "Lme4",
-            icon = icon("bar-chart-o", verify_fa = FALSE),
+            icon = icon("chart-column", verify_fa = FALSE),
             style = "color: #d9534f"
           ),
           br()

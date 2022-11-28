@@ -381,7 +381,7 @@ mod_aug_model_server <- function(input, output, session, data) {
         D.opt = formattable::color_tile("orange", "white")(D.opt),
         pvalue = formattable::color_tile("white", "orange")(pvalue),
       ) %>%
-      dplyr::select(MODEL, everything()) %>%
+      dplyr::select(MODEL, dplyr::everything()) %>%
       kableExtra::kable(escape = F, align = "c") %>%
       kableExtra::kable_styling(c("hover", "responsive", "condensed"), full_width = T, position = "center")
   }
@@ -517,14 +517,14 @@ mod_aug_model_server <- function(input, output, session, data) {
       req(model_selected())
       model <- model_selected()$mod
       # DATA <- data.frame(model$mf)
-      # DATA$residuals <- residuals(model)
+      # DATA$residuals <-stats::residuals(model)
       # DATA$col <- as.numeric(DATA$col)
       # DATA$row <- as.numeric(DATA$row)
       # ic <- which(names(DATA)=="col")
       # ir <- which(names(DATA)=="row")
       # ix <- which(names(DATA)=="residuals")
       # DATA <- geoR::as.geodata(DATA, coords.col = c(ic,ir),  data.col = ix)
-      # par(mfrow=c(1,2))
+      # graphics::par(mfrow=c(1,2))
       # var1 = geoR::variog(DATA, max.dist=1000)
       # plot(var1)
       # env.var = geoR::variog.mc.env(DATA, obj.v=var1, nsim=100)
@@ -541,13 +541,13 @@ mod_aug_model_server <- function(input, output, session, data) {
     },
     content = function(file) {
       if (input$typefile == "png") {
-        png(file, width = input$png.wid, height = input$png.hei)
+        grDevices::png(file, width = input$png.wid, height = input$png.hei)
         augment.SpATS(model_selected()$mod, col = "col", row = "row", response = "resp")
-        dev.off()
+        grDevices::dev.off()
       } else {
-        pdf(file, width = input$pdf.wid, height = input$pdf.hei)
+        grDevices::pdf(file, width = input$pdf.wid, height = input$pdf.hei)
         augment.SpATS(model_selected()$mod, col = "col", row = "row", response = "resp")
-        dev.off()
+        grDevices::dev.off()
       }
     }
   )
