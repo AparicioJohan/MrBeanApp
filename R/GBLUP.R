@@ -3,12 +3,14 @@
 #' @param pheno_data data.frame with phenotypic data
 #' @param geno_matrix data.frame with first column identifying the genotype names
 #'  and the rest containing marker information in format (-1, 0 , 1).
-#' @param genoype string with the genotype name
+#' @param genotype string with the genotype name
 #' @param traits vector with the traits to be analyzed
 #' @param method "GBLUP", "rrBLUP" or "mix" ("mix" in progress)
 #'
 #' @return List with GBLUPs, variance components and marker effects.
 #'  list(results, var_comp, markers)
+#'  
+#' @importFrom stats cor reformulate dt
 #'
 #' @export
 #'
@@ -89,7 +91,7 @@ GBLUPs <- function(pheno_data = NULL,
     K <- sommer::A.mat(geno_matrix)
     colnames(K) <- rownames(K) <- rownames(geno_matrix)
     for (var in traits) {
-      equation <- reformulate("1", response = var)
+      equation <- stats::reformulate("1", response = var)
       GBLUP <- sommer::mmer(
         equation,
         random = ~ sommer::vsr(level, Gu = K),
@@ -121,7 +123,7 @@ GBLUPs <- function(pheno_data = NULL,
       gblups_results[, "GEBVs"] <- coefficients
       gblups_results[, "standard.error"] <- sqrt(PEV)
       gblups_results[, "reliability"] <- 1 - PEV / c(var_g)
-      corr <- cor(
+      corr <- stats::cor(
         x = gblups_results$observed,
         y = gblups_results$predicted.value, 
         use = "pairwise.complete.obs"
@@ -148,7 +150,7 @@ GBLUPs <- function(pheno_data = NULL,
     )
     for (var in traits) {
       trn_geno_matrix <- geno_matrix[gen_in_common[[var]], ]
-      equation <- reformulate("1", response = var)
+      equation <- stats::reformulate("1", response = var)
       rrBLUP <- sommer::mmer(
         equation,
         random = ~ sommer::vsr(list(trn_geno_matrix), buildGu = FALSE),
@@ -167,7 +169,7 @@ GBLUPs <- function(pheno_data = NULL,
     rrblups_results <- rrblups_results %>%
       dplyr::mutate(
         phenotypic = ifelse(!is.na(level), TRUE, FALSE),
-        level = rownames(.)
+        level = rownames(.) # it was a dot .
       ) %>%
       dplyr::relocate(level, phenotypic)
   } else {
@@ -204,7 +206,7 @@ GBLUPs <- function(pheno_data = NULL,
       var_markers <- t(M) %*% MMT_inv %*% (var_g) %*% t(MMT_inv) %*% M
       se_markers <- sqrt(diag(var_markers))
       t_stat_from_g <- markers / se_markers
-      pval_GBLUP <- dt(t_stat_from_g, df = n - k - 1)
+      pval_GBLUP <- stats::dt(t_stat_from_g, df = n - k - 1)
       
       id <- names(gblup)
       intercept <- mixGBLUP$Beta$Estimate
@@ -222,7 +224,7 @@ GBLUPs <- function(pheno_data = NULL,
     mix_gblups_results <- mix_gblups_results %>%
       dplyr::mutate(
         phenotypic = ifelse(!is.na(level), TRUE, FALSE),
-        level = rownames(.)
+        level = rownames(.) # it was a dot .
       ) %>%
       dplyr::relocate(level, phenotypic)
     var_comp_mix <- merge(shared, var_comp_mix, by = "trait")
@@ -328,18 +330,18 @@ marker_plot <- function(marker = NULL,
       tidyr::gather(key = "trait", value = "value", -1) %>%
       dplyr::filter(trait %in% trait_selected)
     mark_plot <- table_dt %>%
-      ggplot(
-        aes(
+      ggplot2::ggplot(
+        ggplot2::aes(
           x = marker,
           y = value^2
         )
       ) +
       {
         if (type == "point") {
-          geom_point(size = point_size, alpha = alpha)
+          ggplot2::geom_point(size = point_size, alpha = alpha)
         } else if (type == "line") {
-          geom_segment(
-            aes(
+          ggplot2::geom_segment(
+            ggplot2::aes(
               x = marker,
               xend = marker,
               y = 0,
@@ -349,20 +351,20 @@ marker_plot <- function(marker = NULL,
           )
         }
       } +
-      theme(
-        text = element_text(size = legend_size),
-        axis.text.x = element_blank(),
-        axis.ticks.x = element_blank(),
-        panel.background = element_rect(
+      ggplot2::theme(
+        text = ggplot2::element_text(size = legend_size),
+        axis.text.x = ggplot2::element_blank(),
+        axis.ticks.x = ggplot2::element_blank(),
+        panel.background = ggplot2::element_rect(
           fill = "white",
           colour = "white"
         )
       ) +
-      labs(
+      ggplot2::labs(
         x = "Marker",
         y = "Estimated Squared-Marker Effect"
       ) +
-      facet_wrap(~trait, nrow = length(trait_selected), scales = "free_y")
+      ggplot2::facet_wrap(~trait, nrow = length(trait_selected), scales = "free_y")
   } else if (num_chr > 1) {
     marker_id <- colnames(marker)[1]
     colnames(map)[1] <- marker_id
@@ -382,8 +384,8 @@ marker_plot <- function(marker = NULL,
     mark_plot <- marker_info %>%
       tidyr::gather(key = "trait", value = "value", -(1:5)) %>%
       dplyr::filter(trait %in% trait_selected) %>%
-      ggplot(
-        aes(
+      ggplot2::ggplot(
+        ggplot2::aes(
           x = BPcum,
           y = value^2,
           color = chr
@@ -391,25 +393,25 @@ marker_plot <- function(marker = NULL,
       ) +
       {
         if (type == "point") {
-          geom_point(size = point_size, alpha = alpha)
+          ggplot2::geom_point(size = point_size, alpha = alpha)
         } else if (type == "line") {
-          geom_line(alpha = alpha)
+          ggplot2::geom_line(alpha = alpha)
         }
       } +
-      theme(
-        text = element_text(size = legend_size),
-        axis.ticks.x = element_blank(),
-        panel.background = element_rect(
+      ggplot2::theme(
+        text = ggplot2::element_text(size = legend_size),
+        axis.ticks.x = ggplot2::element_blank(),
+        panel.background = ggplot2::element_rect(
           fill = "white",
           colour = "white"
         )
       ) +
-      labs(
+      ggplot2::labs(
         x = "Chr",
         y = "Estimated Squared-Marker Effect"
       ) +
-      facet_wrap(~trait, nrow = length(trait_selected), scales = "free_y") +
-      scale_x_continuous(label = axisdf$chr, breaks = axisdf$center)
+      ggplot2::facet_wrap(~trait, nrow = length(trait_selected), scales = "free_y") +
+      ggplot2::scale_x_continuous(labels = axisdf$chr, breaks = axisdf$center)
   }
   return(mark_plot)
 }

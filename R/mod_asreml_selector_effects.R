@@ -277,16 +277,21 @@ mod_asreml_selector_effects_server <- function(input, output, session, model) {
 
     isolate({
       BLUPS <- BLUPS()
-      q <- ggplot(BLUPS, aes(x = gen, y = predicted.value))
+      q <- ggplot2::ggplot(BLUPS, 
+        ggplot2::aes(x = gen, y = predicted.value)
+        )
       v <- as.character(BLUPS[order(BLUPS[, "predicted.value"], decreasing = TRUE), 1])
 
       p <- q +
-        geom_point(size = 1) +
-        geom_errorbar(aes(ymax = upper, ymin = lower)) +
-        theme_bw() +
-        geom_hline(yintercept = mean(BLUPS[, "predicted.value"]), linetype = 2, color = "red") +
-        theme(axis.title.x = element_blank(), axis.text.x = element_blank(), axis.ticks.x = element_blank()) +
-        scale_x_discrete(limits = v)
+        ggplot2::geom_point(size = 1) +
+        ggplot2::geom_errorbar(ggplot2::aes(ymax = upper, ymin = lower)) +
+        ggplot2::theme_bw() +
+        ggplot2::geom_hline(yintercept = mean(BLUPS[, "predicted.value"]), linetype = 2, color = "red") +
+        ggplot2::theme(
+          axis.title.x = ggplot2::element_blank(), 
+          axis.text.x = ggplot2::element_blank(), 
+          axis.ticks.x = ggplot2::element_blank()) +
+        ggplot2::scale_x_discrete(limits = v)
       isolate(plotly::ggplotly(p))
     })
   })
@@ -307,7 +312,7 @@ mod_asreml_selector_effects_server <- function(input, output, session, model) {
       paste("effects_ASReml_Model_mrbean", ".csv", sep = "")
     },
     content = function(file) {
-      write.csv(BLUPS(), file, row.names = FALSE)
+      utils::write.csv(BLUPS(), file, row.names = FALSE)
     }
   )
 
@@ -376,14 +381,14 @@ mod_asreml_selector_effects_server <- function(input, output, session, model) {
       req(fit_mod())
       model <- fit_mod()$mod
       # DATA <- data.frame(model$mf)
-      # DATA$residuals <- residuals(model, spatial =  ifelse(input$swicht2, "plot", "trend"))
+      # DATA$residuals <-stats::residuals(model, spatial =  ifelse(input$swicht2, "plot", "trend"))
       # DATA$col <- as.numeric(DATA$col)
       # DATA$row <- as.numeric(DATA$row)
       # ic <- which(names(DATA)=="col")
       # ir <- which(names(DATA)=="row")
       # ix <- which(names(DATA)=="residuals")
       # DATA <- geoR::as.geodata(DATA, coords.col = c(ic,ir),  data.col = ix)
-      # par(mfrow=c(1,2))
+      # graphics::par(mfrow=c(1,2))
       # var1 = geoR::variog(DATA, max.dist=1000)
       # plot(var1)
       # env.var = geoR::variog.mc.env(DATA, obj.v=var1, nsim=100)
@@ -404,13 +409,13 @@ mod_asreml_selector_effects_server <- function(input, output, session, model) {
     },
     content = function(file) {
       if (input$typefile == "png") {
-        png(file, width = input$png.wid, height = input$png.hei)
+        grDevices::png(file, width = input$png.wid, height = input$png.hei)
         spatial.ASReml(fit_mod()$mod, col = "col", row = "row", response = "resp", genotype = "gen")
-        dev.off()
+        grDevices::dev.off()
       } else {
-        pdf(file, width = input$pdf.wid, height = input$pdf.hei)
+        grDevices::pdf(file, width = input$pdf.wid, height = input$pdf.hei)
         spatial.ASReml(fit_mod()$mod, col = "col", row = "row", response = "resp", genotype = "gen")
-        dev.off()
+        grDevices::dev.off()
       }
     }
   )
@@ -436,7 +441,7 @@ mod_asreml_selector_effects_server <- function(input, output, session, model) {
       colnames(gfit) <- c("MODEL", "n.VC", "logL", "AIC", "BIC", "herit-PEV", "herit-VC", "A-opt", "D-opt")
       gfit <- data.frame(gfit)
       gfit %>%
-        dplyr::select(MODEL, everything()) %>%
+        dplyr::select(MODEL, dplyr::everything()) %>%
         kableExtra::kable(escape = F, align = "c") %>%
         kableExtra::kable_styling(c("hover", "responsive", "condensed"), full_width = T, position = "center")
     })

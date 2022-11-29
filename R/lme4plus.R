@@ -7,7 +7,7 @@ VarG <- function(model, comp) {
 
 VarE <- function(model) {
   if (class(model) == "lm") {
-    v <- sigma(model)^2
+    v <- stats::sigma(model)^2
   } else {
     v <- as.data.frame(VarCorr(model))
     v <- v[v$grp == "Residual", "vcov"]
@@ -27,7 +27,7 @@ ran <- function(var) {
   return(effect)
 }
 
-
+#' @importFrom stats as.formula
 lme4_single <- function(data,
                         response,
                         genotype,
@@ -135,7 +135,7 @@ lme4_single <- function(data,
         Modelo <- lmerTest::lmer(equation, data = dt)
       } else {
         equation <- reformulate(c("Gen", "Replicate", "Replicate:Block", covariate), response = "Response")
-        Modelo <- lm(equation, data = dt)
+        Modelo <- stats::lm(equation, data = dt)
       }
       Modelo
     } else if (model == 2) {
@@ -145,7 +145,7 @@ lme4_single <- function(data,
         Modelo <- lmerTest::lmer(equation, data = dt)
       } else {
         equation <- reformulate(c("Gen", "Replicate", covariate), response = "Response")
-        Modelo <- lm(equation, data = dt)
+        Modelo <- stats::lm(equation, data = dt)
       }
       Modelo
     } else if (model == 3) {
@@ -159,7 +159,7 @@ lme4_single <- function(data,
       equation <- as.formula(paste0(response, " ~ ", gen, formula))
       ind <- sum(grepl("(", equation, fixed = TRUE)) == 0
       if (ind) {
-        Modelo <- try(lm(formula = equation, data = dt), silent = TRUE)
+        Modelo <- try(stats::lm(formula = equation, data = dt), silent = TRUE)
       } else {
         Modelo <- try(lmerTest::lmer(formula = equation, data = dt), silent = TRUE)
       }
@@ -176,7 +176,7 @@ lme4_single <- function(data,
       Modelo
     } else if (model == 4) { # CRD
       equation <- reformulate(c("Gen", covariate), response = "Response")
-      Modelo <- lm(equation, data = dt)
+      Modelo <- stats::lm(equation, data = dt)
     } else if (model == 5) {
       dt$col_f <- as.factor(dt[, col])
       dt$row_f <- as.factor(dt[, row])
@@ -203,7 +203,7 @@ lme4_single <- function(data,
       }
       ind <- sum(grepl("(", equation, fixed = TRUE)) == 0
       if (ind) {
-        Modelo <- lm(formula = equation, data = dt)
+        Modelo <- stats::lm(formula = equation, data = dt)
       } else {
         Modelo <- lmerTest::lmer(formula = equation, data = dt)
       }
@@ -221,7 +221,7 @@ lme4_effects <- function(model, genotype, res_ran, model_class) {
       BLUPS <- ranef(model)[[genotype]] + mean(model@frame[[1]], na.rm = T)
       BLUPS <- data.frame(as.factor(row.names(BLUPS)), BLUPS[, 1])
       colnames(BLUPS) <- c("Genotype", "Effect")
-      BLUPS <- dplyr::arrange(BLUPS, desc(Effect))
+      BLUPS <- dplyr::arrange(BLUPS, dplyr::desc(Effect))
       BLUPS <- data.frame(BLUPS[, 1], round(BLUPS[, 2], 2))
       names(BLUPS) <- c("Line", "BLUPs")
       d <- broom.mixed::augment(ranef(model))
@@ -233,7 +233,7 @@ lme4_effects <- function(model, genotype, res_ran, model_class) {
       BLUPS <- ranef(model)[["Gen"]] + mean(model@frame[[1]], na.rm = T)
       BLUPS <- data.frame(as.factor(row.names(BLUPS)), BLUPS[, 1])
       colnames(BLUPS) <- c("Genotype", "Effect")
-      BLUPS <- dplyr::arrange(BLUPS, desc(Effect))
+      BLUPS <- dplyr::arrange(BLUPS, dplyr::desc(Effect))
       BLUPS <- data.frame(BLUPS[, 1], round(BLUPS[, 2], 2))
       names(BLUPS) <- c("Line", "BLUPs")
       d <- broom.mixed::augment(ranef(model))
@@ -254,7 +254,7 @@ lme4_effects <- function(model, genotype, res_ran, model_class) {
         BLUES
       } else {
         BLUES <- data.frame(lmerTest::ls_means(model, genotype))
-        BLUES <- dplyr::arrange(BLUES, desc(Estimate))
+        BLUES <- dplyr::arrange(BLUES, dplyr::desc(Estimate))
         BLUES <- BLUES %>%
           dplyr::mutate_if(is.numeric, round, digits = 2) %>%
           dplyr::select(levels, Estimate, "Std..Error", lower, upper)
@@ -271,7 +271,7 @@ lme4_effects <- function(model, genotype, res_ran, model_class) {
         BLUES
       } else {
         BLUES <- data.frame(lmerTest::ls_means(model, "Gen")) # "Gen"  fue cambiado por input$genotipo2
-        BLUES <- dplyr::arrange(BLUES, desc(Estimate))
+        BLUES <- dplyr::arrange(BLUES, dplyr::desc(Estimate))
         BLUES <- BLUES %>%
           dplyr::mutate_if(is.numeric, round, digits = 2) %>%
           dplyr::select(levels, Estimate, "Std..Error", lower, upper)
@@ -287,13 +287,13 @@ lme4_effects <- function(model, genotype, res_ran, model_class) {
 res_data_lme4 <- function(Model) {
   if (class(Model) == "lm") {
     Data <- Model$model
-    VarE <- sigma(Model)^2
+    VarE <- stats::sigma(Model)^2
   } else {
     Data <- Model@frame
     VarE <- VarE(Model)
   }
-  Data$Index <- 1:length(residuals(Model))
-  Data$Residuals <- residuals(Model)
+  Data$Index <- 1:length(stats::residuals(Model))
+  Data$Residuals <- stats::residuals(Model)
   u <- +3 * sqrt(VarE)
   l <- -3 * sqrt(VarE)
   Data$Classify <- NA
@@ -301,7 +301,7 @@ res_data_lme4 <- function(Model) {
   Data$Classify[which(abs(Data$Residuals) < u)] <- "Normal"
   Data$l <- l
   Data$u <- u
-  Data$fit <- fitted.values(Model)
+  Data$fit <- stats::fitted.values(Model)
   return(Data)
 }
 

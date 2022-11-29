@@ -922,12 +922,12 @@ mod_M_traits_server <- function(input, output, session, data) {
       names(data)[1] <- "gen"
       data <- data %>%
         tibble::column_to_rownames("gen") %>%
-        na.omit()
+        stats::na.omit()
 
-      res.pca <- prcomp(data, scale. = T)
+      res.pca <- stats::prcomp(data, scale. = T)
 
       if (input$typep == "var") {
-        res.pca.non <- prcomp(data, scale. = input$scale)
+        res.pca.non <- stats::prcomp(data, scale. = input$scale)
         factoextra::fviz_pca_var(
           res.pca.non,
           col.var = "steelblue",
@@ -942,7 +942,7 @@ mod_M_traits_server <- function(input, output, session, data) {
           tibble::rownames_to_column("Genotypes")
         fa12_scores$Score <- sqrt(fa12_scores$PC1^2 + fa12_scores$PC2^2)
         gen <- fa12_scores %>%
-          dplyr::arrange(desc(Score)) %>%
+          dplyr::arrange(dplyr::desc(Score)) %>%
           dplyr::top_n(top) %>%
           dplyr::pull(Genotypes)
         factoextra::fviz_pca_ind(
@@ -1257,7 +1257,7 @@ mod_M_traits_server <- function(input, output, session, data) {
     },
     content = function(file) {
       if (input$filetype3 == "png") {
-        png(file, width = input$png.wid.den, height = input$png.hei.den)
+        grDevices::png(file, width = input$png.wid.den, height = input$png.hei.den)
         req(blups())
         data <- blups()
         data <- data[, 1:3] %>% tidyr::spread(., "Trait", "predicted.values")
@@ -1273,9 +1273,9 @@ mod_M_traits_server <- function(input, output, session, data) {
           horiz = input$horiz
         )
         print(dend)
-        dev.off()
+        grDevices::dev.off()
       } else {
-        pdf(file, width = input$pdf.wid.den, height = input$pdf.hei.den)
+        grDevices::pdf(file, width = input$pdf.wid.den, height = input$pdf.hei.den)
         req(blups())
         data <- blups()
         data <- data[, 1:3] %>% tidyr::spread(., "Trait", "predicted.values")
@@ -1291,7 +1291,7 @@ mod_M_traits_server <- function(input, output, session, data) {
           horiz = input$horiz
         )
         print(dend)
-        dev.off()
+        grDevices::dev.off()
       }
     }
   )
@@ -1340,7 +1340,7 @@ mod_M_traits_server <- function(input, output, session, data) {
     content = function(file) {
       req(blups())
       datos <- data.frame(blups())
-      write.csv(datos, file, row.names = FALSE)
+      utils::write.csv(datos, file, row.names = FALSE)
     }
   )
 
@@ -1353,7 +1353,7 @@ mod_M_traits_server <- function(input, output, session, data) {
       datos <- data.frame(
         blups()[, 1:3] %>% tidyr::spread(., "Trait", "predicted.values")
       )
-      write.csv(datos, file, row.names = FALSE)
+      utils::write.csv(datos, file, row.names = FALSE)
     }
   )
 
@@ -1369,7 +1369,7 @@ mod_M_traits_server <- function(input, output, session, data) {
       resum <- msa_table(Models, gen_ran = input$res_ran, k = input$k_clean_out)
       names(resum)[1] <- "Trait"
       dt <- resum %>% dplyr::mutate_if(is.numeric, round, 3)
-      write.csv(dt, file, row.names = FALSE)
+      utils::write.csv(dt, file, row.names = FALSE)
     }
   )
 
@@ -1382,7 +1382,7 @@ mod_M_traits_server <- function(input, output, session, data) {
     },
     content = function(file) {
       if (input$typefile == "png") {
-        png(file, width = input$png.wid, height = input$png.hei)
+        grDevices::png(file, width = input$png.wid, height = input$png.hei)
         spaTrend <- ifelse(input$tog_plot == TRUE, "percentage", "raw")
         plot(
           Modelo()[[input$selected]], 
@@ -1392,9 +1392,9 @@ mod_M_traits_server <- function(input, output, session, data) {
           cex.axis = 1.5, 
           axis.args = list(cex.axis = 1.2)
         )
-        dev.off()
+        grDevices::dev.off()
       } else {
-        pdf(file, width = input$pdf.wid, height = input$pdf.hei)
+        grDevices::pdf(file, width = input$pdf.wid, height = input$pdf.hei)
         spaTrend <- ifelse(input$tog_plot == TRUE, "percentage", "raw")
         plot(
           Modelo()[[input$selected]],
@@ -1404,7 +1404,7 @@ mod_M_traits_server <- function(input, output, session, data) {
           cex.axis = 1.5, 
           axis.args = list(cex.axis = 1.2)
         )
-        dev.off()
+        grDevices::dev.off()
       }
     }
   )
@@ -1418,7 +1418,7 @@ mod_M_traits_server <- function(input, output, session, data) {
     },
     content = function(file) {
       if (input$type == "png") {
-        png(file, width = input$png.wid.c, height = input$png.hei.c)
+        grDevices::png(file, width = input$png.wid.c, height = input$png.hei.c)
         bl <- blups()
         bl <- bl[, 1:3] %>% tidyr::spread(., "Trait", "predicted.values")
         validate(
@@ -1440,9 +1440,9 @@ mod_M_traits_server <- function(input, output, session, data) {
           g1 <- ggCor(bl[, -1], colours = c("#db4437", "white", "#4285f4"))
           print(g1)
         }
-        dev.off()
+        grDevices::dev.off()
       } else {
-        pdf(file, width = input$pdf.wid.c, height = input$pdf.hei.c)
+        grDevices::pdf(file, width = input$pdf.wid.c, height = input$pdf.hei.c)
         bl <- blups()
         bl <- bl[, 1:3] %>% tidyr::spread(., "Trait", "predicted.values")
         validate(
@@ -1464,7 +1464,7 @@ mod_M_traits_server <- function(input, output, session, data) {
           g1 <- ggCor(bl[, -1], colours = c("#db4437", "white", "#4285f4"))
           print(g1)
         }
-        dev.off()
+        grDevices::dev.off()
       }
     }
   )

@@ -241,45 +241,45 @@ mod_distribution_server <- function(input, output, session, data) {
     dt <- data$data()
     if (is.numeric(dt[, input$Id088])) {
       if ((input$Id088f) == "" | !isTRUE(input$factor_hist)) {
-        ggplot(dt, aes_string(x = input$Id088)) +
-          geom_histogram(
-            aes(y = ..density..),
+        ggplot2::ggplot(dt, ggplot2::aes_string(x = input$Id088)) +
+          ggplot2::geom_histogram(
+            ggplot2::aes(y = ggplot2::after_stat(density)),
             alpha = input$alphagg,
             na.rm = TRUE,
             bins = input$binwidth
           ) +
-          theme_bw() +
-          geom_density(alpha = input$alphagD, na.rm = TRUE)
+          ggplot2::theme_bw() +
+          ggplot2::geom_density(alpha = input$alphagD, na.rm = TRUE)
       } else {
         dt[, input$Id088f] <- as.factor(dt[, input$Id088f])
-        p <- ggplot(
+        p <- ggplot2::ggplot(
           dt,
-          aes_string(
+          ggplot2::aes_string(
             x = input$Id088,
             fill = input$Id088f,
             color = input$Id088f
           )
         ) +
-          geom_histogram(
-            aes(y = ..density..),
+          ggplot2::geom_histogram(
+            ggplot2::aes(y = ggplot2::after_stat(density)),
             alpha = input$alphagg,
             position = "identity",
             na.rm = TRUE,
             bins = input$binwidth
           ) +
-          theme_bw() +
-          geom_density(alpha = input$alphagD, na.rm = TRUE)
+          ggplot2::theme_bw() +
+          ggplot2::geom_density(alpha = input$alphagD, na.rm = TRUE)
         if (isTRUE(input$Facewrap)) {
-          p + facet_wrap(~ .data[[input$Id088f]])
+          p + ggplot2::facet_wrap(~ .data[[input$Id088f]])
         } else {
           p
         }
       }
     } else {
-      ggplot(dt, aes_string(x = input$Id088)) +
-        geom_bar(na.rm = TRUE) +
-        theme_bw() +
-        coord_flip()
+      ggplot2::ggplot(dt, ggplot2::aes_string(x = input$Id088)) +
+        ggplot2::geom_bar(na.rm = TRUE) +
+        ggplot2::theme_bw() +
+        ggplot2::coord_flip()
     }
   })
 
@@ -296,59 +296,59 @@ mod_distribution_server <- function(input, output, session, data) {
       dt <- data$data()
       if (is.numeric(dt[, input$Id088])) {
         if ((input$Id088f) == "" | !isTRUE(input$factor_hist)) {
-          p <- ggplot(dt, aes_string(x = input$Id088)) +
-            geom_histogram(
-              aes(y = ..density..),
+          p <- ggplot2::ggplot(dt, ggplot2::aes_string(x = input$Id088)) +
+            ggplot2::geom_histogram(
+              ggplot2::aes(y = ggplot2::after_stat(density)),
               alpha = input$alphagg,
               na.rm = TRUE,
               bins = input$binwidth
             ) +
-            theme_bw() +
-            geom_density(alpha = input$alphagD, na.rm = TRUE)
+            ggplot2::theme_bw() +
+            ggplot2::geom_density(alpha = input$alphagD, na.rm = TRUE)
         } else {
           dt[, input$Id088f] <- as.factor(dt[, input$Id088f])
-          p <- ggplot(
+          p <- ggplot2::ggplot(
             dt,
-            aes_string(
+            ggplot2::aes_string(
               x = input$Id088,
               fill = input$Id088f,
               color = input$Id088f
             )
           ) +
-            geom_histogram(
-              aes(y = ..density..),
+            ggplot2::geom_histogram(
+              ggplot2::aes(y = ggplot2::after_stat(density)),
               alpha = input$alphagg,
               position = "identity",
               na.rm = TRUE,
               bins = input$binwidth
             ) +
-            theme_bw() +
-            geom_density(alpha = input$alphagD, na.rm = TRUE)
+            ggplot2::theme_bw() +
+            ggplot2::geom_density(alpha = input$alphagD, na.rm = TRUE)
           if (isTRUE(input$Facewrap)) {
-            p <- p + facet_wrap(~ .data[[input$Id088f]])
+            p <- p + ggplot2::facet_wrap(~ .data[[input$Id088f]])
           } else {
             p
           }
         }
       } else {
-        p <- ggplot(
+        p <- ggplot2::ggplot(
           dt,
-          aes_string(
+          ggplot2::aes_string(
             x = input$Id088
           )
         ) +
-          geom_bar(na.rm = TRUE) +
-          theme_bw() +
-          coord_flip()
+          ggplot2::geom_bar(na.rm = TRUE) +
+          ggplot2::theme_bw() +
+          ggplot2::coord_flip()
       }
       if (input$typefileDes == "png") {
-        png(file, width = input$png.wid.d, height = input$png.hei.d)
+        grDevices::png(file, width = input$png.wid.d, height = input$png.hei.d)
         print(p)
-        dev.off()
+        grDevices::dev.off()
       } else {
-        pdf(file, width = input$pdf.wid.d, height = input$pdf.hei.d)
+        grDevices::pdf(file, width = input$pdf.wid.d, height = input$pdf.hei.d)
         print(p)
-        dev.off()
+        grDevices::dev.off()
       }
     }
   )

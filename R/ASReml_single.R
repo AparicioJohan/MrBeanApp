@@ -76,6 +76,10 @@ spatial.single <- function(data = NULL, gen = NULL, block = NULL, ibk = NULL, ro
                            add.block = FALSE, add.ibk = FALSE, add.row = FALSE, add.col = FALSE,
                            add.spl.row = FALSE, add.spl.col = FALSE, add.cov1 = FALSE, add.cov2 = FALSE,
                            add.nugget = FALSE, type.gen = "random", type.block = "fixed", type.residual = "ar1") {
+  
+  if (!requireNamespace("asreml", quietly = TRUE)) {
+    stop("The package asreml is not loaded.")
+  }
   asreml::asreml.options(trace = FALSE)
   n <- nrow(data)
   if (n == 0) {
@@ -240,7 +244,7 @@ spatial.single <- function(data = NULL, gen = NULL, block = NULL, ibk = NULL, ro
 
   # Obtaining predictions for models (and ANOVA)
   aov <- asreml::wald.asreml(mod.ref, denDF = "algebraic", ssType = "incremental")$Wald
-  preds <- predict(mod.ref, classify = "gen", vcov = TRUE)
+  preds <- asreml::predict.asreml(mod.ref, classify = "gen", vcov = TRUE)
   # Obtaining solutions (only random)
   if (type.gen == "fixed") {
     sols <- NULL

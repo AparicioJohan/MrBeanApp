@@ -18,6 +18,8 @@ R.square <- function(Model) {
 #' Coefficient of Variation SpATS
 #'
 #' @param Model SpATS object
+#' 
+#' @importFrom stats median
 #'
 #' @return a numeric value
 #' @noRd
@@ -42,7 +44,7 @@ CV.spats <- function(Model) {
 res_data <- function(Model, k = 3) {
   dt <- Model$data
   VarE <- Model$psi[1]
-  Data <- data.frame(Index = 1:length(residuals(Model)), Residuals = residuals(Model))
+  Data <- data.frame(Index = 1:length(stats::residuals(Model)), Residuals = stats::residuals(Model))
   u <- +k * sqrt(VarE)
   l <- -k * sqrt(VarE)
   Data$Classify <- NA
@@ -53,7 +55,7 @@ res_data <- function(Model, k = 3) {
   Data$gen <- dt[, Model$model$geno$genotype]
   Data$col <- dt[, Model$terms$spatial$terms.formula$x.coord]
   Data$row <- dt[, Model$terms$spatial$terms.formula$y.coord]
-  Data$fit <- fitted.values(Model)
+  Data$fit <- stats::fitted.values(Model)
   Data$response <- dt[, Model$model$response]
   return(Data)
 }
@@ -66,13 +68,13 @@ res_data <- function(Model, k = 3) {
 #' @noRd
 res_index <- function(data_out) {
   k <- dplyr::filter(data_out, !is.na(Classify)) %>%
-    ggplot(aes(x = Index, y = Residuals, color = Classify)) +
-    geom_point(size = 2, alpha = 0.5, na.rm = T) +
-    theme_bw() +
-    scale_color_manual(values = c("grey80", "red")) +
-    geom_hline(yintercept = data_out$u, color = "red") +
-    geom_hline(yintercept = data_out$l, color = "red") +
-    geom_hline(yintercept = 0, linetype = "dashed")
+    ggplot2::ggplot(ggplot2::aes(x = Index, y = Residuals, color = Classify)) +
+    ggplot2::geom_point(size = 2, alpha = 0.5, na.rm = T) +
+    ggplot2::theme_bw() +
+    ggplot2::scale_color_manual(values = c("grey80", "red")) +
+    ggplot2::geom_hline(yintercept = data_out$u, color = "red") +
+    ggplot2::geom_hline(yintercept = data_out$l, color = "red") +
+    ggplot2::geom_hline(yintercept = 0, linetype = "dashed")
   plotly::ggplotly(k)
 }
 
@@ -84,10 +86,10 @@ res_index <- function(data_out) {
 #' @noRd
 res_map <- function(data_out) {
   k <- dplyr::filter(data_out, !is.na(Classify)) %>%
-    ggplot(aes(x = col, y = row, color = Classify)) +
-    geom_point(size = 2, na.rm = T) +
-    theme_bw() +
-    scale_color_manual(values = c("grey80", "red"))
+    ggplot2::ggplot(ggplot2::aes(x = col, y = row, color = Classify)) +
+    ggplot2::geom_point(size = 2, na.rm = T) +
+    ggplot2::theme_bw() +
+    ggplot2::scale_color_manual(values = c("grey80", "red"))
   plotly::ggplotly(k)
 }
 
@@ -99,12 +101,12 @@ res_map <- function(data_out) {
 #' @noRd
 res_fitted <- function(data_out) {
   k <- dplyr::filter(data_out, !is.na(Classify)) %>%
-    ggplot(aes(x = fit, y = Residuals, color = Classify)) +
-    geom_point(size = 2, alpha = 0.5, na.rm = T) +
-    theme_bw() +
-    scale_color_manual(values = c("grey80", "red")) +
-    xlab("Fitted Values") +
-    geom_hline(yintercept = 0, linetype = "dashed")
+    ggplot2::ggplot(ggplot2::aes(x = fit, y = Residuals, color = Classify)) +
+    ggplot2::geom_point(size = 2, alpha = 0.5, na.rm = T) +
+    ggplot2::theme_bw() +
+    ggplot2::scale_color_manual(values = c("grey80", "red")) +
+    ggplot2::xlab("Fitted Values") +
+    ggplot2::geom_hline(yintercept = 0, linetype = "dashed")
   plotly::ggplotly(k)
 }
 
@@ -119,7 +121,7 @@ res_qqplot <- function(data_out) {
     ggpubr::ggqqplot(
       x = "Residuals",
       fill = "Classify",
-      ggtheme = theme_bw(),
+      ggtheme = ggplot2::theme_bw(),
       ylab = "Sample Quantile",
       xlab = "Theoretical Quantile"
     )
@@ -133,13 +135,13 @@ res_qqplot <- function(data_out) {
 #' @return plotly object
 #' @noRd
 res_hist <- function(data_out) {
-  hi <- hist(data_out[, "Residuals"], plot = FALSE)
+  hi <- graphics::hist(data_out[, "Residuals"], plot = FALSE)
   br <- hi$breaks
-  p <- ggplot(data_out, aes(x = Residuals)) +
-    geom_histogram(aes(y = ..density..), alpha = 0.8, breaks = c(br), na.rm = T) +
-    theme_bw() +
-    geom_density(alpha = 0.5, na.rm = T) +
-    geom_vline(xintercept = c(data_out$u, data_out$l), linetype = 2, color = "red")
+  p <- ggplot2::ggplot(data_out, ggplot2::aes(x = Residuals)) +
+    ggplot2::geom_histogram(ggplot2::aes(y = ggplot2::after_stat(density)), alpha = 0.8, breaks = c(br), na.rm = T) +
+    ggplot2::theme_bw() +
+    ggplot2::geom_density(alpha = 0.5, na.rm = T) +
+    ggplot2::geom_vline(xintercept = c(data_out$u, data_out$l), linetype = 2, color = "red")
   plotly::ggplotly(p)
 }
 
@@ -151,6 +153,8 @@ res_hist <- function(data_out) {
 #'  FALSE by default
 #'
 #' @return data.frame or a lsd value depending on the data.frame argument
+#' 
+#' @importFrom stats median qt
 #' @export
 #'
 #' @examples
@@ -180,8 +184,8 @@ LSD <- function(model, alpha = 0.05, data.frame = FALSE) {
     df <- n_obs - sum(model$eff.dim)
     n_reps <- model$terms$geno$geno_dim
     names(n_reps) <- model$terms$geno$geno_names
-    ns <- median(n_reps)
-    t_value <- qt(p = 1 - (alpha / 2), df = df)
+    ns <- stats::median(n_reps)
+    t_value <- stats::qt(p = 1 - (alpha / 2), df = df)
     lsd <- t_value * sqrt(var_E * (1 / ns + 1 / ns))
     if (data.frame) {
       DT <- data.frame(
@@ -204,20 +208,20 @@ LSD <- function(model, alpha = 0.05, data.frame = FALSE) {
 
 res_compare <- function(Model, variable, factor) {
   data <- Model$data
-  data$Residuals <- residuals(Model)
-  data <- type.convert(data, as.is = FALSE)
+  data$Residuals <-stats::residuals(Model)
+  data <- utils::type.convert(data, as.is = FALSE)
   req(variable)
   label <- class(data[, variable])
   if (factor) {
     data[, variable] <- as.factor(data[, variable])
-    p <- ggplot(data, aes_string(x = variable, y = "Residuals", fill = variable)) +
-      geom_boxplot(na.rm = T) +
-      theme_bw()
+    p <- ggplot2::ggplot(data, ggplot2::aes_string(x = variable, y = "Residuals", fill = variable)) +
+      ggplot2::geom_boxplot(na.rm = T) +
+      ggplot2::theme_bw()
   } else {
     data[, variable] <- as.numeric(data[, variable])
-    p <- ggplot(data, aes_string(x = variable, y = "Residuals")) +
-      geom_point(size = 2, alpha = 0.5, color = "grey80", na.rm = T) +
-      theme_bw()
+    p <- ggplot2::ggplot(data, ggplot2::aes_string(x = variable, y = "Residuals")) +
+      ggplot2::geom_point(size = 2, alpha = 0.5, color = "grey80", na.rm = T) +
+      ggplot2::theme_bw()
   }
   plotly::ggplotly(p)
 }
@@ -236,7 +240,7 @@ check_gen_SpATS <- function(gen, data, check_gen = c("ci", "st", "wa")) {
   return(data)
 }
 
-
+#' @importFrom stats as.formula
 SpATS_mrbean <- function(data = NULL, 
                          response = "",
                          genotype = "",
@@ -492,7 +496,7 @@ gen_share <- function(data = NULL, genotype = "line", exp = "Exp", response = NA
     message("columns not found in the data")
     return()
   }
-  data <- type.convert(data, as.is = FALSE)
+  data <- utils::type.convert(data, as.is = FALSE)
   data[, genotype] <- as.factor(data[, genotype])
   data[, exp] <- as.factor(data[, exp])
   if (!is.na(response)) data <- data[!is.na(data[, response]), ]
@@ -538,7 +542,7 @@ dup_check <- function(data, experiment, column, row) {
 res_raw_data <- function(Model, k = 3) {
   dt <- Model$data
   VarE <- Model$psi[1]
-  Data <- data.frame(Index = 1:length(residuals(Model)), Residuals = residuals(Model))
+  Data <- data.frame(Index = 1:length(stats::residuals(Model)), Residuals =stats::residuals(Model))
   u <- +k * sqrt(VarE)
   l <- -k * sqrt(VarE)
   Data$Classify <- NA
@@ -561,7 +565,7 @@ VarG_msa <- function(model) {
     return(vargen)
   } else {
     # pred <- predict(model,which = gen)[,"predicted.values"]
-    # CV <- round(sd(pred)/mean(pred),3)
+    # CV <- round(stats::sd(pred)/mean(pred),3)
     # names(CV) <- "CV"
     CV <- NA
     return(CV)
@@ -606,9 +610,9 @@ msa_effects <- function(model) {
 
   ind <- sum(grepl("checks", model$model$fixed, fixed = TRUE)) != 0
   if (ind) {
-    PP <- predict(model, which = gen, predFixed = "marginal") %>% dplyr::select(.data[[gen]], predicted.values, standard.errors)
+    PP <- SpATS::predict.SpATS(model, which = gen, predFixed = "marginal") %>% dplyr::select(.data[[gen]], predicted.values, standard.errors)
     PP$type <- "test"
-    PC <- predict(model, which = "checks", predFixed = "marginal") %>% dplyr::select(checks, predicted.values, standard.errors)
+    PC <- SpATS::predict.SpATS(model, which = "checks", predFixed = "marginal") %>% dplyr::select(checks, predicted.values, standard.errors)
     PC <- PC[PC$checks != "_NoCheck", ]
     PC$type <- "check"
     names(PC)[1] <- gen
@@ -616,7 +620,7 @@ msa_effects <- function(model) {
       dplyr::mutate_if(is.numeric, round, 3) %>%
       data.frame()
   } else {
-    effects <- predict(model, which = gen, predFixed = "marginal")[, c(gen, "predicted.values", "standard.errors")] %>%
+    effects <- SpATS::predict.SpATS(model, which = gen, predFixed = "marginal")[, c(gen, "predicted.values", "standard.errors")] %>%
       dplyr::mutate_if(is.numeric, round, 3) %>%
       data.frame()
   }
@@ -659,7 +663,7 @@ weight_SpATS <- function(model) {
   gen_mat <- colnames(model$vcov$C11_inv)
 
   genotype <- model$model$geno$genotype
-  dt <- predict(model, which = genotype, predFixed = "marginal") %>%
+  dt <- SpATS::predict.SpATS(model, which = genotype, predFixed = "marginal") %>%
     droplevels() %>%
     dplyr::mutate_if(is.numeric, round, 3)
   gen_lvls <- as.factor(unique(as.character(dt[, genotype])))
@@ -686,13 +690,15 @@ weight_SpATS <- function(model) {
   ))
 }
 
+
+#' @importFrom stats pchisq
 Lik.ratio.test <- function(Model_nested, Model_full) {
   lo.lik1 <- Model_nested / -2
   lo.lik2 <- Model_full / -2
 
   d <- 2 * (lo.lik2 - lo.lik1)
 
-  p.value1 <- round(1 - pchisq(d, 1), 3)
+  p.value1 <- round(1 - stats::pchisq(d, 1), 3)
 
   siglevel <- 0
   if (abs(p.value1) < 0.05) {
@@ -811,10 +817,10 @@ varComp <- function(object, which = "variances") {
   object$p.table.dim <- m
   class(object) <- "summary.SpATS"
 
-  v_name <- as.character(na.omit(row.names(vc)))
+  v_name <- as.character(stats::na.omit(row.names(vc)))
   vc <- vc %>%
     as.data.frame() %>%
-    type.convert(as.is = FALSE) %>%
+    utils::type.convert(as.is = FALSE) %>%
     dplyr::mutate_if(is.numeric, round, 3)
 
   vc <- vc[-c(nrow(vc) - 1), ]
@@ -926,7 +932,7 @@ ggCor <-
       x$row <- factor(x$row, levels = rev(colnames(myData)))
 
       # Remove NAs
-      x <- na.omit(x)
+      x <- stats::na.omit(x)
     })
 
     # Combine both dataframes with p values and corr coefficients
@@ -990,17 +996,17 @@ ggCor <-
       return(cors)
     }
 
-    require(ggplot2)
+    # require(ggplot2)
 
-    p <- ggplot(data = cors, aes(x = col, y = row, fill = name.x)) +
-      geom_tile(color = "gray") +
-      labs(x = NULL, y = NULL) +
-      theme_minimal(base_size = 16) +
-      geom_text(aes(x = col, y = row, label = label), color = cors$txtCol, size = size_text) +
-      scale_fill_gradient2(low = colours[1], mid = colours[2], high = colours[3]) +
-      theme(
-        axis.text.x = element_text(angle = 40, hjust = 1), legend.position = "none",
-        panel.grid.minor.x = element_blank(), panel.grid.major = element_blank()
+    p <- ggplot2::ggplot(data = cors, ggplot2::aes(x = col, y = row, fill = name.x)) +
+      ggplot2::geom_tile(color = "gray") +
+      ggplot2::labs(x = NULL, y = NULL) +
+      ggplot2::theme_minimal(base_size = 16) +
+      ggplot2::geom_text(ggplot2::aes(x = col, y = row, label = label), color = cors$txtCol, size = size_text) +
+      ggplot2::scale_fill_gradient2(low = colours[1], mid = colours[2], high = colours[3]) +
+      ggplot2::theme(
+        axis.text.x = ggplot2::element_text(angle = 40, hjust = 1), legend.position = "none",
+        panel.grid.minor.x = ggplot2::element_blank(), panel.grid.major = ggplot2::element_blank()
       )
 
     return(p)
@@ -1039,14 +1045,14 @@ summ_complete <- function(data, grp = "", var) {
           N.Valid = rapportools::nvalid(.data[[var]], na.rm = TRUE),
           Pct.Valid = N.Valid * 100 / dplyr::n(),
           Mean = mean(.data[[var]], na.rm = TRUE),
-          Std.Dev = sd(.data[[var]], na.rm = TRUE),
+          Std.Dev = stats::sd(.data[[var]], na.rm = TRUE),
           Min = min(.data[[var]], na.rm = TRUE),
-          Q1 = quantile(.data[[var]], probs = 0.25, type = 2, names = FALSE, na.rm = TRUE),
-          Median = median(.data[[var]], na.rm = TRUE),
-          Q3 = quantile(.data[[var]], probs = 0.75, type = 2, names = FALSE, na.rm = TRUE),
+          Q1 = stats::quantile(.data[[var]], probs = 0.25, type = 2, names = FALSE, na.rm = TRUE),
+          Median = stats::median(.data[[var]], na.rm = TRUE),
+          Q3 = stats::quantile(.data[[var]], probs = 0.75, type = 2, names = FALSE, na.rm = TRUE),
           Max = max(.data[[var]], na.rm = TRUE),
-          MAD = mad(.data[[var]], na.rm = TRUE),
-          IQR = IQR(.data[[var]], na.rm = TRUE),
+          MAD = stats::mad(.data[[var]], na.rm = TRUE),
+          IQR = stats::IQR(.data[[var]], na.rm = TRUE),
           CV = Std.Dev / Mean,
           Skewness = rapportools::skewness(.data[[var]], na.rm = TRUE),
           SE.Skewness = sqrt((6 * N.Valid * (N.Valid - 1)) / ((N.Valid - 2) * (N.Valid + 1) * (N.Valid + 3))),
@@ -1059,14 +1065,14 @@ summ_complete <- function(data, grp = "", var) {
           N.Valid = rapportools::nvalid(.data[[var]], na.rm = TRUE),
           Pct.Valid = N.Valid * 100 / dplyr::n(),
           Mean = mean(.data[[var]], na.rm = TRUE),
-          Std.Dev = sd(.data[[var]], na.rm = TRUE),
+          Std.Dev = stats::sd(.data[[var]], na.rm = TRUE),
           Min = min(.data[[var]], na.rm = TRUE),
-          Q1 = quantile(.data[[var]], probs = 0.25, type = 2, names = FALSE, na.rm = TRUE),
-          Median = median(.data[[var]], na.rm = TRUE),
-          Q3 = quantile(.data[[var]], probs = 0.75, type = 2, names = FALSE, na.rm = TRUE),
+          Q1 = stats::quantile(.data[[var]], probs = 0.25, type = 2, names = FALSE, na.rm = TRUE),
+          Median = stats::median(.data[[var]], na.rm = TRUE),
+          Q3 = stats::quantile(.data[[var]], probs = 0.75, type = 2, names = FALSE, na.rm = TRUE),
           Max = max(.data[[var]], na.rm = TRUE),
-          MAD = mad(.data[[var]], na.rm = TRUE),
-          IQR = IQR(.data[[var]], na.rm = TRUE),
+          MAD = stats::mad(.data[[var]], na.rm = TRUE),
+          IQR = stats::IQR(.data[[var]], na.rm = TRUE),
           CV = Std.Dev / Mean,
           Skewness = rapportools::skewness(.data[[var]], na.rm = TRUE),
           SE.Skewness = sqrt((6 * N.Valid * (N.Valid - 1)) / ((N.Valid - 2) * (N.Valid + 1) * (N.Valid + 3))),

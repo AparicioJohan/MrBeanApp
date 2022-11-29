@@ -85,17 +85,17 @@ app_ui <- function(request) {
             bs4SidebarMenuSubItem(
               text = "Model Specs",
               tabName = "modelo",
-              icon = shiny::icon("circle-thin", verify_fa = FALSE)
+              icon = shiny::icon("circle", verify_fa = FALSE)
             ),
             bs4SidebarMenuSubItem(
               text = "BLUPs/BLUEs",
               tabName = "blupspat",
-              icon = shiny::icon("circle-thin", verify_fa = FALSE)
+              icon = shiny::icon("circle", verify_fa = FALSE)
             ),
             bs4SidebarMenuSubItem(
               text = "Residuals",
               tabName = "resispat",
-              icon = shiny::icon("circle-thin", verify_fa = FALSE)
+              icon = shiny::icon("circle", verify_fa = FALSE)
             )
           ),
           # Multiple-single analysis
@@ -106,12 +106,12 @@ app_ui <- function(request) {
             bs4SidebarMenuSubItem(
               text = "Model Specs",
               tabName = "msa",
-              icon = shiny::icon("circle-thin", verify_fa = FALSE)
+              icon = shiny::icon("circle", verify_fa = FALSE)
             ),
             bs4SidebarMenuSubItem(
               text = "Results",
               tabName = "msa_result",
-              icon = shiny::icon("circle-thin", verify_fa = FALSE)
+              icon = shiny::icon("circle", verify_fa = FALSE)
             )
           ),
           # Multiple trait
@@ -122,7 +122,7 @@ app_ui <- function(request) {
             bs4SidebarMenuSubItem(
               text = "Model Specs",
               tabName = "multi_trait",
-              icon = shiny::icon("circle-thin", verify_fa = FALSE)
+              icon = shiny::icon("circle", verify_fa = FALSE)
             )
           ),
           bs4SidebarHeader("ASReml"),
@@ -134,12 +134,12 @@ app_ui <- function(request) {
             bs4SidebarMenuSubItem(
               text = "Model Specs",
               tabName = "spats_asreml",
-              icon = shiny::icon("circle-thin", verify_fa = FALSE)
+              icon = shiny::icon("circle", verify_fa = FALSE)
             ),
             bs4SidebarMenuSubItem(
               text = "BLUPs/BLUEs",
               tabName = "spats_asreml_effects",
-              icon = shiny::icon("circle-thin", verify_fa = FALSE)
+              icon = shiny::icon("circle", verify_fa = FALSE)
             )
           ),
           # Un-replicated analysis
@@ -150,12 +150,12 @@ app_ui <- function(request) {
             bs4SidebarMenuSubItem(
               text = "Model Specs",
               tabName = "aug_model",
-              icon = shiny::icon("circle-thin", verify_fa = FALSE)
+              icon = shiny::icon("circle", verify_fa = FALSE)
             ),
             bs4SidebarMenuSubItem(
               text = "BLUPs/BLUEs",
               tabName = "aug_result",
-              icon = shiny::icon("circle-thin", verify_fa = FALSE)
+              icon = shiny::icon("circle", verify_fa = FALSE)
             )
           ),
           # Model selector
@@ -174,7 +174,7 @@ app_ui <- function(request) {
                 )
               ),
               tabName = "asreml_selector",
-              icon = shiny::icon("circle-thin", verify_fa = FALSE)
+              icon = shiny::icon("circle", verify_fa = FALSE)
             ),
             bs4SidebarMenuSubItem(
               HTML(
@@ -187,7 +187,7 @@ app_ui <- function(request) {
                 )
               ),
               tabName = "asr_sel_selected",
-              icon = shiny::icon("circle-thin", verify_fa = FALSE)
+              icon = shiny::icon("circle", verify_fa = FALSE)
             )
           ),
           bs4SidebarHeader("Two-Stage Analysis"),
@@ -207,7 +207,7 @@ app_ui <- function(request) {
                 )
               ),
               tabName = "met",
-              icon = shiny::icon("circle-thin", verify_fa = FALSE)
+              icon = shiny::icon("circle", verify_fa = FALSE)
             ),
             bs4SidebarMenuSubItem(
               HTML(
@@ -220,7 +220,7 @@ app_ui <- function(request) {
                 )
               ),
               tabName = "met_result",
-              icon = shiny::icon("circle-thin", verify_fa = FALSE)
+              icon = shiny::icon("circle", verify_fa = FALSE)
             ),
             bs4SidebarMenuSubItem(
               HTML(
@@ -233,7 +233,7 @@ app_ui <- function(request) {
                 )
               ),
               tabName = "met_fa",
-              icon = shiny::icon("circle-thin", verify_fa = FALSE)
+              icon = shiny::icon("circle", verify_fa = FALSE)
             )
           ),
           # GBLUP
@@ -253,7 +253,7 @@ app_ui <- function(request) {
                 )
               ),
               tabName = "gblup",
-              icon = shiny::icon("circle-thin", verify_fa = FALSE)
+              icon = shiny::icon("circle", verify_fa = FALSE)
             ),
             bs4SidebarMenuSubItem(
               HTML(
@@ -266,7 +266,7 @@ app_ui <- function(request) {
                 )
               ),
               tabName = "gblup_results",
-              icon = shiny::icon("circle-thin", verify_fa = FALSE)
+              icon = shiny::icon("circle", verify_fa = FALSE)
             )
           ),
           bs4SidebarHeader("Traditional Designs"),
@@ -278,12 +278,12 @@ app_ui <- function(request) {
             bs4SidebarMenuSubItem(
               text = "Model Specs",
               tabName = "mixed",
-              icon = shiny::icon("circle-thin", verify_fa = FALSE)
+              icon = shiny::icon("circle", verify_fa = FALSE)
             ),
             bs4SidebarMenuSubItem(
               text = "BLUPs/BLUEs",
               tabName = "boxes",
-              icon = shiny::icon("circle-thin", verify_fa = FALSE)
+              icon = shiny::icon("circle", verify_fa = FALSE)
             )
           ),
           bs4SidebarHeader("About"),
@@ -445,7 +445,7 @@ app_ui <- function(request) {
           actionLink(
             inputId = "toAwesome33",
             label = "About",
-            icon = icon("bar-chart-o", verify_fa = FALSE)
+            icon = icon("chart-column", verify_fa = FALSE)
           ),
           br()
         ),

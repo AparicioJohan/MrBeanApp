@@ -552,7 +552,7 @@ mod_spats_single_server <- function(input, output, session, data) {
       paste("coeff_SpATS_Model_mrbean", ".csv", sep = "")
     },
     content = function(file) {
-      write.csv(co.spats(), file, row.names = FALSE)
+      utils::write.csv(co.spats(), file, row.names = FALSE)
     }
   )
 
@@ -620,7 +620,7 @@ mod_spats_single_server <- function(input, output, session, data) {
       paste("effects_SpATS_Model_mrbean", ".csv", sep = "")
     },
     content = function(file) {
-      write.csv(blup(), file, row.names = FALSE)
+      utils::write.csv(blup(), file, row.names = FALSE)
     }
   )
   

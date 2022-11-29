@@ -46,14 +46,14 @@ data_react <- function(file = NULL,
           )
         )
       } else {
-        dt <- read.csv(
+        dt <- utils::read.csv(
           file = inFile$datapath,
           header = header,
           sep = sep
         )
         if (miss == "Other") {
           P <- string
-          dt <- read.csv(
+          dt <- utils::read.csv(
             file = inFile$datapath,
             header = header,
             sep = sep,

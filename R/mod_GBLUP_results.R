@@ -140,9 +140,9 @@ mod_GBLUP_results_server <- function(id, gblup) {
           v <- as.character(BLUPS[order(BLUPS[, indx], decreasing = TRUE), 2])
           lvls_type <- length(unique(BLUPS$type))
           if (lvls_type >= 2) {
-            q <- ggplot(
+            q <- ggplot2::ggplot(
               BLUPS,
-              aes(
+              ggplot2::aes(
                 x = Line,
                 y = GBLUP, 
                 color = type, 
@@ -150,9 +150,9 @@ mod_GBLUP_results_server <- function(id, gblup) {
               )
             )
           } else {
-            q <- ggplot(
+            q <- ggplot2::ggplot(
               BLUPS, 
-              aes(
+              ggplot2::aes(
                 x = Line,
                 y = GBLUP,
                 label = reliability
@@ -160,24 +160,24 @@ mod_GBLUP_results_server <- function(id, gblup) {
             )
           }
           p <- q +
-            geom_point(size = 1) +
-            geom_errorbar(aes(ymax = Ls, ymin = Lu)) +
-            geom_hline(
+            ggplot2::geom_point(size = 1) +
+            ggplot2::geom_errorbar(ggplot2::aes(ymax = Ls, ymin = Lu)) +
+            ggplot2::geom_hline(
               yintercept = mean(BLUPS[, 3]), 
               linetype = 2, 
               color = "grey"
             ) +
-            theme(
-              axis.title.x = element_blank(), 
-              axis.text.x = element_blank(),
-              axis.ticks.x = element_blank(),
-              panel.background = element_rect(
+            ggplot2::theme(
+              axis.title.x = ggplot2::element_blank(), 
+              axis.text.x = ggplot2::element_blank(),
+              axis.ticks.x = ggplot2::element_blank(),
+              panel.background = ggplot2::element_rect(
                 fill = "white",
                 colour = "white"
               )
             ) +
-            ylab(names(BLUPS)[3]) +
-            scale_x_discrete(limits = v)
+            ggplot2::ylab(names(BLUPS)[3]) +
+            ggplot2::scale_x_discrete(limits = v)
           plotly::ggplotly(p)
         },
         error = function(e) {

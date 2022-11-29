@@ -775,7 +775,7 @@ mod_GBLUP_server <- function(id) {
       content = function(file) {
         req(modelo())
         datos <- data.frame(modelo()$var_comp$GBLUP)
-        write.csv(datos, file, row.names = FALSE)
+        utils::write.csv(datos, file, row.names = FALSE)
       }
     )
 
@@ -855,7 +855,7 @@ mod_GBLUP_server <- function(id) {
       content = function(file) {
         req(modelo())
         datos <- data.frame(modelo()$results$GBLUP)
-        write.csv(datos, file, row.names = TRUE)
+        utils::write.csv(datos, file, row.names = TRUE)
       }
     )
 
@@ -889,7 +889,7 @@ mod_GBLUP_server <- function(id) {
       content = function(file) {
         req(modelo())
         datos <- data.frame(modelo()$markers$rrBLUP)
-        write.csv(datos, file, row.names = TRUE)
+        utils::write.csv(datos, file, row.names = TRUE)
       }
     )
 
@@ -954,13 +954,13 @@ mod_GBLUP_server <- function(id) {
         ) +
           ggtitle("Genotypic Correlation")
         if (input$type == "png") {
-          png(file, width = input$png.wid.c, height = input$png.hei.c)
+          grDevices::png(file, width = input$png.wid.c, height = input$png.hei.c)
           print(gg)
-          dev.off()
+          grDevices::dev.off()
         } else {
-          pdf(file, width = input$pdf.wid.c, height = input$pdf.hei.c)
+          grDevices::pdf(file, width = input$pdf.wid.c, height = input$pdf.hei.c)
           print(gg)
-          dev.off()
+          grDevices::dev.off()
         }
       }
     )
@@ -1185,13 +1185,13 @@ mod_GBLUP_server <- function(id) {
           }
         )
         if (input$filetype3 == "png") {
-          png(file, width = input$png.wid.den, height = input$png.hei.den)
+          grDevices::png(file, width = input$png.wid.den, height = input$png.hei.den)
           print(dend)
-          dev.off()
+          grDevices::dev.off()
         } else {
-          pdf(file, width = input$pdf.wid.den, height = input$pdf.hei.den)
+          grDevices::pdf(file, width = input$pdf.wid.den, height = input$pdf.hei.den)
           print(dend)
-          dev.off()
+          grDevices::dev.off()
         }
       }
     )
@@ -1207,22 +1207,22 @@ mod_GBLUP_server <- function(id) {
             dplyr::select(type, level, observed, predicted.value)
 
           plot_corr <- BLUPS %>%
-            ggplot(
-              aes(
+            ggplot2::ggplot(
+              ggplot2::aes(
                 x = observed,
                 y = predicted.value
               )
             ) +
-            geom_point(
+            ggplot2::geom_point(
               alpha = input$alpha,
               size = input$point_size,
               color = "grey"
             ) +
-            theme_bw(base_size = input$legend_size) +
-            labs(x = "Observed", y = "Predicted") +
+            ggplot2::theme_bw(base_size = input$legend_size) +
+            ggplot2::labs(x = "Observed", y = "Predicted") +
             ggpubr::stat_cor(size = input$point_size) +
-            geom_smooth(method = "lm", se = FALSE) +
-            coord_fixed()
+            ggplot2::geom_smooth(method = "lm", se = FALSE) +
+            ggplot2::coord_fixed()
           plot_corr
         },
         error = function(e) {
@@ -1300,21 +1300,21 @@ mod_GBLUP_server <- function(id) {
             dplyr::filter(trait %in% trait_selected) %>%
             dplyr::select(type, level, predicted.value, reliability)
           plot_corr <- table_dt %>%
-            ggplot(
-              aes(
+            ggplot2::ggplot(
+              ggplot2::aes(
                 x = reliability,
                 y = predicted.value,
                 color = type,
                 label = level
               )
             ) +
-            geom_point(
+            ggplot2::geom_point(
               alpha = input$alpha_rel,
               size = input$point_size_rel
             ) +
-            theme_bw(base_size = input$legend_size_rel) +
-            labs(x = "Reliability", y = "Predicted") +
-            geom_vline(xintercept = 0, linetype = 2, color = "grey")
+            ggplot2::theme_bw(base_size = input$legend_size_rel) +
+            ggplot2::labs(x = "Reliability", y = "Predicted") +
+            ggplot2::geom_vline(xintercept = 0, linetype = 2, color = "grey")
           plot_corr
           plotly::ggplotly(plot_corr)
         },
@@ -1408,9 +1408,9 @@ mod_GBLUP_server <- function(id) {
           tibble::column_to_rownames("level")
         tryCatch(
           {
-            res.pca <- prcomp(data, scale. = T)
+            res.pca <- stats::prcomp(data, scale. = T)
             if (input$type_plot == "var") {
-              res.pca.non <- prcomp(data, scale. = input$scale)
+              res.pca.non <- stats::prcomp(data, scale. = input$scale)
               factoextra::fviz_pca_var(
                 res.pca.non,
                 col.var = "steelblue",
@@ -1428,7 +1428,7 @@ mod_GBLUP_server <- function(id) {
                 tibble::rownames_to_column("Genotypes")
               fa12_scores$Score <- sqrt(fa12_scores$PC1^2 + fa12_scores$PC2^2)
               gen <- fa12_scores %>%
-                dplyr::arrange(desc(Score)) %>%
+                dplyr::arrange(dplyr::desc(Score)) %>%
                 dplyr::top_n(top) %>%
                 dplyr::pull(Genotypes)
               factoextra::fviz_pca_ind(
@@ -1751,7 +1751,7 @@ mod_GBLUP_server <- function(id) {
             )
           }
         )
-        write.table(
+        utils::write.table(
           ds,
           file = file,
           quote = FALSE, 

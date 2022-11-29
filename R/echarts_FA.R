@@ -1,8 +1,8 @@
 
 
-fa.asreml <- function(object, uniplot = F, uniplot.tol = 0.85, uniplot.cex = 0.5,
-                      trunc.char = c(1, 6), blups = TRUE, regplot = F, addedplot = F,
-                      g.list = NULL, heatmap = F, heatmap.ord = "asis", agnes.method = "average") {
+fa.asreml <- function(object, uniplot = FALSE, uniplot.tol = 0.85, uniplot.cex = 0.5,
+                      trunc.char = c(1, 6), blups = TRUE, regplot = FALSE, addedplot = FALSE,
+                      g.list = NULL, heatmap = FALSE, heatmap.ord = "asis", agnes.method = "average") {
   fa.var <- function(fat) {
     unlist(lapply(fat, function(x) {
       if (x$Fun == "fa") {
@@ -212,97 +212,98 @@ fa.asreml <- function(object, uniplot = F, uniplot.tol = 0.85, uniplot.cex = 0.5
     if (k == 1) {
       uniplot <- FALSE
     }
-    if (uniplot) {
-      bp.main <- names(faterms)[nt]
-      if (k == 2) {
-        uniplot.lst[[nt]] <- lattice::xyplot(Lamc[, 1] ~ Lamc[
-          ,
-          2
-        ],
-        xlim = c(-1.1, 1.1), ylim = c(-1.1, 1.1),
-        asp = "s", xlab = "Loading 2", ylab = "Loading 1",
-        main = bp.main, panel = function(x, y, subscripts,
-                                         sn, tol, lcex, ...) {
-          panel.curve(sqrt(1 - x^2), from = -1, to = 1)
-          panel.curve(-sqrt(1 - x^2), from = -1, to = 1)
-          ne <- length(sn)
-          radius <- sqrt(x * x + y * y)
-          lcol <- rep("blue", ne)
-          ltyp <- rep(1, ne)
-          llwd <- rep(1.5, ne)
-          lcol[radius < tol] <- "red"
-          ltyp[radius < tol] <- 3
-          llwd[radius < tol] <- 1
-          panel.segments(rep(0, ne), rep(0, ne), x,
-            y,
-            lty = ltyp, col = lcol, lwd = llwd
-          )
-          ltext(x, y, sn,
-            cex = lcex, col = lcol,
-            srt = 45
-          )
-        }, sn = sn, tol = uniplot.tol, lcex = uniplot.cex
-        )
-      } else {
-        tmp <- vector(mode = "list", length = k * (k -
-          1) / 2)
-        natmp <- character(0)
-        for (i in seq(1, k - 1)) {
-          for (j in seq(i + 1, k)) {
-            natmp <- c(natmp, paste("Ld", i, j, sep = ""))
-            tmp[[(i - 1) * (k - 1) + (j - i)]] <- lattice::xyplot(Lamc[
-              ,
-              i
-            ] ~ Lamc[, j],
-            xlim = c(-1.1, 1.1), ylim = c(
-              -1.1,
-              1.1
-            ), asp = "s", xlab = paste(
-              "Loading",
-              j
-            ), ylab = paste("Loading", i), main = bp.main,
-            panel = function(x, y, subscripts, sn,
-                             tol, lcex, ...) {
-              panel.curve(sqrt(1 - x^2),
-                from = -1,
-                to = 1
-              )
-              panel.curve(-sqrt(1 - x^2),
-                from = -1,
-                to = 1
-              )
-              ne <- length(sn)
-              radius <- sqrt(x * x + y * y)
-              lcol <- rep("blue", ne)
-              ltyp <- rep(1, ne)
-              llwd <- rep(1.5, ne)
-              lcol[radius < tol] <- "red"
-              ltyp[radius < tol] <- 3
-              llwd[radius < tol] <- 1
-              panel.segments(rep(0, ne), rep(0, ne),
-                x, y,
-                lty = ltyp, col = lcol, lwd = llwd
-              )
-              ltext(x, y, sn,
-                cex = lcex, col = lcol,
-                srt = 45
-              )
-            }, sn = sn, tol = uniplot.tol, lcex = uniplot.cex
-            )
-          }
-        }
-        names(tmp) <- natmp
-        uniplot.lst[[nt]] <- tmp
-      }
-    }
+    # if (uniplot) {
+    #   bp.main <- names(faterms)[nt]
+    #   if (k == 2) {
+    #     uniplot.lst[[nt]] <- lattice::xyplot(Lamc[, 1] ~ Lamc[
+    #       ,
+    #       2
+    #     ],
+    #     xlim = c(-1.1, 1.1), ylim = c(-1.1, 1.1),
+    #     asp = "s", xlab = "Loading 2", ylab = "Loading 1",
+    #     main = bp.main, panel = function(x, y, subscripts,
+    #                                      sn, tol, lcex, ...) {
+    #       panel.curve(sqrt(1 - x^2), from = -1, to = 1)
+    #       panel.curve(-sqrt(1 - x^2), from = -1, to = 1)
+    #       ne <- length(sn)
+    #       radius <- sqrt(x * x + y * y)
+    #       lcol <- rep("blue", ne)
+    #       ltyp <- rep(1, ne)
+    #       llwd <- rep(1.5, ne)
+    #       lcol[radius < tol] <- "red"
+    #       ltyp[radius < tol] <- 3
+    #       llwd[radius < tol] <- 1
+    #       panel.segments(rep(0, ne), rep(0, ne), x,
+    #         y,
+    #         lty = ltyp, col = lcol, lwd = llwd
+    #       )
+    #       ltext(x, y, sn,
+    #         cex = lcex, col = lcol,
+    #         srt = 45
+    #       )
+    #     }, sn = sn, tol = uniplot.tol, lcex = uniplot.cex
+    #     )
+    #   } else {
+    #     tmp <- vector(mode = "list", length = k * (k -
+    #       1) / 2)
+    #     natmp <- character(0)
+    #     for (i in seq(1, k - 1)) {
+    #       for (j in seq(i + 1, k)) {
+    #         natmp <- c(natmp, paste("Ld", i, j, sep = ""))
+    #         tmp[[(i - 1) * (k - 1) + (j - i)]] <- lattice::xyplot(Lamc[
+    #           ,
+    #           i
+    #         ] ~ Lamc[, j],
+    #         xlim = c(-1.1, 1.1), ylim = c(
+    #           -1.1,
+    #           1.1
+    #         ), asp = "s", xlab = paste(
+    #           "Loading",
+    #           j
+    #         ), ylab = paste("Loading", i), main = bp.main,
+    #         panel = function(x, y, subscripts, sn,
+    #                          tol, lcex, ...) {
+    #           panel.curve(sqrt(1 - x^2),
+    #             from = -1,
+    #             to = 1
+    #           )
+    #           panel.curve(-sqrt(1 - x^2),
+    #             from = -1,
+    #             to = 1
+    #           )
+    #           ne <- length(sn)
+    #           radius <- sqrt(x * x + y * y)
+    #           lcol <- rep("blue", ne)
+    #           ltyp <- rep(1, ne)
+    #           llwd <- rep(1.5, ne)
+    #           lcol[radius < tol] <- "red"
+    #           ltyp[radius < tol] <- 3
+    #           llwd[radius < tol] <- 1
+    #           panel.segments(rep(0, ne), rep(0, ne),
+    #             x, y,
+    #             lty = ltyp, col = lcol, lwd = llwd
+    #           )
+    #           ltext(x, y, sn,
+    #             cex = lcex, col = lcol,
+    #             srt = 45
+    #           )
+    #         }, sn = sn, tol = uniplot.tol, lcex = uniplot.cex
+    #         )
+    #       }
+    #     }
+    #     names(tmp) <- natmp
+    #     uniplot.lst[[nt]] <- tmp
+    #   }
+    # }
     if (heatmap) {
       dimnames(Cmat) <- list(sn, sn)
       if (heatmap.ord == "asis") {
         sn.ord <- sn
       } else if (heatmap.ord == "cluster") {
         dis.mat <- 1 - Cmat
-        agnes.lst[[nt]] <- agnes(
-          x = dis.mat, diss = TRUE,
+        agnes.lst[[nt]] <- cluster::agnes(
+          x = dis.mat, 
+          diss = TRUE,
           method = agnes.method
         )
         sn.ord <- agnes.lst[[nt]]$order.lab
@@ -313,10 +314,10 @@ fa.asreml <- function(object, uniplot = F, uniplot.tol = 0.85, uniplot.cex = 0.5
       diag(Cmat.ord) <- NA
       range(Cmat.ord, na.rm = T)
       atss <- seq(-1, 1, 0.1)
-      hh <- rev(rainbow(256, start = 0, end = 2 / 3))
+      hh <- rev(grDevices::rainbow(256, start = 0, end = 2 / 3))
       hm.lab <- fa.outer(faterms[[nt]])
       hm.main <- names(faterms)[nt]
-      heatmap.lst[[nt]] <- levelplot(Cmat.ord[
+      heatmap.lst[[nt]] <- lattice::levelplot(Cmat.ord[
         sn.ord,
         rev(sn.ord)
       ],
@@ -369,20 +370,20 @@ fa.asreml <- function(object, uniplot = F, uniplot.tol = 0.85, uniplot.cex = 0.5
         unique(Variety.fac)
       ))
       blup.inmet.df <- blup.inmet.df[order(
-        type.convert(blup.inmet.df[[outer.name]],
+        utils::type.convert(blup.inmet.df[[outer.name]],
           as.is = FALSE
         ),
-        type.convert(blup.inmet.df[[inner.name]],
+        utils::type.convert(blup.inmet.df[[inner.name]],
           as.is = FALSE
         )
       ), ]
       pres <- tapply(y, list(Variety, Site), function(x) length(x[!is.na(x)]))
       blup.inmet.df$pres <- as.vector(pres)
       score.inmet.df <- score.inmet.df[order(
-        type.convert(score.inmet.df[[outer.name]],
+        utils::type.convert(score.inmet.df[[outer.name]],
           as.is = FALSE
         ),
-        type.convert(score.inmet.df[[inner.name]],
+        utils::type.convert(score.inmet.df[[inner.name]],
           as.is = FALSE
         )
       ), ]
@@ -431,7 +432,7 @@ fa.asreml <- function(object, uniplot = F, uniplot.tol = 0.85, uniplot.cex = 0.5
       }
       regplot.df[[inner.name]] <- factor(regplot.df[[inner.name]])
       xform <- paste(paste("fac", 1:k, sep = "."), collapse = "+")
-      xform <- formula(paste("blup~", xform, "|", inner.name,
+      xform <-stats::formula(paste("blup~", xform, "|", inner.name,
         sep = ""
       ))
       rp.main <- paste(names(faterms)[nt], "BLUPS")
@@ -440,10 +441,10 @@ fa.asreml <- function(object, uniplot = F, uniplot.tol = 0.85, uniplot.cex = 0.5
         outer = TRUE, as.table = TRUE, par.strip.text = list(cex = 0.6),
         main = rp.main, panel = function(x, y, slopes,
                                          ...) {
-          panel.xyplot(x, y)
-          panel.abline(b = slopes[
-            current.column(),
-            current.row()
+          lattice::panel.xyplot(x, y)
+          lattice::panel.abline(b = slopes[
+            lattice::current.column(),
+            lattice::current.row()
           ], a = 0)
         }, slopes = score.mat
       )
@@ -457,7 +458,7 @@ fa.asreml <- function(object, uniplot = F, uniplot.tol = 0.85, uniplot.cex = 0.5
         xform <- paste(paste("fac", 1:k, sep = "."),
           collapse = "+"
         )
-        xform <- formula(paste("blup~", xform, "|",
+        xform <-stats::formula(paste("blup~", xform, "|",
           inner.name,
           sep = ""
         ))
@@ -467,12 +468,12 @@ fa.asreml <- function(object, uniplot = F, uniplot.tol = 0.85, uniplot.cex = 0.5
           outer = T, as.table = T, par.strip.text = list(cex = 0.6),
           main = ap.main, panel = function(x, y, subscripts,
                                            slopes, yadj, ...) {
-            yadj <- yadj[[current.row()]]
-            yadj <- yadj[current.column(), ]
-            panel.xyplot(x, y - yadj)
-            panel.abline(a = 0, b = slopes[
-              current.column(),
-              current.row()
+            yadj <- yadj[[lattice::current.row()]]
+            yadj <- yadj[lattice::current.column(), ]
+            lattice::panel.xyplot(x, y - yadj)
+            lattice::panel.abline(a = 0, b = slopes[
+              lattice::current.column(),
+              lattice::current.row()
             ])
           }, slopes = score.mat, yadj = Yadd
         )
@@ -522,7 +523,7 @@ fa.asreml <- function(object, uniplot = F, uniplot.tol = 0.85, uniplot.cex = 0.5
             sn.ord <- sn
           } else if (heatmap.ord == "cluster") {
             dis.mat <- 1 - Cmat
-            agnes.lst[[total.where]] <- agnes(
+            agnes.lst[[total.where]] <- cluster::agnes(
               x = dis.mat,
               diss = TRUE, method = agnes.method
             )
@@ -534,9 +535,9 @@ fa.asreml <- function(object, uniplot = F, uniplot.tol = 0.85, uniplot.cex = 0.5
           diag(Cmat.ord) <- NA
           range(Cmat.ord, na.rm = T)
           atss <- seq(-1, 1, 0.1)
-          hh <- rev(rainbow(256, start = 0, end = 2 / 3))
+          hh <- rev(grDevices::rainbow(256, start = 0, end = 2 / 3))
           hm.main <- fanam[length(fanam)]
-          heatmap.lst[[total.where]] <- levelplot(Cmat.ord[
+          heatmap.lst[[total.where]] <- lattice::levelplot(Cmat.ord[
             sn.ord,
             rev(sn.ord)
           ],
@@ -710,7 +711,7 @@ loadChart <- function(model, x = "fac_1", y = "fac_2", plot = TRUE, trial_select
   Env.stats <- merge(Env.stats, lstar, by = "site")
 
   clean.data <- model$mf %>%
-    type.convert(as.is = FALSE) %>%
+    utils::type.convert(as.is = FALSE) %>%
     data.frame()
   Env.means <- data.frame(site = levels(clean.data[, env]))
 
@@ -919,13 +920,13 @@ latent_regress <- function(model, genotype, scale = T, text_labs = T, size_text 
     ggplot2::geom_point(size = 3, alpha = alpha_p) +
     ggplot2::facet_grid(~loading, scales = "free_x") +
     ggplot2::theme_bw(base_size = 15) +
-    ggplot2::geom_abline(aes(slope = blupr, intercept = 0, color = gen)) +
+    ggplot2::geom_abline(ggplot2::aes(slope = blupr, intercept = 0, color = gen)) +
     ggplot2::geom_hline(yintercept = 0, linetype = 2, color = "grey") +
     ggplot2::theme(legend.position = "bottom") +
     ggplot2::labs(x = " ", color = "Genotype")
 
   if (text_labs) {
-    p <- p + geom_label_repel(ggplot2::aes(label = site),
+    p <- p + ggrepel::geom_label_repel(ggplot2::aes(label = site),
       nudge_y = 0.05,
       nudge_x = -0.03,
       force = 1,

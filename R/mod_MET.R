@@ -241,7 +241,7 @@ mod_MET_server <- function(input, output, session) {
         if (!Ext %in% c("csv", "CSV")) {
           return()
         } # if(Ext!="csv")
-        read.csv(input$file1$datapath, header = input$header, sep = input$sep)
+        utils::read.csv(input$file1$datapath, header = input$header, sep = input$sep)
       },
       error = function(e) {
         shinytoastr::toastr_error(
@@ -479,8 +479,8 @@ mod_MET_server <- function(input, output, session) {
           dplyr::group_by(trial = .data[[datafilter()$trial]]) %>%
           dplyr::summarise(
             mean = round(mean(.data[[datafilter()$resp]], na.rm = T), 2),
-            lower = round(mean - sd(.data[[datafilter()$resp]], na.rm = T), 2),
-            upper = round(mean + sd(.data[[datafilter()$resp]], na.rm = T), 2)
+            lower = round(mean - stats::sd(.data[[datafilter()$resp]], na.rm = T), 2),
+            upper = round(mean + stats::sd(.data[[datafilter()$resp]], na.rm = T), 2)
           )
 
         df %>%
@@ -567,7 +567,7 @@ mod_MET_server <- function(input, output, session) {
       colnames(gfit) <- c("MODEL", "n.VC", "logL", "AIC", "BIC")
       gfit <- data.frame(gfit)
       gfit %>%
-        dplyr::select(MODEL, everything()) %>%
+        dplyr::select(MODEL, dplyr::everything()) %>%
         kableExtra::kable(escape = F, align = "c") %>%
         kableExtra::kable_styling(c("hover", "responsive", "condensed"), full_width = T, position = "center")
     })

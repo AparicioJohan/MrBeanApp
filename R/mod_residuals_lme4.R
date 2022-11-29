@@ -24,7 +24,7 @@ mod_residuals_lme4_ui <- function(id) {
         width = 6,
         fluidRow(
           bs4TabCard(
-            width = 12, id = "Res_lme4", title = tagList(shiny::icon("bar-chart-o", verify_fa = FALSE), "Residuals"),
+            width = 12, id = "Res_lme4", title = tagList(shiny::icon("chart-column", verify_fa = FALSE), "Residuals"),
             status = "success", collapsible = T, maximizable = T, solidHeader = FALSE, side = "left", type = "tabs",
             tabPanel(
               title = "Residual", active = T, helpText("First run the Mixed Model"),
@@ -88,12 +88,15 @@ mod_residuals_lme4_server <- function(input, output, session, model) {
         req(model$effects())
         BLUPS <- model$effects()
         v <- as.character(BLUPS[order(BLUPS$Estimation, decreasing = TRUE), 1])
-        g1 <- ggplot(BLUPS, aes(x = Genotype, Estimation)) +
-          geom_point(size = 1) +
-          geom_errorbar(aes(ymax = upper, ymin = lower)) +
-          theme_bw() +
-          theme(axis.title.x = element_blank(), axis.text.x = element_blank(), axis.ticks.x = element_blank()) +
-          scale_x_discrete(limits = v)
+        g1 <- ggplot2::ggplot(BLUPS, ggplot2::aes(x = Genotype, Estimation)) +
+          ggplot2::geom_point(size = 1) +
+          ggplot2::geom_errorbar(ggplot2::aes(ymax = upper, ymin = lower)) +
+          ggplot2::theme_bw() +
+          ggplot2::theme(
+            axis.title.x = ggplot2::element_blank(), 
+            axis.text.x = ggplot2::element_blank(), 
+            axis.ticks.x = ggplot2::element_blank()) +
+          ggplot2::scale_x_discrete(limits = v)
         plotly::ggplotly(g1)
       } else {
         BLUPS <- model$effects()
@@ -103,12 +106,15 @@ mod_residuals_lme4_server <- function(input, output, session, model) {
         effect <- names(BLUPS)[2]
         v <- as.character(BLUPS[order(BLUPS[, 2], decreasing = TRUE), 1])
 
-        p <- ggplot(BLUPS, aes(x = .data[[gen]], y = .data[[effect]])) +
-          geom_errorbar(aes(ymax = ub, ymin = lb)) +
-          theme_bw() +
-          theme(axis.title.x = element_blank(), axis.text.x = element_blank(), axis.ticks.x = element_blank()) +
-          geom_point(size = 1) +
-          scale_x_discrete(limits = v)
+        p <- ggplot2::ggplot(BLUPS, ggplot2::aes(x = .data[[gen]], y = .data[[effect]])) +
+          ggplot2::geom_errorbar(ggplot2::aes(ymax = ub, ymin = lb)) +
+          ggplot2::theme_bw() +
+          ggplot2::theme(
+            axis.title.x = ggplot2::element_blank(), 
+            axis.text.x = ggplot2::element_blank(), 
+            axis.ticks.x = ggplot2::element_blank()) +
+          ggplot2::geom_point(size = 1) +
+          ggplot2::scale_x_discrete(limits = v)
         plotly::ggplotly(p)
       }
     })

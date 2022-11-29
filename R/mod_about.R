@@ -148,7 +148,7 @@ mod_about_ui <- function(id) {
 mod_about_server <- function(input, output, session) {
   ns <- session$ns
   output$Rsession <- renderPrint(
-    print(sessionInfo())
+    print(utils::sessionInfo())
   )
 }
 

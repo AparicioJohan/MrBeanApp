@@ -22,6 +22,7 @@
 #' mod:         ASReml-R object with all information from the fitted model
 #' predictions: Predictions for all genotypes across all sites, with thier standard
 #'               error and reliability.
+#'               
 #'
 #' @author
 #' Salvador A. Gezan. VSN International
@@ -31,6 +32,10 @@
 #'
 stageMET <- function(data = NULL, gen = NULL, trial = NULL, resp = NULL, weight = NULL,
                      type.gen = "random", type.trial = "fixed", vc.model = "corh", workspace = "128mb") {
+  # Check if asreml is available.
+  if (!requireNamespace("asreml", quietly = TRUE)) {
+    stop("The package asreml is not loaded.")
+  }
   asreml::asreml.options(trace = FALSE, workspace = workspace)
   n <- nrow(data)
   if (n == 0) {
@@ -158,8 +163,8 @@ stageMET <- function(data = NULL, gen = NULL, trial = NULL, resp = NULL, weight 
   }
 
   # Obtaining predictions for models
-  pvals <- predict(mod.ref, classify = "trial:gen", sed = FALSE, vcov = FALSE)$pvals # pworkspace=1e08
-  pvals2 <- predict(mod.ref, classify = "gen", sed = FALSE, vcov = FALSE)$pvals
+  pvals <- asreml::predict.asreml(mod.ref, classify = "trial:gen", sed = FALSE, vcov = FALSE)$pvals # pworkspace=1e08
+  pvals2 <- asreml::predict.asreml(mod.ref, classify = "gen", sed = FALSE, vcov = FALSE)$pvals
   # Obtaining some statistics
   gfit <- matrix(NA, ncol = 4, nrow = 1)
   gfit[1] <- nrow(summary(mod.ref)$varcomp)
@@ -290,8 +295,8 @@ covariance_asreml <- function(matrix, corr = TRUE, size = 4) {
 
   reorder_cormat <- function(cormat) {
     # Use correlation between variables as distance
-    dd <- as.dist((1 - cormat) / 2)
-    hc <- hclust(dd)
+    dd <- stats::as.dist((1 - cormat) / 2)
+    hc <- stats::hclust(dd)
     cormat <- cormat[hc$order, hc$order]
   }
 

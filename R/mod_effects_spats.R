@@ -76,18 +76,21 @@ mod_effects_spats_server <- function(input, output, session, Model) {
 
 
     if ("type" %in% names(BLUPS)) {
-      q <- ggplot(BLUPS, aes(x = Line, y = predicted.value, color = type))
+      q <- ggplot2::ggplot(BLUPS, ggplot2::aes(x = Line, y = predicted.value, color = type))
     } else {
-      q <- ggplot(BLUPS, aes(x = Line, y = predicted.value))
+      q <- ggplot2::ggplot(BLUPS, ggplot2::aes(x = Line, y = predicted.value))
     }
 
     p <- q +
-      geom_point(size = 1) +
-      geom_errorbar(aes(ymax = Ls, ymin = Lu)) +
-      theme_bw() +
-      geom_hline(yintercept = mean(BLUPS[, 2]), linetype = 2, color = "grey") +
-      theme(axis.title.x = element_blank(), axis.text.x = element_blank(), axis.ticks.x = element_blank()) +
-      ylab(names(BLUPS)[2]) + scale_x_discrete(limits = v)
+      ggplot2::geom_point(size = 1) +
+      ggplot2::geom_errorbar(ggplot2::aes(ymax = Ls, ymin = Lu)) +
+      ggplot2::theme_bw() +
+      ggplot2::geom_hline(yintercept = mean(BLUPS[, 2]), linetype = 2, color = "grey") +
+      ggplot2::theme(
+        axis.title.x = ggplot2::element_blank(), 
+        axis.text.x = ggplot2::element_blank(), 
+        axis.ticks.x = ggplot2::element_blank()) +
+      ggplot2::ylab(names(BLUPS)[2]) + ggplot2::scale_x_discrete(limits = v)
     isolate(plotly::ggplotly(p))
   })
 
@@ -108,20 +111,20 @@ mod_effects_spats_server <- function(input, output, session, Model) {
       paste("effects_SpATS_Model_mrbean", ".csv", sep = "")
     },
     content = function(file) {
-      write.csv(Model$Effects(), file, row.names = FALSE)
+      utils::write.csv(Model$Effects(), file, row.names = FALSE)
     }
   )
 
   output$hist <- plotly::renderPlotly({
     BLUPS <- Model$Effects()
-    hi <- hist(BLUPS[, 2], plot = FALSE)
+    hi <- graphics::hist(BLUPS[, 2], plot = FALSE)
     br <- hi$breaks
     label <- names(BLUPS)[2]
-    k <- ggplot(BLUPS, aes_string(label)) +
-      geom_histogram(breaks = c(br)) +
-      theme_bw() +
-      ggtitle(paste0("Histogram of ", label)) +
-      xlab("")
+    k <- ggplot2::ggplot(BLUPS, ggplot2::aes_string(label)) +
+      ggplot2::geom_histogram(breaks = c(br)) +
+      ggplot2::theme_bw() +
+      ggplot2::ggtitle(paste0("Histogram of ", label)) +
+      ggplot2::xlab("")
     isolate(plotly::ggplotly(k))
   })
 }
