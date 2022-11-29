@@ -10,17 +10,23 @@
 mod_MET_ui <- function(id) {
   ns <- NS(id)
   tagList(
-    # HTML("<center><img src='www/dashboard.svg' width='40%' height='40%'></center>"),
     HTML('<h1 style="font-weight: bold; color: #00a65a;">Multi-Environmental Analysis with ASReml-R</h1>'),
-    # HTML('<h4 style="font-weight: bold; color: #00a65a;">Two-Stage</h4>'),
     fluidRow(
       col_3(
         fluidRow(
           bs4Dash::box(
-            title = tagList(shiny::icon("file-upload", verify_fa = FALSE), "Import Data"), solidHeader = FALSE, width = 12, status = "success",
-            maximizable = T, closable = F,
+            title = tagList(
+              shiny::icon("file-upload", verify_fa = FALSE), 
+              "Import Data"
+            ),
+            solidHeader = FALSE,
+            width = 12, 
+            status = "success",
+            maximizable = TRUE, 
+            closable = FALSE,
             fileInput(
-              inputId = ns("file1"), width = "100%",
+              inputId = ns("file1"), 
+              width = "100%",
               label = "Load your database",
               accept = c(
                 "text/csv",
@@ -33,8 +39,15 @@ mod_MET_ui <- function(id) {
             ),
             helpText("Default max. file size is 5MB"),
             prettyCheckbox(
-              inputId = ns("header"), label = "Header", icon = icon("check"), outline = TRUE, fill = FALSE, shape = "square",
-              animation = "tada", value = TRUE, status = "success"
+              inputId = ns("header"), 
+              label = "Header",
+              icon = icon("check"), 
+              outline = TRUE,
+              fill = FALSE, 
+              shape = "square",
+              animation = "tada",
+              value = TRUE,
+              status = "success"
             ),
             shinyjs::hidden(
               div(
@@ -43,14 +56,22 @@ mod_MET_ui <- function(id) {
                   inputId = ns("sep"),
                   label = "Cell separation character:",
                   choices = list(
-                    Tab = "\t", Comma = ",",
-                    Semicolon = ";", "Space" = " "
+                    Tab = "\t",
+                    Comma = ",",
+                    Semicolon = ";", 
+                    "Space" = " "
                   ),
-                  selected = ",", width = "100%"
+                  selected = ",", 
+                  width = "100%"
                 ),
                 actionBttn(
-                  inputId = ns("tabBut"), icon = icon("sliders-h", verify_fa = FALSE), size = "sm",
-                  label = "View", style = "unite", color = "warning", block = T
+                  inputId = ns("tabBut"),
+                  icon = icon("sliders-h", verify_fa = FALSE), 
+                  size = "sm",
+                  label = "View",
+                  style = "unite", 
+                  color = "warning", 
+                  block = TRUE
                 )
               )
             )
@@ -73,7 +94,13 @@ mod_MET_ui <- function(id) {
             id = ns("when_file1"),
             fluidRow(
               bs4Dash::box(
-                width = 12, status = "success", solidHeader = FALSE, title = tagList(icon = icon("cogs", verify_fa = FALSE), "Components"), # background = "light-blue"
+                width = 12,
+                status = "success", 
+                solidHeader = FALSE, 
+                title = tagList(
+                  icon = icon("cogs", verify_fa = FALSE),
+                  "Components"
+                ), 
                 selectInput(
                   inputId = ns("variable"),
                   label = tagList("Response Variable",
@@ -82,126 +109,161 @@ mod_MET_ui <- function(id) {
                       placement = "top"
                     )
                   ),
-                  choices = "", width = "100%"
+                  choices = "",
+                  width = "100%"
                 ),
                 selectInput(
                   inputId = ns("genotype"),
                   label = tagList("Genotype",
-                    icon = tooltip(icon("question-circle", verify_fa = FALSE),
+                    icon = tooltip(
+                      icon("question-circle", verify_fa = FALSE),
                       title = "The column with genotypes.",
                       placement = "top"
                     )
                   ),
-                  choices = "", width = "100%"
+                  choices = "",
+                  width = "100%"
                 ),
                 awesomeCheckbox(
                   inputId = ns("res_ran"),
                   label = "Random Genotype",
-                  value = TRUE, status = "danger"
+                  value = TRUE,
+                  status = "danger"
                 ),
                 selectInput(
                   inputId = ns("experiment"),
-                  label = tagList("Experiment",
-                    icon = tooltip(icon("question-circle", verify_fa = FALSE),
+                  label = tagList(
+                    "Experiment",
+                    icon = tooltip(
+                      icon("question-circle", verify_fa = FALSE),
                       title = "Select the variable with Experiment-ID",
                       placement = "top"
                     )
                   ),
-                  choices = "", width = "100%"
+                  choices = "",
+                  width = "100%"
                 ),
                 awesomeCheckbox(
                   inputId = ns("exp_ran"),
                   label = "Random Experiment",
-                  value = FALSE, status = "danger"
+                  value = FALSE,
+                  status = "danger"
                 ),
                 shinyjs::hidden(
                   pickerInput(
                     inputId = ns("selected"),
-                    label = tagList("Subset",
-                      icon = tooltip(icon("question-circle", verify_fa = FALSE),
+                    label = tagList(
+                      "Subset",
+                      icon = tooltip(
+                        icon("question-circle", verify_fa = FALSE),
                         title = "Select the experiments that you want to analyze.",
                         placement = "top"
                       )
                     ),
                     choices = NULL,
                     options = list(
-                      `actions-box` = TRUE, size = 5
+                      `actions-box` = TRUE, 
+                      size = 5
                     ),
-                    multiple = TRUE, width = "100%"
+                    multiple = TRUE,
+                    width = "100%"
                   )
                 ),
                 selectInput(
                   inputId = ns("weight"),
-                  label = tagList("Weights",
-                    icon = tooltip(icon("question-circle", verify_fa = FALSE),
+                  label = tagList(
+                    "Weights",
+                    icon = tooltip(
+                      icon("question-circle", verify_fa = FALSE),
                       title = "Select the variable with weights",
                       placement = "top"
                     )
                   ),
-                  choices = "", width = "100%"
+                  choices = "",
+                  width = "100%"
                 ),
                 selectInput(
                   inputId = ns("VC"),
-                  label = tagList("Covariance Structure",
-                    icon = tooltip(icon("question-circle", verify_fa = FALSE),
+                  label = tagList(
+                    "Covariance Structure",
+                    icon = tooltip(
+                      icon("question-circle", verify_fa = FALSE),
                       title = "Select the Variance-covariance Structure",
                       placement = "top"
                     )
                   ),
                   choices = list(
-                    diag = "diag", corv = "corv",
-                    corh = "corh", fa1 = "fa1", fa2 = "fa2", fa3 = "fa3", fa4 = "fa4", corgh = "corgh"
+                    diag = "diag",
+                    corv = "corv",
+                    corh = "corh", 
+                    fa1 = "fa1",
+                    fa2 = "fa2", 
+                    fa3 = "fa3",
+                    fa4 = "fa4",
+                    corgh = "corgh"
                   ),
                   width = "100%"
                 ),
-                textInput(ns("workspace"),
-                  label = tagList("Workspace",
-                    icon = tooltip(icon("question-circle", verify_fa = FALSE),
+                textInput(
+                  inputId = ns("workspace"),
+                  label = tagList(
+                    "Workspace",
+                    icon = tooltip(
+                      icon("question-circle", verify_fa = FALSE),
                       title = "128mb / 1gb / 2gb ",
                       placement = "top"
                     )
                   ),
                   value = "128mb"
                 ),
-                actionBttn(inputId = ns("check"), label = "Check!", style = "jelly", color = "success", block = T, icon = icon("check"))
+                actionBttn(
+                  inputId = ns("check"), 
+                  label = "Check!", 
+                  style = "jelly",
+                  color = "success", 
+                  block = TRUE, 
+                  icon = icon("check")
+                )
               )
             )
           )
         )
       ),
       column(
-        6,
+        width = 6,
         shinyjs::hidden(
           div(
             id = ns("plots"),
             fluidRow(
               bs4Dash::box(
                 width = 12,
-                title = tagList(icon = icon("pagelines"), "Genotypes"), maximizable = T,
-                status = "success", solidHeader = FALSE, collapsible = TRUE,
+                title = tagList(icon = icon("pagelines"), "Genotypes"),
+                maximizable = TRUE,
+                status = "success", 
+                solidHeader = FALSE, 
+                collapsible = TRUE,
                 radioGroupButtons(
                   inputId = ns("visual"),
                   label = "Plot",
                   choices = c("Number", "Shared", "Means"),
                   status = "success",
                   checkIcon = list(
-                    yes = icon("ok",
-                      lib = "glyphicon"
-                    ),
-                    no = icon("remove",
-                      lib = "glyphicon"
-                    )
+                    yes = icon("ok", lib = "glyphicon"),
+                    no = icon("remove", lib = "glyphicon")
                   )
                 ),
-                echarts4r::echarts4rOutput(ns("nGen")),
+                echarts4r::echarts4rOutput(outputId = ns("nGen")),
                 fluidRow(
                   col_4(),
                   col_4(
                     actionBttn(
                       inputId = ns("run"),
                       label = "Run Models",
-                      style = "unite", size = "sm", block = T,
-                      color = "warning", icon = icon("spinner")
+                      style = "unite", 
+                      size = "sm",
+                      block = TRUE,
+                      color = "warning", 
+                      icon = icon("spinner")
                     )
                   ),
                   col_4()
@@ -216,7 +278,7 @@ mod_MET_ui <- function(id) {
                       style = "color: #28a745"
                     ),
                     br(),
-                    tableOutput(ns("INFO"))
+                    tableOutput(outputId = ns("INFO"))
                   )
                 )
               )
@@ -240,13 +302,21 @@ mod_MET_server <- function(input, output, session) {
         Ext <- tools::file_ext(input$file1$datapath)
         if (!Ext %in% c("csv", "CSV")) {
           return()
-        } # if(Ext!="csv")
-        utils::read.csv(input$file1$datapath, header = input$header, sep = input$sep)
+        }
+        utils::read.csv(
+          file = input$file1$datapath,
+          header = input$header,
+          sep = input$sep
+        )
       },
       error = function(e) {
         shinytoastr::toastr_error(
-          title = "Error:", conditionMessage(e), position = "bottom-full-width",
-          showMethod = "slideDown", hideMethod = "hide", hideEasing = "linear"
+          title = "Error:",
+          message = conditionMessage(e), 
+          position = "bottom-full-width",
+          showMethod = "slideDown",
+          hideMethod = "hide", 
+          hideEasing = "linear"
         )
       }
     )
@@ -264,7 +334,13 @@ mod_MET_server <- function(input, output, session) {
   })
 
   observe({
-    shinyjs::toggle(id = "selected", anim = T, time = 1, animType = "fade", condition = input$experiment != "")
+    shinyjs::toggle(
+      id = "selected", 
+      anim = TRUE,
+      time = 1, 
+      animType = "fade", 
+      condition = input$experiment != ""
+    )
     req(input$experiment)
     req(dataset())
     req(input$experiment %in% names(dataset()))
@@ -282,7 +358,16 @@ mod_MET_server <- function(input, output, session) {
       {
         dataset() %>% dplyr::mutate_if(is.numeric, round, 3)
       },
-      option = list(pageLength = 10, scrollX = TRUE, columnDefs = list(list(className = "dt-center", targets = 0:ncol(dataset())))),
+      option = list(
+        pageLength = 10, 
+        scrollX = TRUE, 
+        columnDefs = list(
+          list(
+            className = "dt-center",
+            targets = 0:ncol(dataset())
+          )
+        )
+      ),
       filter = "top",
       selection = "multiple"
     )
@@ -290,7 +375,9 @@ mod_MET_server <- function(input, output, session) {
 
   observeEvent(input$tabBut, {
     showModal(modalDialog(
-      title = "Raw-Data", size = "l", easyClose = T,
+      title = "Raw-Data",
+      size = "l", 
+      easyClose = TRUE,
       DT::dataTableOutput(ns("table"))
     ))
   })
@@ -319,15 +406,16 @@ mod_MET_server <- function(input, output, session) {
     if (!input$variable %in% names(dataset())) {
       return()
     }
-    if (!input$weight %in% names(dataset())) {
-      return()
-    }
-
     tmp_data <- dataset()
     if (!is.null(input$selected)) {
       tmp_data <- dataset() %>%
         dplyr::filter(.data[[input$experiment]] %in% input$selected) %>%
         droplevels()
+    }
+    weight <- input$weight
+    if (is.null(input$weight)) {
+      tmp_data <- tmp_data %>% dplyr::mutate(WT = 1)
+      weight <- "WT"
     }
 
     data <- list(
@@ -335,7 +423,7 @@ mod_MET_server <- function(input, output, session) {
       gen = input$genotype,
       trial = input$experiment,
       resp = input$variable,
-      weight = input$weight,
+      weight = weight,
       type.gen = input$res_ran,
       type.trial = input$exp_ran,
       vc.model = input$VC,
@@ -423,38 +511,6 @@ mod_MET_server <- function(input, output, session) {
     color = transparent(0.3)
   )
 
-  # info_check <- reactive({
-  #   input$check
-  #   input$file1
-  #   isolate({
-  #     req(datafilter())
-  #     req(datafilter()$data)
-  #     print(datafilter()$data)
-  #     w$show()
-  #     inf <- check_spats(datafilter()$data, datafilter()$resp, datafilter()$gen, datafilter()$trial, NULL , NULL , two.stage = TRUE)
-  #     w$hide()
-  #     return(inf)
-  #   })
-  # })
-
-
-  # shared <- reactive({
-  #   input$check
-  #   input$file1
-  #   isolate({
-  #     req(datafilter())
-  #     req(datafilter()$data)
-  #     w$show()
-  #     inf <- gen_share(datafilter()$data, datafilter()$gen, datafilter()$trial, datafilter()$resp)
-  #     w$hide()
-  #     return(inf)
-  #   })
-  # })
-  #
-  # observe({
-  #   print(info_check())
-  # })
-  #
   output$nGen <- echarts4r::renderEcharts4r({
     input$check
     input$file1
@@ -464,13 +520,26 @@ mod_MET_server <- function(input, output, session) {
       req(datafilter()$data)
       if (input$visual == "Number") {
         w$show()
-        inf <- check_spats(datafilter()$data, datafilter()$resp, datafilter()$gen, datafilter()$trial, NULL, NULL, two.stage = TRUE)
+        inf <- check_spats(
+          data = datafilter()$data, 
+          response = datafilter()$resp,
+          genotype = datafilter()$gen,
+          experiment = datafilter()$trial,
+          col = NULL,
+          row = NULL, 
+          two.stage = TRUE
+        )
         w$hide()
         req(inf)
         number_gen(inf)
       } else if (input$visual == "Shared") {
         w$show()
-        shared <- gen_share(datafilter()$data, datafilter()$gen, datafilter()$trial, datafilter()$resp)
+        shared <- gen_share(
+          data = datafilter()$data,
+          genotype = datafilter()$gen, 
+          exp = datafilter()$trial,
+          response = datafilter()$resp
+        )
         w$hide()
         req(shared)
         plot_shared(shared)
@@ -544,13 +613,6 @@ mod_MET_server <- function(input, output, session) {
       hide(id = "ok", anim = TRUE, animType = "slide")
     }
   })
-
-  # observeEvent(input$run,{
-  #   print(modelo()$corrM)
-  #   print(modelo()$vcovM)
-  #   print(modelo()$gfit)
-  #   print(head(modelo()$predictions))
-  # })
 
   output$INFO <- function() {
     input$run
