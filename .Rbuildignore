@@ -5,7 +5,6 @@
 ^data-raw$
 dev_history.R
 ^dev$
-^data$
 $run_dev.*
 ^LICENSE\.md$
 ^README\.Rmd$
@@ -16,10 +15,6 @@ $run_dev.*
 ^\.github$
 ^docs$
 ^joss$
-^FielDHub_Overview\.png$
-^Example_FielDHub4.png$
-^pREPExample\.PNG$
-^DExample.PNG$
 ^CONTRIBUTING\.md$
 ^rsconnect$
 ^Dockerfile$

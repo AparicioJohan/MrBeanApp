@@ -1,6 +1,6 @@
 #' @title A dataset containing an alpha lattice design.
 #'
-#' @format dataframe
+#' @format data frame
 #' \describe{
 #'   \item{dataset}{description here }
 #'   \item{unique_identifier}{description here}
@@ -20,6 +20,13 @@
 #'   \item{YDHA}{description here}
 #'   \item{YDHPL}{description here}
 #' }
-#' @name Dar16C_hiP
-#' @usage data(Dar16C_hiP)
 #' @source \url{CIAT: Bean Breeding Program}
+"Dar16C_hiP"
+
+#' @title A list of datasets
+#'
+#' @format a list
+#' @description mod.list is an object that pass a dataset to the environment variables
+#' 
+#' @source \url{CIAT: Bean Breeding Program}
+"mod.list"
