@@ -78,6 +78,22 @@ RUN Rscript -e 'remotes::install_version("sommer",upgrade="never", version = "4.
 RUN Rscript -e 'remotes::install_version("colourpicker",upgrade="never", version = "1.1.1")'
 RUN Rscript -e 'remotes::install_github("RinteRface/bs4Dash@aef2c3a02387e9cf0eabbeffd4104177ef463237")'
 
+RUN mkdir ./private_pkgs
+
+COPY source_pkgs/asreml-4.1.0.176-Ubuntu-18-R4.1.tar.gz ./private_pkgs/asreml-4.1.0.176-Ubuntu-18-R4.1.tar.gz
+COPY source_pkgs/asreml_license.R ./private_pkgs/asreml_license.R
+
+# Install ASReml dependencies
+RUN R -e  'install.packages("data.table")'
+RUN R -e  'install.packages("ggplot2")'
+RUN R -e  'install.packages("jsonlite")'
+
+# Install ASReml from source
+RUN R -e 'install.packages("private_pkgs/asreml-4.1.0.176-Ubuntu-18-R4.1.tar.gz", repos = NULL)'
+
+# Activate the ASReml license (Uncomment this line to activate the ASReml license)
+# RUN Rscript private_pkgs/asreml_license.R
+
 RUN mkdir /build_zone
 ADD . /build_zone
 WORKDIR /build_zone
