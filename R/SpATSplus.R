@@ -856,7 +856,7 @@ coef.SpATS <- function(model) {
 ggCor <-
   function(myData, colours = c("#db4437", "white", "#FF9D00"),
            blackLabs = c(-0.7, 0.7), showSignif = TRUE,
-           pBreaks = c(0, .0001, .001, .01, Inf), pLabels = c("***", "**", "*", "ns"),
+           pBreaks = c(0, .001, .01, .05, Inf), pLabels = c("***", "**", "*", "ns"),
            showDiagonal = FALSE, Diag = NULL, returnTable = FALSE,
            size_text = 4) {
 
