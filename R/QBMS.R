@@ -117,13 +117,23 @@ dataqbms <- function(studies = NULL, dt_studies = NULL) {
   }
 
   mult_dt <- lapply(studies, trial_study, dt_studies = dt_studies)
-  names(mult_dt) <- dt_studies$trial
-  mult_dt <- data.table::rbindlist(
-    l = mult_dt,
-    fill = TRUE,
-    idcol = "trial"
-  ) %>% 
-    as.data.frame()
+  engine <- QBMS::debug_qbms()$config$engine
+  if(engine %in% "breedbase") {
+    mult_dt <- data.table::rbindlist(
+      l = mult_dt,
+      fill = TRUE
+    ) %>% 
+      as.data.frame()
+  } else {
+    names(mult_dt) <- dt_studies$trial
+    mult_dt <- data.table::rbindlist(
+      l = mult_dt,
+      fill = TRUE,
+      idcol = "trial"
+    ) %>% 
+      as.data.frame()
+  }
+
   
   return(mult_dt)
 }
