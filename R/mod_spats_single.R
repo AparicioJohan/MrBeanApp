@@ -173,7 +173,7 @@ mod_spats_single_ui <- function(id) {
               style = "display:rigth"
             )
           ),
-          disabled( 
+          disabled(
             actionButton(ns("LSD"), "LSD")
           ),
           br(), hr(),
@@ -205,7 +205,7 @@ mod_spats_single_ui <- function(id) {
         status = "success",
         solidHeader = FALSE,
         title = tagList(
-          icon = icon("sliders-h", verify_fa = FALSE), 
+          icon = icon("sliders-h", verify_fa = FALSE),
           "Segments and Residuals"
         ),
         collapsible = TRUE,
@@ -239,8 +239,8 @@ mod_spats_single_ui <- function(id) {
             )
           ),
           min = 1,
-          max =  4,
-          value =  3,
+          max = 4,
+          value = 3,
           step = 0.1,
           width = "100%"
         ),
@@ -345,8 +345,8 @@ mod_spats_single_server <- function(input, output, session, data) {
       ns("segcol"),
       label = "Num of col segments",
       min = 1,
-      max =  nlevels(dt$col_f) + 30,
-      value =  nlevels(dt$col_f),
+      max = nlevels(dt$col_f) + 30,
+      value = nlevels(dt$col_f),
       width = "100%"
     )
   })
@@ -362,8 +362,8 @@ mod_spats_single_server <- function(input, output, session, data) {
       ns("segrow"),
       label = "Num of row segments",
       min = 1,
-      max =  nlevels(dt$row_f) + 30,
-      value =  nlevels(dt$row_f),
+      max = nlevels(dt$row_f) + 30,
+      value = nlevels(dt$row_f),
       width = "100%"
     )
   })
@@ -477,7 +477,7 @@ mod_spats_single_server <- function(input, output, session, data) {
             covariate = input$covariate,
             clean_out = input$outliers,
             iterations = input$times,
-            checks = input$selected, 
+            checks = input$selected,
             k_clean_out = input$k_clean_out
           )
           Modelo_SpATS
@@ -486,7 +486,7 @@ mod_spats_single_server <- function(input, output, session, data) {
           shinytoastr::toastr_error(
             title = "Warning:",
             conditionMessage(e),
-            position =  "bottom-right",
+            position = "bottom-right",
             progressBar = TRUE
           )
         }
@@ -623,11 +623,11 @@ mod_spats_single_server <- function(input, output, session, data) {
       utils::write.csv(blup(), file, row.names = FALSE)
     }
   )
-  
+
 
   # LSD ---------------------------------------------------------------------
 
-  
+
   lsd <- reactive({
     validate(
       need(input$variable != "", " "),
@@ -639,7 +639,7 @@ mod_spats_single_server <- function(input, output, session, data) {
     lsd <- LSD(model = Modelo(), data.frame = TRUE)
     lsd
   })
-  
+
   output$lsd_table <- DT::renderDataTable(
     if (input$action == 0) {
       return()
@@ -652,12 +652,12 @@ mod_spats_single_server <- function(input, output, session, data) {
         },
         option = list(
           scrollX = TRUE,
-          dom = 't'
+          dom = "t"
         )
       )
     }
   )
-  
+
   observeEvent(input$LSD, {
     showModal(
       modalDialog(
@@ -669,7 +669,7 @@ mod_spats_single_server <- function(input, output, session, data) {
           type = 6,
           color = "#28a745"
         ),
-        if(input$res_ran) {
+        if (input$res_ran) {
           strong("Genotype should be fixed.")
         },
         footer = tagList(
