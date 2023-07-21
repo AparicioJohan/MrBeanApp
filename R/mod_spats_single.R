@@ -87,7 +87,10 @@ mod_spats_single_ui <- function(id) {
         status = "success",
         solidHeader = FALSE,
         collapsible = TRUE,
-        title = tagList(icon = icon("table-cells", verify_fa = FALSE), "Coordinates"),
+        title = tagList(
+          icon = icon("table-cells", verify_fa = FALSE), 
+          "Coordinates"
+        ),
         rintrojs::introBox(
           selectInput(
             inputId = ns("column"),
@@ -322,7 +325,7 @@ mod_spats_single_server <- function(input, output, session, data) {
   observe({
     shinyjs::toggle(
       id = "selected",
-      anim = T,
+      anim = TRUE,
       time = 1,
       animType = "fade",
       condition = input$genotipo != "" & input$res_ran == TRUE
@@ -377,7 +380,7 @@ mod_spats_single_server <- function(input, output, session, data) {
         text = HTML("<center> It's necessary that you fill the fields
                     </center>"),
         type = "warning",
-        html = T
+        html = TRUE
       )
     }
   }) %>%
@@ -433,7 +436,7 @@ mod_spats_single_server <- function(input, output, session, data) {
         ),
         position = "bottom-right",
         progressBar = TRUE,
-        closeButton = T,
+        closeButton = TRUE,
         timeOut = 1000
       )
     }
@@ -529,7 +532,7 @@ mod_spats_single_server <- function(input, output, session, data) {
     showModal(modalDialog(
       title = "Coefficients",
       size = "l",
-      easyClose = T,
+      easyClose = TRUE,
       shinycssloaders::withSpinner(
         DT::dataTableOutput(ns("distTable2")),
         type = 6,
@@ -596,7 +599,7 @@ mod_spats_single_server <- function(input, output, session, data) {
       modalDialog(
         title = "BLUPs/BLUEs",
         size = "l",
-        easyClose = T,
+        easyClose = TRUE,
         shinycssloaders::withSpinner(
           DT::dataTableOutput(ns("distTable")),
           type = 6,
@@ -663,7 +666,7 @@ mod_spats_single_server <- function(input, output, session, data) {
       modalDialog(
         title = "LSD",
         size = "l",
-        easyClose = T,
+        easyClose = TRUE,
         shinycssloaders::withSpinner(
           DT::dataTableOutput(ns("lsd_table")),
           type = 6,
