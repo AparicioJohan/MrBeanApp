@@ -274,11 +274,15 @@ SpATS_mrbean <- function(data = NULL,
     yes = length(unique(dt[, row])),
     no = nrows
   )
-  for (i in 1:length(fix_fact)) {
-    dt[, fix_fact[i]] <- as.factor(dt[, fix_fact[i]])
+  if (!is.null(fix_fact)) {
+    for (i in 1:length(fix_fact)) {
+      dt[, fix_fact[i]] <- as.factor(dt[, fix_fact[i]])
+    }
   }
-  for (i in 1:length(ran_fact)) {
-    dt[, ran_fact[i]] <- as.factor(dt[, ran_fact[i]])
+  if (!is.null(ran_fact)) {
+    for (i in 1:length(ran_fact)) {
+      dt[, ran_fact[i]] <- as.factor(dt[, ran_fact[i]])
+    }
   }
   if (is.null(fix_fact) & is.null(covariate)) {
     Fijo <- as.formula(~NULL)
