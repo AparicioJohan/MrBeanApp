@@ -122,7 +122,6 @@ mod_descrip_scatter_server <- function(id, data, plot = 1) {
       } else {
         isolate({
           dt <- data$data()
-          dt[, input$factor2] <- as.factor(dt[, input$factor2])
           if (plot == 1) {
             gra <- ggplot2::ggplot(
               dt,

@@ -127,7 +127,6 @@ mod_descrip_boxplot_server <- function(id, data, plot = 2) {
       } else {
         isolate({
           dt <- data$data()
-          dt[, input$factor2] <- as.factor(dt[, input$factor2])
           if (plot == 1) {
 
           } else {
