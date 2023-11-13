@@ -261,7 +261,7 @@ mod_import_dt_ui <- function(id) {
               ),
               actionButton(
                 ns("mysql"),
-                label = "Conect",
+                label = "Connect",
                 icon = icon("sync", verify_fa = FALSE)
               ),
               strong(
