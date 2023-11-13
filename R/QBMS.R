@@ -1,7 +1,7 @@
 #' QBMS conexion
 #'
 #' @param url go to QBMS documentation
-#' @param engine "bms" or "breadbase"
+#' @param engine "bms" or "breedbase"
 #' @param path go to QBMS documentation
 #' @param time_out go to QBMS documentation
 #' @param no_auth go to QBMS documentation
@@ -11,7 +11,7 @@
 #' @return a list
 #' @noRd
 qbmsbrapi <- function(url = "https://bms.ciat.cgiar.org/ibpworkbench/controller/auth/login",
-                      engine = c("bms", "breadbase"),
+                      engine = c("bms", "breedbase"),
                       path = ifelse(engine == "bms", "bmsapi", ""),
                       time_out = ifelse(engine == "bms", 120, 300),
                       no_auth = FALSE,
