@@ -458,11 +458,11 @@ app_ui <- function(request) {
           HTML("&nbsp; &nbsp; &nbsp; &nbsp;"),
           a(
             href = "https://www.linkedin.com/in/johan-steven-aparicio-arce-b68976193/",
-            target = "_blank", "J.Aparicio@cgiar.org"
+            target = "_blank", "johanstevenapa@gmail.com"
           )
         ),
         right = tagList(
-          "Alliance Bioversity International - CIAT 2022",
+          "Alliance Bioversity International - CIAT 2023",
           HTML("&nbsp; &nbsp; &nbsp; &nbsp;") 
         )
       )
