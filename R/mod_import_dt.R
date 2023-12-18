@@ -191,9 +191,9 @@ mod_import_dt_ui <- function(id) {
               status = "success",
               h3("How to connect BrAPI in MrBean?"),
               hr(),
-              includeHTML(
-                system.file("app/www/icon.html",
-                  package = "MrBean"
+              suppressWarnings(
+                includeHTML(
+                  system.file("app/www/icon.html", package = "MrBean")
                 )
               )
             )

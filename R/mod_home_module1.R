@@ -17,8 +17,10 @@ mod_home_module1_ui <- function(id) {
           HTML("<img src='www/beans3.png' width='52' vspace='10' hspace='10' height='48' align='left'>
                   <font size='7'>Mr.Bean</font>"),
           br(),
-          includeHTML(
-            system.file("app/www/encabezado.html", package = "MrBean")
+          suppressWarnings(
+            includeHTML(
+              system.file("app/www/encabezado.html", package = "MrBean")
+            )
           ),
           width = 12,
           status = "success",
