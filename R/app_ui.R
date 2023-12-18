@@ -23,7 +23,7 @@ app_ui <- function(request) {
         title = dashboardBrand(
           title = "MrBean",
           color = "white",
-          href = "https://mrpackages.netlify.app/",
+          href = "https://apariciojohan.github.io/MrBeanApp/",
           image = "www/beans3.png",
           opacity = 0.8
         ),
