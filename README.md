@@ -43,6 +43,15 @@ A running demo is on [shinyapps.io](https://beanteam.shinyapps.io/MrBean_BETA/).
 </div>
 </div>
 
+### Citation
+
+> *Aparicio J, Gezan SA, Ariza-Suarez D, Raatz B, Diaz S, Heilman-Morales A and Lobaton J (2024)* Mr.Bean: a comprehensive statistical and visualization application for modeling agricultural field trials data. **Front. Plant Sci. 14:1290078.**; [https://doi.org/10.3389/fpls.2023.1290078](https://doi.org/10.3389/fpls.2023.1290078)
+
+### Acknowledgments
+
+> * [Bean Breeding Program - International Center for Tropical Agriculture (CIAT)](https://alliancebioversityciat.org/)
+> * [Big Data Pipeline Unit (NDSU)](https://sites.google.com/ndsu.edu/plsc-bpdm/home)
+
 <br>
 
 Please note that the ‘MrBean’ project is released with a [Contributor
