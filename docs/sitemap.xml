@@ -34,7 +34,13 @@
     <loc>/reference/index.html</loc>
   </url>
   <url>
+    <loc>/reference/LSD.html</loc>
+  </url>
+  <url>
     <loc>/reference/marker_plot.html</loc>
+  </url>
+  <url>
+    <loc>/reference/mod.list.html</loc>
   </url>
   <url>
     <loc>/reference/R.square.html</loc>
