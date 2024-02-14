@@ -49,10 +49,12 @@ A running demo is on [shinyapps.io](https://beanteam.shinyapps.io/MrBean_BETA/).
 
 ### Acknowledgments
 
-> * [Bean Breeding Program - International Center for Tropical Agriculture (CIAT)](https://alliancebioversityciat.org/)
-> * [Big Data Pipeline Unit (NDSU)](https://sites.google.com/ndsu.edu/plsc-bpdm/home)
+* [Bean Breeding Program - International Center for Tropical Agriculture (CIAT)](https://alliancebioversityciat.org/)
+* [Big Data Pipeline Unit (NDSU)](https://sites.google.com/ndsu.edu/plsc-bpdm/home)
+  * Ana Maria Heilman
+  * Didier Murillo Florez
 
-<br>
+## Code of Conduct
 
 Please note that the ‘MrBean’ project is released with a [Contributor
 Code of Conduct](CODE_OF_CONDUCT.md). By contributing to this project,
