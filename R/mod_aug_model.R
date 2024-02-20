@@ -369,17 +369,26 @@ mod_aug_model_server <- function(input, output, session, data) {
     modelo() %>%
       dplyr::mutate_if(is.numeric, round, 2) %>%
       .[-5, ] %>%
-      dplyr::mutate(
-        MODEL = MODEL,
-        n.VC = formattable::color_tile("white", "orange")(n.VC),
-        logL = formattable::color_tile("white", "orange")(logL),
-        AIC = formattable::color_tile("orange", "white")(AIC),
-        BIC = formattable::color_tile("orange", "white")(BIC),
-        heritPEV = formattable::color_tile("white", "orange")(heritPEV),
-        heritVC = formattable::color_tile("white", "orange")(heritVC),
-        A.opt = formattable::color_tile("orange", "white")(A.opt),
-        D.opt = formattable::color_tile("orange", "white")(D.opt),
-        pvalue = formattable::color_tile("white", "orange")(pvalue),
+      formattable::formattable(
+        list(
+          df = formattable::formatter(
+            "span",
+            style = x ~ formattable::style(
+              display = "block",
+              "border-radius" = "2px",
+              "padding" = "2px",
+              "text-align" = "left"
+            )
+          ),
+          logL = formattable::color_tile("white", "orange"),
+          AIC = formattable::color_tile("orange", "white"),
+          BIC = formattable::color_tile("orange", "white"),
+          heritPEV = formattable::color_tile("white", "orange"),
+          heritVC = formattable::color_tile("white", "orange"),
+          A.opt = formattable::color_tile("orange", "white"),
+          D.opt = formattable::color_tile("orange", "white"),
+          pvalue = formattable::color_tile("white", "orange")
+        )
       ) %>%
       dplyr::select(MODEL, dplyr::everything()) %>%
       kableExtra::kable(escape = F, align = "c") %>%
