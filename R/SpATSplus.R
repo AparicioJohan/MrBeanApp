@@ -835,7 +835,7 @@ varComp <- function(object, which = "variances") {
 
 # SpATS coefficients
 
-coef.SpATS <- function(model) {
+coef_SpATS <- function(model) {
   # coefficients
   coef_spats <- model$coeff
   coef_random <- attr(coef_spats, "random")

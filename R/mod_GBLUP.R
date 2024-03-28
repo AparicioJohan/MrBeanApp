@@ -188,7 +188,6 @@ mod_GBLUP_ui <- function(id) {
             id = ns("results"),
             bs4TabCard(
               width = 12,
-              id = "tabcard",
               maximizable = T,
               closable = F,
               status = "success",

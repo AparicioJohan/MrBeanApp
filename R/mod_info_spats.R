@@ -18,7 +18,8 @@ mod_info_spats_ui <- function(id) {
     ),
     fluidRow(
       bs4TabCard(
-        width = 6, id = "tabcard", maximizable = T, closable = F,
+        width = 6, 
+        maximizable = T, closable = F,
         status = "success", side = "left", type = "tabs",
         tabPanel(
           title = "Summary",

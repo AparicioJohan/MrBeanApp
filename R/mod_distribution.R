@@ -79,8 +79,9 @@ mod_distribution_ui <- function(id) {
             maximizable = T,
             solidHeader = FALSE,
             closable = F,
-            status = "success", side = "left", type = "tabs",
-            id = "tabcard",
+            status = "success",
+            side = "left", 
+            type = "tabs",
             tabPanel(
               title = "Histogram",
               icon = icon("chart-bar"),

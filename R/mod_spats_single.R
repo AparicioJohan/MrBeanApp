@@ -503,7 +503,7 @@ mod_spats_single_server <- function(input, output, session, data) {
   # Coefficients
   co.spats <- reactive({
     req(Modelo())
-    coef <- coef.SpATS(Modelo())
+    coef <- coef_SpATS(Modelo())
     coef
   })
 
