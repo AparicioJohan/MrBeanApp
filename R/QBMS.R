@@ -55,7 +55,9 @@ qbmsprograms <- function(crop = NULL) {
   if (is.null(crop)) {
     return()
   }
-  QBMS::set_crop(crop)
+  if (QBMS::debug_qbms()$config$engine != "breedbase") {
+    QBMS::set_crop(crop)
+  }
   programs <- QBMS::list_programs()
   return(programs)
 }
