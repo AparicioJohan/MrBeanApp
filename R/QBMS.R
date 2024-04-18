@@ -37,7 +37,11 @@ qbmsbrapi <- function(url = "https://bms.ciat.cgiar.org/ibpworkbench/controller/
     if (is.null(password) | password == "") {
       return()
     }
-    bmslogin <- QBMS::login_bms(username = username, password = password)
+    if (engine == "bms") {
+      bmslogin <- QBMS::login_bms(username = username, password = password)
+    } else {
+      bmslogin <- QBMS::login_breedbase(username = username, password = password)
+    }
   } else {
     bmslogin <- NULL
   }
