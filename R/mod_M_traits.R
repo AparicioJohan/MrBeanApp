@@ -132,7 +132,7 @@ mod_M_traits_ui <- function(id) {
                   shinyjs::hidden(
                     pickerInput(
                       inputId = ns("fix_traits"),
-                      label = "Experiments",
+                      label = "Traits",
                       choices = "",
                       multiple = T,
                       options = list(
