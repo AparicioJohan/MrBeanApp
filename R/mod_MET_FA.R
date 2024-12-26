@@ -175,7 +175,7 @@ mod_MET_FA_server <- function(input, output, session, model) {
     mod <- model$model()$mod
     req(length(grep("fa", model$model()$mod$call)) != 0)
     ASM <- try(fa.asreml(mod, trunc.char = NULL), silent = T)
-    if (class(ASM) == "try-error") {
+    if (inherits(ASM, what = "try-error")) {
       return()
     }
     genVarChart(mod, height = "65%")

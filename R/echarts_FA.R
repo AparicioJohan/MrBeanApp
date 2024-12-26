@@ -716,9 +716,9 @@ loadChart <- function(model, x = "fac_1", y = "fac_2", plot = TRUE, trial_select
   Env.means <- data.frame(site = levels(clean.data[, env]))
 
   env_effect <- try(coef(model)$fixed[paste0(env, "_", levels(clean.data[, env])), ], silent = T)
-  if (class(env_effect) == "try-error") {
+  if (inherits(env_effect, what = "try-error")) {
     env_effect <- try(coef(model)$rand[paste0(env, "_", levels(clean.data[, env])), ], silent = T)
-    if (class(env_effect) == "try-error") env_effect <- 0
+    if (inherits(env_effect, what = "try-error")) env_effect <- 0
   }
 
   Env.means$coef <- env_effect

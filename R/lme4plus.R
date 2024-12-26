@@ -6,7 +6,7 @@ VarG <- function(model, comp) {
 }
 
 VarE <- function(model) {
-  if (class(model) == "lm") {
+  if (inherits(model, what = "lm")) {
     v <- stats::sigma(model)^2
   } else {
     v <- as.data.frame(VarCorr(model))
@@ -81,7 +81,7 @@ lme4_single <- function(data,
       Modelo <- try(lmerTest::lmer(formula = equation, data = dt), silent = TRUE)
       tryCatch(
         {
-          if (class(Modelo) == "try-error") stop("Error in formula")
+          if (inherits(Modelo, what = "try-error")) stop("Error in formula")
         },
         error = function(e) {
           shinytoastr::toastr_error(title = "Warning:", conditionMessage(e), position = "bottom-right", progressBar = TRUE)
@@ -166,7 +166,7 @@ lme4_single <- function(data,
 
       tryCatch(
         {
-          if (class(Modelo) == "try-error") stop("Error in formula")
+          if (inherits(Modelo, what = "try-error")) stop("Error in formula")
         },
         error = function(e) {
           shinytoastr::toastr_error(title = "Warning:", conditionMessage(e), position = "bottom-right", progressBar = TRUE)
@@ -244,7 +244,7 @@ lme4_effects <- function(model, genotype, res_ran, model_class) {
     }
   } else {
     if (model_class == 3) {
-      if (class(model) == "lm") {
+      if (inherits(model, what = "lm")) {
         form_equa <- reformulate(termlabels = genotype)
         BLUES <- data.frame(emmeans::emmeans(model, form_equa)) # Instalar emmeans
         BLUES <- BLUES %>%
@@ -262,7 +262,7 @@ lme4_effects <- function(model, genotype, res_ran, model_class) {
         BLUES
       }
     } else {
-      if (class(model) == "lm") {
+      if (inherits(model, what = "lm")) {
         BLUES <- data.frame(emmeans::emmeans(model, ~Gen)) # Instalar emmeans
         BLUES <- BLUES %>%
           dplyr::select(-df) %>%
@@ -285,7 +285,7 @@ lme4_effects <- function(model, genotype, res_ran, model_class) {
 
 
 res_data_lme4 <- function(Model) {
-  if (class(Model) == "lm") {
+  if (inherits(Model, what = "lm")) {
     Data <- Model$model
     VarE <- stats::sigma(Model)^2
   } else {

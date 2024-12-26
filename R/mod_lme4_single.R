@@ -368,7 +368,7 @@ mod_lme4_single_server <- function(input, output, session, data) {
         req(alpha())
         DT::datatable(
           {
-            if (class(alpha()) == "lm") {
+            if (inherits(alpha(), what = "lm")) {
               round(broom.mixed::glance(alpha())[, -c(1:5)], 2)
             } else {
               round((broom.mixed::glance(alpha())), 2)
@@ -383,7 +383,7 @@ mod_lme4_single_server <- function(input, output, session, data) {
   output$printranova <- renderPrint({
     validate(need(input$run != 0, "Run the model"))
     req(alpha())
-    if (class(alpha()) == "lm") {
+    if (inherits(alpha(), what = "lm")) {
       return()
     } else {
       dt <- alpha()@frame
@@ -400,7 +400,7 @@ mod_lme4_single_server <- function(input, output, session, data) {
       validate(need(nfixed > 1, "ANOVA is only calculated for fixed effects"))
     } else {
       isolate({
-        if (class(alpha()) == "lm") {
+        if (inherits(alpha(), what = "lm")) {
           k <- suppressWarnings((broom.mixed::tidy(stats::anova(alpha()))))
         } else {
           k <- suppressWarnings((broom.mixed::tidy(lmerTest::ranova(alpha(), ddf = "Kenward-Roger", type = 1))))

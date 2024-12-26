@@ -283,7 +283,7 @@ mod_asreml_selector_server <- function(input, output, session, data) {
       )
 
       dt <- try(fill.asreml(dt, rows = conv_null(input$row), ranges = conv_null(input$column)), silent = T)
-      if (class(dt) == "try-error") dt <- data.frame()
+      if (inherits(dt, what = "try-error")) dt <- data.frame()
     })
     return(list(components = variables, data = dt))
   })
