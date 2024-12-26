@@ -1,69 +1,25 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-  <url>
-    <loc>/404.html</loc>
-  </url>
-  <url>
-    <loc>/authors.html</loc>
-  </url>
-  <url>
-    <loc>/CODE_OF_CONDUCT.html</loc>
-  </url>
-  <url>
-    <loc>/index.html</loc>
-  </url>
-  <url>
-    <loc>/LICENSE-text.html</loc>
-  </url>
-  <url>
-    <loc>/LICENSE.html</loc>
-  </url>
-  <url>
-    <loc>/news/index.html</loc>
-  </url>
-  <url>
-    <loc>/reference/Dar16C_hiP.html</loc>
-  </url>
-  <url>
-    <loc>/reference/desireFormat.html</loc>
-  </url>
-  <url>
-    <loc>/reference/GBLUPs.html</loc>
-  </url>
-  <url>
-    <loc>/reference/index.html</loc>
-  </url>
-  <url>
-    <loc>/reference/LSD.html</loc>
-  </url>
-  <url>
-    <loc>/reference/marker_plot.html</loc>
-  </url>
-  <url>
-    <loc>/reference/mod.list.html</loc>
-  </url>
-  <url>
-    <loc>/reference/R.square.html</loc>
-  </url>
-  <url>
-    <loc>/reference/res_data.html</loc>
-  </url>
-  <url>
-    <loc>/reference/run_app.html</loc>
-  </url>
-  <url>
-    <loc>/reference/spatial.aud.html</loc>
-  </url>
-  <url>
-    <loc>/reference/spatial.selector.html</loc>
-  </url>
-  <url>
-    <loc>/reference/spatial.single.html</loc>
-  </url>
-  <url>
-    <loc>/reference/stageMET.html</loc>
-  </url>
-  <url>
-    <loc>/reference/stats.spatial.html</loc>
-  </url>
+<urlset xmlns = 'http://www.sitemaps.org/schemas/sitemap/0.9'>
+<url><loc>/404.html</loc></url>
+<url><loc>/authors.html</loc></url>
+<url><loc>/CODE_OF_CONDUCT.html</loc></url>
+<url><loc>/index.html</loc></url>
+<url><loc>/LICENSE-text.html</loc></url>
+<url><loc>/LICENSE.html</loc></url>
+<url><loc>/news/index.html</loc></url>
+<url><loc>/reference/Dar16C_hiP.html</loc></url>
+<url><loc>/reference/desireFormat.html</loc></url>
+<url><loc>/reference/GBLUPs.html</loc></url>
+<url><loc>/reference/index.html</loc></url>
+<url><loc>/reference/LSD.html</loc></url>
+<url><loc>/reference/marker_plot.html</loc></url>
+<url><loc>/reference/mod.list.html</loc></url>
+<url><loc>/reference/R.square.html</loc></url>
+<url><loc>/reference/res_data.html</loc></url>
+<url><loc>/reference/run_app.html</loc></url>
+<url><loc>/reference/spatial.aud.html</loc></url>
+<url><loc>/reference/spatial.selector.html</loc></url>
+<url><loc>/reference/spatial.single.html</loc></url>
+<url><loc>/reference/stageMET.html</loc></url>
+<url><loc>/reference/stats.spatial.html</loc></url>
 </urlset>
+

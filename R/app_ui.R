@@ -16,8 +16,8 @@ app_ui <- function(request) {
       preloader = NULL,
       options = NULL,
       fullscreen = TRUE,
-      help = FALSE,
-      dark = NULL,
+      help = NULL,
+      dark = FALSE,
       scrollToTop = FALSE,
       header = bs4DashNavbar(
         title = dashboardBrand(
@@ -454,7 +454,7 @@ app_ui <- function(request) {
       footer = bs4DashFooter(
         fixed = TRUE,
         left = tagList(
-          "v.2.0.9",
+          "v.2.1.0",
           HTML("&nbsp; &nbsp; &nbsp; &nbsp;"),
           "Alliance Bioversity & CIAT 2019 - 2024"
         ),

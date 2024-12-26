@@ -1,3 +1,8 @@
+# MrBean 2.1.0
+
+* Fixed issue in number of segments for SpATS models.
+* Fixed R CMD checks
+
 # MrBean 2.0.9
 
 * LSD for single-site spatial analysis with SpATS.

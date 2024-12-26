@@ -8,7 +8,7 @@
 a list
 }
 \source{
-\url{CIAT: Bean Breeding Program}
+None
 }
 \usage{
 mod.list

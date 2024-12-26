@@ -20,7 +20,7 @@
 #'   \item{YDHA}{description here}
 #'   \item{YDHPL}{description here}
 #' }
-#' @source \url{CIAT: Bean Breeding Program}
+#' @source CIAT: Bean Breeding Program
 "Dar16C_hiP"
 
 #' @title A list of datasets
@@ -28,5 +28,5 @@
 #' @format a list
 #' @description mod.list is an object that pass a dataset to the environment variables
 #' 
-#' @source \url{CIAT: Bean Breeding Program}
+#' @source None
 "mod.list"
