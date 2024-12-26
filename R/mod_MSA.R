@@ -17,12 +17,12 @@ mod_MSA_ui <- function(id) {
         fluidRow(
           bs4Dash::box(
             width = 12,
-            status = "success", 
-            solidHeader = FALSE, 
+            status = "success",
+            solidHeader = FALSE,
             title = tagList(
               icon = icon("cogs", verify_fa = FALSE),
               "Configuration"
-            ), 
+            ),
             selectInput(
               inputId = ns("variable"),
               label = tagList(
@@ -52,7 +52,7 @@ mod_MSA_ui <- function(id) {
             awesomeCheckbox(
               inputId = ns("res_ran"),
               label = "Random Genotype",
-              value = TRUE, 
+              value = TRUE,
               status = "danger"
             ),
             hr(),
@@ -71,7 +71,7 @@ mod_MSA_ui <- function(id) {
                 options = list(
                   `actions-box` = TRUE, size = 5, `live-search` = TRUE
                 ),
-                multiple = TRUE, 
+                multiple = TRUE,
                 width = "100%"
               )
             ),
@@ -93,7 +93,7 @@ mod_MSA_ui <- function(id) {
               column(
                 6,
                 selectInput(
-                  inputId = ns("column"), 
+                  inputId = ns("column"),
                   label = "Column",
                   choices = "",
                   width = "100%"
@@ -102,19 +102,19 @@ mod_MSA_ui <- function(id) {
               column(
                 6,
                 selectInput(
-                  inputId = ns("row"), 
+                  inputId = ns("row"),
                   label = "Row",
-                  choices = "", 
+                  choices = "",
                   width = "100%"
                 )
               )
             ),
             actionBttn(
-              inputId = ns("check"), 
-              label = "Check!", 
+              inputId = ns("check"),
+              label = "Check!",
               style = "jelly",
-              color = "success", 
-              block = T, 
+              color = "success",
+              block = T,
               icon = icon("check")
             )
           )
@@ -130,23 +130,23 @@ mod_MSA_ui <- function(id) {
                 width = 12,
                 title = tagList(
                   icon = icon("wrench"), "Additional Components"
-                ), 
-                status = "success", 
-                solidHeader = FALSE, 
+                ),
+                status = "success",
+                solidHeader = FALSE,
                 collapsible = TRUE,
                 actionBttn(
                   inputId = ns("tabBut"),
                   icon = icon("sliders-h", verify_fa = FALSE),
                   size = "xs",
-                  label = "Info About the Experiments", 
-                  style = "unite", 
-                  color = "warning", 
+                  label = "Info About the Experiments",
+                  style = "unite",
+                  color = "warning",
                   block = TRUE
                 ),
                 selectInput(
-                  inputId = ns("replicate"), 
-                  label = "Replicate", 
-                  choices = "", 
+                  inputId = ns("replicate"),
+                  label = "Replicate",
+                  choices = "",
                   width = "100%"
                 ),
                 selectizeInput(
@@ -160,7 +160,7 @@ mod_MSA_ui <- function(id) {
                       placement = "top"
                     )
                   ),
-                  choices = "", 
+                  choices = "",
                   multiple = TRUE
                 ),
                 shinyjs::hidden(
@@ -187,7 +187,7 @@ mod_MSA_ui <- function(id) {
                       placement = "top"
                     )
                   ),
-                  choices = "", 
+                  choices = "",
                   multiple = TRUE
                 ),
                 shinyjs::hidden(
@@ -235,8 +235,8 @@ mod_MSA_ui <- function(id) {
                     )
                   ),
                   min = 1,
-                  max =  4,
-                  value =  3,
+                  max = 4,
+                  value = 3,
                   step = 0.1,
                   width = "100%"
                 ),
@@ -246,20 +246,20 @@ mod_MSA_ui <- function(id) {
                   value = FALSE, status = "danger"
                 ),
                 numericInput(
-                  ns("times"), 
-                  "Number of Times to Check", 
+                  ns("times"),
+                  "Number of Times to Check",
                   value = 1,
                   min = 1,
-                  max = 3, 
+                  max = 3,
                   step = 1,
                   width = "100%"
                 ),
                 actionBttn(
                   inputId = ns("continue"),
                   label = "Continue?",
-                  style = "jelly", 
+                  style = "jelly",
                   color = "success",
-                  block = T, 
+                  block = T,
                   icon = icon("exclamation-circle", verify_fa = FALSE)
                 )
               )
@@ -277,10 +277,10 @@ mod_MSA_ui <- function(id) {
                 width = 12,
                 title = tagList(
                   icon = icon("pagelines"), "Genotypes Statistics"
-                ), 
+                ),
                 maximizable = T,
-                status = "success", 
-                solidHeader = FALSE, 
+                status = "success",
+                solidHeader = FALSE,
                 collapsible = TRUE,
                 prettySwitch(
                   inputId = ns("swicht"),
@@ -291,8 +291,8 @@ mod_MSA_ui <- function(id) {
                 ),
                 echarts4r::echarts4rOutput(ns("nGen")),
                 actionLink(
-                  inputId = ns("conectivity"), 
-                  label = "See Conectivity", 
+                  inputId = ns("conectivity"),
+                  label = "See Conectivity",
                   icon = icon("arrow-right"),
                   style = "color: #28a745"
                 ),
@@ -305,7 +305,7 @@ mod_MSA_ui <- function(id) {
                       style = "unite",
                       size = "sm",
                       block = T,
-                      color = "warning", 
+                      color = "warning",
                       icon = icon("spinner")
                     )
                   ),
@@ -342,22 +342,28 @@ mod_MSA_server <- function(input, output, session, data) {
   observeEvent(data$data(), {
     dt <- data$data()
     updateSelectInput(
-      session, "variable", choices = names(dt), selected = "YdHa_clean"
+      session, "variable",
+      choices = names(dt), selected = "YdHa_clean"
     )
     updateSelectInput(
-      session, "genotype", choices = names(dt), selected = "line"
+      session, "genotype",
+      choices = names(dt), selected = "line"
     )
     updateSelectInput(
-      session, "experiment", choices = names(dt), selected = "dataset"
+      session, "experiment",
+      choices = names(dt), selected = "dataset"
     )
     updateSelectInput(
-      session, "column", choices = names(dt), selected = "col"
+      session, "column",
+      choices = names(dt), selected = "col"
     )
     updateSelectInput(
-      session, "row", choices = names(dt), selected = "row"
+      session, "row",
+      choices = names(dt), selected = "row"
     )
     updateSelectInput(
-      session, "replicate", choices = names(dt), selected = "rep"
+      session, "replicate",
+      choices = names(dt), selected = "rep"
     )
   })
 
@@ -370,25 +376,25 @@ mod_MSA_server <- function(input, output, session, data) {
     req(input$experiment %in% names(data$data()))
     dt <- data$data()
     updatePickerInput(
-      session, 
+      session,
       "fix_traits",
-      choices = unique(dt[, input$experiment]), 
+      choices = unique(dt[, input$experiment]),
       selected = "NNNN"
     )
     updatePickerInput(
-      session, 
+      session,
       "ran_traits",
-      choices = unique(dt[, input$experiment]), 
+      choices = unique(dt[, input$experiment]),
       selected = "NNNN"
     )
   })
 
   observe({
     shinyjs::toggle(
-      id = "selected_checks", 
-      anim = TRUE, 
+      id = "selected_checks",
+      anim = TRUE,
       time = 1,
-      animType = "fade", 
+      animType = "fade",
       condition = input$genotype != "" & input$res_ran == TRUE
     )
     req(input$genotype)
@@ -409,11 +415,11 @@ mod_MSA_server <- function(input, output, session, data) {
       req(data$data())
       w$show()
       inf <- check_spats(
-        data$data(), 
-        input$variable, 
-        input$genotype, 
-        input$experiment, 
-        input$column, 
+        data$data(),
+        input$variable,
+        input$genotype,
+        input$experiment,
+        input$column,
         input$row
       )
       w$hide()
@@ -428,7 +434,7 @@ mod_MSA_server <- function(input, output, session, data) {
       input$variable,
       input$genotype,
       input$experiment,
-      input$column, 
+      input$column,
       input$row
     )
     nNew <- names(dt)[!names(dt) %in% vars]
@@ -454,8 +460,8 @@ mod_MSA_server <- function(input, output, session, data) {
           info_check()
         },
         option = list(
-          pageLength = 10, 
-          scrollX = TRUE, 
+          pageLength = 10,
+          scrollX = TRUE,
           columnDefs = list(
             list(className = "dt-center", targets = 0:ncol(info_check()))
           )
@@ -469,7 +475,7 @@ mod_MSA_server <- function(input, output, session, data) {
   observeEvent(input$tabBut, {
     showModal(modalDialog(
       title = "Info-Experiments",
-      size = "l", 
+      size = "l",
       easyClose = TRUE,
       DT::dataTableOutput(ns("table"))
     ))
@@ -482,7 +488,8 @@ mod_MSA_server <- function(input, output, session, data) {
       w$show()
       inf <- info_check() %>%
         dplyr::filter(
-          percentage <= 0.6 & length(ncol) >= 2 & length(nrow) >= 2) %>%
+          percentage <= 0.6 & length(ncol) >= 2 & length(nrow) >= 2
+        ) %>%
         dplyr::pull(.data[[exp]])
       w$hide()
       return(inf)
@@ -495,8 +502,8 @@ mod_MSA_server <- function(input, output, session, data) {
       req(data$data())
       w$show()
       inf <- gen_share(
-        data$data(), 
-        input$genotype, 
+        data$data(),
+        input$genotype,
         input$experiment,
         input$variable
       )
@@ -535,15 +542,15 @@ mod_MSA_server <- function(input, output, session, data) {
       DT::datatable(
         {
           checkConection(
-            data = data$data(), 
+            data = data$data(),
             genotype = input$genotype,
-            trial = input$experiment, 
+            trial = input$experiment,
             response = input$variable,
             all = TRUE
           )
         },
         option = list(
-          pageLength = 10, 
+          pageLength = 10,
           scrollX = TRUE,
           columnDefs = list(
             list(className = "dt-center", targets = 0:ncol(info_check()))
@@ -575,14 +582,15 @@ mod_MSA_server <- function(input, output, session, data) {
       paste("Conectivity", ".csv", sep = "")
     },
     content = function(file) {
-      utils::write.csv(checkConection(
-        data = data$data(),
-        genotype = input$genotype,
-        trial = input$experiment,
-        response = input$variable, all = T
-      ),
-      file,
-      row.names = FALSE
+      utils::write.csv(
+        checkConection(
+          data = data$data(),
+          genotype = input$genotype,
+          trial = input$experiment,
+          response = input$variable, all = T
+        ),
+        file,
+        row.names = FALSE
       )
     }
   )
@@ -610,8 +618,8 @@ mod_MSA_server <- function(input, output, session, data) {
 
       if (nrow(dt) == 0) {
         shinytoastr::toastr_error(
-          title = "Warning:", 
-          "Duplicated row and columns", 
+          title = "Warning:",
+          "Duplicated row and columns",
           position = "bottom-right",
           progressBar = TRUE
         )
@@ -648,26 +656,29 @@ mod_MSA_server <- function(input, output, session, data) {
         dt_tmp <- dt %>%
           dplyr::filter(.data[[input$experiment]] %in% exp) %>%
           droplevels()
-        models_list[[exp]] <- try({
-          SpATS_mrbean(
-          data = dt_tmp, 
-          response = input$variable,
-          genotype = input$genotype,
-          col = input$column, 
-          row = input$row, 
-          segm = FALSE,
-          ncols = NULL, 
-          nrows = NULL, 
-          rep = input$replicate,
-          fix_fact = fixed,
-          ran_fact = random,
-          gen_ran = input$res_ran, 
-          covariate = input$covariate,
-          clean_out = input$outliers,
-          iterations = input$times, 
-          checks = input$selected_checks,
-          k_clean_out = input$k_clean_out
-        )}, silent = TRUE
+        models_list[[exp]] <- try(
+          {
+            SpATS_mrbean(
+              data = dt_tmp,
+              response = input$variable,
+              genotype = input$genotype,
+              col = input$column,
+              row = input$row,
+              segm = FALSE,
+              ncols = NULL,
+              nrows = NULL,
+              rep = input$replicate,
+              fix_fact = fixed,
+              ran_fact = random,
+              gen_ran = input$res_ran,
+              covariate = input$covariate,
+              clean_out = input$outliers,
+              iterations = input$times,
+              checks = input$selected_checks,
+              k_clean_out = input$k_clean_out
+            )
+          },
+          silent = TRUE
         )
         if (inherits(models_list[[exp]], "try-error")) {
           message_to_send <- models_list[[exp]]
@@ -675,7 +686,7 @@ mod_MSA_server <- function(input, output, session, data) {
           shinytoastr::toastr_error(
             message = message_to_send,
             title = paste0("Error in Exp '", exp, "':"),
-            position =  "bottom-full-width",
+            position = "bottom-full-width",
             progressBar = TRUE
           )
         }

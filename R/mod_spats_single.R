@@ -349,7 +349,7 @@ mod_spats_single_server <- function(input, output, session, data) {
       label = "Num of col segments",
       min = 1,
       max = nlevels(dt$col_f) + 30,
-      value = nlevels(dt$col_f),
+      value = check_segments(nlevels(dt$col_f), nest_div = 2),
       width = "100%"
     )
   })
@@ -366,7 +366,7 @@ mod_spats_single_server <- function(input, output, session, data) {
       label = "Num of row segments",
       min = 1,
       max = nlevels(dt$row_f) + 30,
-      value = nlevels(dt$row_f),
+      value = check_segments(nlevels(dt$row_f), nest_div = 2),
       width = "100%"
     )
   })

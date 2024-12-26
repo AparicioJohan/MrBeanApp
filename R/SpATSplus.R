@@ -1,3 +1,26 @@
+check_segments <- function(levels, nest_div) {
+  # Validate inputs
+  if (levels <= 0 || nest_div <= 0) {
+    stop("'levels' and 'nest_div' must be positive integers.")
+  }
+  # Ensure levels is a multiple of 2
+  if (levels %% 2 != 0) {
+    # Adjust levels to make it a multiple of 2
+    if ((levels - 1) %% 2 == 0) {
+      levels <- levels - 1
+    } else if ((levels + 1) %% 2 == 0) {
+      levels <- levels + 1
+    }
+  }
+  # Check if levels is a valid multiple of nest_div
+  if (levels %% nest_div != 0) {
+    stop(paste("The number of levels,", levels, "is not a multiple of", nest_div, "."))
+  }
+  
+  return(levels)
+}
+
+
 #' R.square
 #'
 #' @param Model SpATS object
@@ -266,12 +289,12 @@ SpATS_mrbean <- function(data = NULL,
   dt$row_f <- factor(dt[, row])
   ncols <- ifelse(
     test = is.null(ncols) | isFALSE(segm),
-    yes = length(unique(dt[, col])), 
+    yes = check_segments(length(unique(dt[, col])), nest_div = 2), 
     no = ncols
   )
   nrows <- ifelse(
     test = is.null(nrows) | isFALSE(segm),
-    yes = length(unique(dt[, row])),
+    yes = check_segments(length(unique(dt[, row])), nest_div = 2),
     no = nrows
   )
   if (!is.null(fix_fact)) {
@@ -373,10 +396,10 @@ SpATS_mrbean <- function(data = NULL,
     ), 
     silent = TRUE
   )
-  if (class(Modelo) == "try-error"){
+  if (inherits(Modelo, what = "try-error")){
     stop(attr(Modelo, "condition"))
   } 
-  if (class(Modelo) == "try-error") {
+  if (inherits(Modelo, what = "try-error")) {
     return()
   }
   if (clean_out) {
