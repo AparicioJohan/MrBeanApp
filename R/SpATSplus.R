@@ -677,45 +677,31 @@ table_outlier <- function(models, id = "trait", k = 3) {
 
 # Weights
 
+
 weight_SpATS <- function(model) {
   rand <- model$model$geno$as.random
   if (rand) {
     return()
   }
-
-  C_inv <- as.matrix(rbind(
-    cbind(model$vcov$C11_inv, model$vcov$C12_inv), # Combine components into one matrix C
-    cbind(model$vcov$C21_inv, model$vcov$C22_inv)
-  ))
-  gen_mat <- colnames(model$vcov$C11_inv)
-
   genotype <- model$model$geno$genotype
-  dt <- SpATS::predict.SpATS(model, which = genotype, predFixed = "marginal") %>%
-    droplevels() %>%
-    dplyr::mutate_if(is.numeric, round, 3)
-  gen_lvls <- as.factor(unique(as.character(dt[, genotype])))
-
-  intc <- intersect(gen_mat, gen_lvls)
-  diff <- setdiff(gen_lvls, gen_mat)
-
-  vcov <- C_inv[c("Intercept", intc), c("Intercept", intc)]
-  colnames(vcov)[1] <- rownames(vcov)[1] <- diff
+  dt <- SpATS::predict.SpATS(
+    object = model,
+    which = genotype,
+    predFixed = "marginal",
+    return.vcov.matrix = TRUE
+  )
+  vcov <- as.matrix(attr(dt, "vcov"))
   diag_vcov <- diag(vcov)
-
-  L <- diag(ncol(vcov))
-  dimnames(L) <- list(colnames(vcov), rownames(vcov))
-  L[, 1] <- 1
-  Se2 <- diag(L %*% vcov %*% t(L))
-
-  data_weights <- data.frame(gen = names(diag_vcov), vcov = diag_vcov, inv_vcov = 1 / diag_vcov, weights = 1 / Se2)
-  data_weights <- merge(dt, data_weights, by.x = genotype, by.y = "gen", sort = F)
-  data_weights <- data_weights[, c(genotype, "predicted.values", "standard.errors", "weights")] # "vcov","inv_vcov",
-
+  data_weights <- dt[, c(genotype, "predicted.values", "standard.errors")]
+  data_weights$weights <- 1 / diag_vcov
   return(list(
-    vcov = vcov, diag = diag_vcov, diag_inv = 1 / diag_vcov,
-    se2 = Se2, se = sqrt(Se2), data_weights = data_weights
+    vcov = vcov,
+    diag = diag_vcov, 
+    diag_inv = 1 / diag_vcov,
+    data_weights = data_weights
   ))
 }
+
 
 
 #' @importFrom stats pchisq
